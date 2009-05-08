@@ -1,0 +1,13 @@
+/* general quickhoney styles */
+
+body {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	background-color: #ffffff;
+	padding-left: 36px;
+	font-size: 80%;
+}
+
+a {
+	text-decoration: none;
+}
+

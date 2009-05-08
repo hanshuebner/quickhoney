@@ -1,0 +1,7 @@
+/* styles for the full image display window */
+
+#logo {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+}

@@ -1,0 +1,41 @@
+/* cms styles */
+
+h1 {
+	font-size: 140%;
+        margin: 0.5em 0em 1em 0em;
+}
+
+h2 {
+	font-size: 110%;
+        margin: 0.5em 0em 1em 0em;
+}
+
+h3 {
+	font-size: 100%;
+        margin: 0.5em 0em 1em 0em;
+}
+
+p {
+	margin: 0px;
+}
+
+a img { border-width: 0px; }
+
+.cmslink {
+	background-color: #bfbfbf;
+	color: #000000;
+	border: thin solid #000000;
+	padding-left: 4px;
+	padding-right: 4px;
+	text-decoration: none;
+}
+
+.cmslink:hover {
+	background-color: #ffffff;
+	color: #000000;
+}
+
+#session-info {
+	font-size: 80%;
+}
+
