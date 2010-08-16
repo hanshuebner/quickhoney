@@ -653,8 +653,8 @@ function show_page(pagename, subpath) {
 
     /* workaround for IE, which does not display the overlapping menu items expectedly */
     map(function (keyword) {
-        $('m_' + keyword).style.zIndex = (keyword == pagename) ? 101 : 100;
-    }, ['pixel', 'vector', 'pen', 'news', 'shop', 'contact']); /* , 'shop' disabled */
+            $('m_' + keyword).style.zIndex = (keyword == pagename) ? 101 : 100;
+        }, ['pixel', 'vector', 'pen', 'news', 'contact']); /* , 'shop' disabled */
 
     // Activate the menu by coloring the menu choices correctly
     $('menu').className = pagename;

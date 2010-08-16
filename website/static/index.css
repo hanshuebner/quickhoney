@@ -120,20 +120,20 @@ a.debugger {
 #menu.contact a#m_contact img.unselected { visibility: hidden }
 
 #m_home { top: 30px; left: 36px; }
+/*
 #m_pixel { top: 36px; left: 247px; }
 #m_vector { top: 36px; left: 317px; }
 #m_pen { top: 36px; left: 398px; }
 #m_news { top: 36px; left: 450px; }
 #m_shop { top: 36px; left: 523px; }
 #m_contact { top: 36px; left: 586px; }
+*/
 
-/*
 #m_pixel { top: 36px; left: 259px; }
 #m_vector { top: 36px; left: 340px; }
 #m_pen { top: 36px; left: 435px; } 
 #m_news { top: 36px; left: 500px; } 
 #m_contact { top: 36px; left: 586px; }
-*/
 
 #menu img.selected {
 	visibility: hidden;

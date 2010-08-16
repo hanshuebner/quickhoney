@@ -334,13 +334,6 @@
                                                                 :spider-keywords spider-keywords))))
 		  (with-http-response ()
 		    (with-http-body ()
-                      (let ((tinyurl (drakma:http-request
-                                      (format nil "http://tinyurl.com/api-create.php?url=~A"
-                                              (hunchentoot:url-encode (format nil "http://quickhoney.com~A/~A"
-                                                                              (handler-path handler) image-name))))))
-                        (twitter:update-status (bknr-session-user)
-                                               (format nil "Uploaded new image ~A: ~A"
-                                                       image-name tinyurl)))
 		      (html (:html
 			     (:head
 			      (:title "Upload successful")
@@ -405,8 +398,6 @@
                              (apply #'make-store-image :image uploaded-image args)
                              (apply #'import-image (upload-pathname uploaded-file) args))))
               (declare (ignore item))   ; for now
-              (twitter:update-status (bknr-session-user)
-                                     (format nil "Posted news item: http://quickhoney.com/news/~A" name))
               (with-http-response ()
                 (with-http-body ()
                   (html (:html
@@ -596,6 +587,10 @@
 (defclass shutdown-handler (admin-only-handler page-handler)
   ())
 
+(defvar *acceptor* nil)
+
 (defmethod handle ((handler shutdown-handler))
-  (hunchentoot:stop-server hunchentoot:*server*)
+  (when *acceptor*
+    (hunchentoot:stop *acceptor*)
+    (setf *acceptor* nil))
   "Shutting down HTTP server")

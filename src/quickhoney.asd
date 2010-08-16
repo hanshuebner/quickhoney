@@ -27,7 +27,7 @@
 	       :cl-gd
                :unit-test
                :yason
-               :cl-pdf)
+               #+(or) :cl-pdf)
 
   :components ((:file "packages")
 	       (:file "config" :depends-on ("packages"))
@@ -41,8 +41,8 @@
 	       (:file "webserver" :depends-on ("handlers"))
 	       (:file "daily" :depends-on ("config"))
 
-               (:file "turtle" :depends-on ("packages"))
-               (:file "pixel-pdf" :depends-on ("turtle"))
+               #+(or) (:file "turtle" :depends-on ("packages"))
+               #+(or) (:file "pixel-pdf" :depends-on ("turtle"))
 
                (:file "money" :depends-on ("packages"))
                (:file "shop" :depends-on ("money"))

@@ -36,8 +36,10 @@
     (format t "; loading site configuration file~%")
     (let ((*package* (find-package :quickhoney.config)))
       (load "site-config.lisp")))
-  (bt:make-thread (curry #'hunchentoot:start-server
-                         :port *webserver-port*
-                         :threaded nil
-                         :persistent-connections-p nil)
+  (setf *acceptor* (make-instance 'hunchentoot:acceptor
+                                  :port *webserver-port*
+                                  :taskmaster (make-instance 'hunchentoot:single-threaded-taskmaster)
+                                  :persistent-connections-p nil
+                                  :request-dispatcher 'bknr.web:bknr-dispatch))
+  (bt:make-thread (curry #'hunchentoot:start *acceptor*)
                   :name (format nil "HTTP server on port ~A" *webserver-port*)))

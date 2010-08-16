@@ -1,3 +1,20 @@
+;; -*- Lisp -*-
+
+(require 'asdf)
+
+(defun setup-registry (directory-path)
+  (format t "; adding components under ~A to asdf registry~%" directory-path)
+  (mapc (lambda (asd-pathname)
+	  (pushnew (make-pathname :name nil
+				  :type nil
+				  :version nil 
+				  :defaults asd-pathname)
+		   asdf:*central-registry*
+		   :test #'equal))
+	(directory (merge-pathnames #p"**/*.asd" directory-path))))
+
+(setup-registry #P"../../../")
+
 (push :cl-gd-gif *features*)
 
 (asdf:oos 'asdf:load-op :quickhoney)

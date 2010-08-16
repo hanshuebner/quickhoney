@@ -40,10 +40,12 @@
         <img alt="" class="unselected" src="/image/news-unselected" />
         <img alt="" class="selected" src="/image/news-selected" />
       </a>
+      <!--
       <a onclick="show_directory_buttons('shop')" href="#shop" id="m_shop">
         <img alt="" class="unselected" src="/image/shop-unselected" />
         <img alt="" class="selected" src="/image/shop-selected" />
       </a>
+      -->
       <a href="#contact" id="m_contact">
         <img alt="" class="unselected" src="/image/contact-unselected" />
         <img alt="" class="selected" src="/image/contact-selected" />
@@ -184,9 +186,11 @@
             Keywords:<br />
             <input type="text" id="upload_keywords" name="spider-keywords" value="" size="60" /><br />
             <input type="checkbox" id="explicit" name="explicit" value="1" /> Explicit<br/>
+            <!-- shop disabled for now
             <input type="checkbox" name="buy-file" value="1"/> Sell as file<br/>
             <input type="checkbox" name="buy-print" value="1"/> Sell as print<br/>
             <input type="checkbox" name="buy-t-shirt" value="1"/> Sell as t-shirt<br/>
+            -->
           </p>
           <p class="cms">
             <input type="submit" name="upload" value="upload" />
@@ -253,9 +257,11 @@
             Keywords:<br />
             <input type="text" id="edit_keywords" name="spider-keywords" value="" size="60" /><br />
             <input type="checkbox" id="edit_explicit" name="explicit" value="1" /> Explicit<br/>
+            <!-- shop disabled for now
             <input type="checkbox" id="edit_buy-file" name="buy-file" value="1"/> Sell as file<br/>
             <input type="checkbox" id="edit_buy-print" name="buy-print" value="1"/> Sell as print<br/>
             <input type="checkbox" id="edit_buy-t-shirt" name="buy-t-shirt" value="1"/> Sell as t-shirt<br/>
+            -->
           </p>
           <p class="cms">
             <button type="submit" onclick="do_edit();">edit</button>
