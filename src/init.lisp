@@ -20,6 +20,7 @@
 Please make sure that ~A points to the correct location, or create
 it if it is missing."
               (first cxml::*default-catalog*)))
+     (setf cxml::*catalog* (cxml:make-catalog))
 
      (setf *hunchentoot-default-external-format* (flex:make-external-format :utf-8 :eol-style :lf))
 
