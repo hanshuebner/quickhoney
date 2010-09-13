@@ -32,7 +32,7 @@
     (nreverse coords)))
 
 (defun corner-image (&key (image *default-image*)
-                          (radius (/ (max (image-width image) (image-height image)) 40))
+                          (radius (floor (/ (max (image-width image) (image-height image)) 40)))
                           corner-color)
   (with-default-image (image)
     (unless corner-color
