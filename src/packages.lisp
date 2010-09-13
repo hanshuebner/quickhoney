@@ -6,7 +6,9 @@
   (:export #:*website-url*
 	   #:*website-directory*
 	   #:*webserver-port*
-	   #:*store-directory*))
+	   #:*store-directory*
+     #:*xml-catalog-directory*
+     #:*thirdparty-directory*))
 
 (defpackage :quickhoney.imageproc
   (:use :cl
