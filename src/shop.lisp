@@ -264,7 +264,7 @@
   (random 10000))
 
 (defmacro with-temporary-directory ((pathname) &body body)
-  `(let ((,pathname (pathname (format nil "/tmp/store-test-~A/" (sb-posix:getpid)))))
+  `(let ((,pathname (pathname (format nil "/tmp/store-test-~A/" (getpid)))))
      (asdf:run-shell-command "rm -rf ~A" ,pathname)
      (prog1
          (progn ,@body)
