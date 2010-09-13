@@ -13,7 +13,7 @@
 		   :test #'equal))
 	(directory (merge-pathnames #p"**/*.asd" directory-path))))
 
-(setup-registry #P"../../../")
+(setup-registry #P"../../")
 
 (push :cl-gd-gif *features*)
 
