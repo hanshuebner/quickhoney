@@ -48,13 +48,22 @@ it if it is missing."
     (format t "; loading site configuration file~%")
     (let ((*package* (find-package :quickhoney.config)))
       (load "site-config.lisp")))
+
+  (start-http-server))
+
+(defun start-http-server ()
+  (when *acceptor*
+    (hunchentoot:stop *acceptor*)
+    (bt:destroy-thread *ht-thread*)
+    (setf *acceptor* nil))
   
   (setf *acceptor* (make-instance 'hunchentoot:acceptor
                                   :port *webserver-port*
                                   :taskmaster (make-instance 'hunchentoot:single-threaded-taskmaster)
                                   :persistent-connections-p nil
                                   :request-dispatcher 'bknr.web:bknr-dispatch))
-
+  
   ;; XXX store thread to stop later on
-  (bt:make-thread (curry #'hunchentoot:start *acceptor*)
-                  :name (format nil "HTTP server on port ~A" *webserver-port*)))
+  (setf *ht-thread*
+        (bt:make-thread (curry #'hunchentoot:start *acceptor*)
+                        :name (format nil "HTTP server on port ~A" *webserver-port*))))

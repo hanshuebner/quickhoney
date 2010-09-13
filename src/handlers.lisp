@@ -588,6 +588,7 @@
   ())
 
 (defvar *acceptor* nil)
+(defvar *ht-thread* nil)
 
 (defmethod handle ((handler shutdown-handler))
   (when *acceptor*
