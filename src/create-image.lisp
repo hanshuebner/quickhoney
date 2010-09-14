@@ -18,9 +18,9 @@
 (push :cl-gd-gif *features*)
 
 (asdf:oos 'asdf:load-op :quickhoney)
+(quickhoney::startup)
 
-(asdf:oos 'asdf:load-op :swank)
-(swank::create-server :port 4085 :dont-close t)
+(quickhoney::dump-executable)
 
 ;; disable ldb
 #+sbcl
