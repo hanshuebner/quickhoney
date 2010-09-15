@@ -654,7 +654,7 @@ var pages = {
                    news),
     shop: new Page('0054ff',
                    shop),
-    /*
+    /* no shopping cart for now
     cart: new Page('0054ff',
                    show_shopping_cart),
      */
@@ -687,6 +687,31 @@ function display_cms_window() {
     }
 }
 
+function show_pricetags(page, subpath) {
+    if ((subpath != undefined) && (subpath != "")) {
+	$("pricetag-big").style.visibility = "hidden";
+	$("pricetag-medium").style.visibility = "hidden";
+	return;
+    }
+
+    switch (page) {
+	case "home":
+	$("pricetag-big").style.visibility = "visible";
+	$("pricetag-medium").style.visibility = "hidden";
+	break;
+
+	case "pixel":
+	case "vector":
+	$("pricetag-big").style.visibility = "hidden";
+	$("pricetag-medium").style.visibility = "visible";
+	break;
+
+	default:
+	$("pricetag-big").style.visibility = "hidden";
+	$("pricetag-medium").style.visibility = "hidden";
+    }
+}
+
 function show_page(pagename, subpath) {
     document.title = "QuickHoney " + pagename + (subpath ? "/" + subpath : '');
 
@@ -696,6 +721,8 @@ function show_page(pagename, subpath) {
     }
 
     var page = pages[pagename];
+
+    show_pricetags(pagename, subpath);
 
     log('show_page ' + pagename + ' subpath ' + subpath + ' current_directory ' + current_directory);
 

@@ -24,6 +24,8 @@
     <div id="menu">
       <a onclick="show_home_buttons()" href="#home" id="m_home">
         <img alt="" class="menu" src="/image/quickhoney" />
+	<img id="pricetag-big" src="/image/pricetag-big" style="visibility: hidden"/>
+	<img id="pricetag-medium" src="/image/pricetag-medium" style="visibility: hidden"/>
       </a>
       <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
         <img alt="" class="unselected" src="/image/pixel-unselected" />

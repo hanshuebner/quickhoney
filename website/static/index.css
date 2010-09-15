@@ -667,3 +667,19 @@ body.pen .button-section-items {
 	padding-top: 30px;
 	font-size: 70%;
 }
+
+/* styles for the pricetags */
+#menu a img#pricetag-big {
+    background-color: transparent;
+    position: absolute;
+    top: 33px;
+    left: 161px;
+    
+}
+
+#menu a img#pricetag-medium {
+    background-color: transparent;
+    position: absolute;
+    top: 33px;
+    left: 171px;
+}
