@@ -9,7 +9,8 @@
     <meta name="verify-v1" content="0lfE42KxaTLpCzUEkuTA7V2a9Ojdwk9BG2XSaZGPaoA=" />
     <link rel="stylesheet" href="/static/yui/reset-fonts/reset-fonts.css,yui/fonts/fonts-min.css,yui/editor/assets/skins/sam/simpleeditor.css,quickhoney.css,index.css,ydsf.css" />
     <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss/quickhoney" />
-    <script src="/static/detectplugins.js,AC_QuickTime.js,MochiKit/MochiKit.js,yui/yahoo-dom-event/yahoo-dom-event.js,yui/animation/animation-min.js,yui/element/element-beta-min.js,yui/container/container_core-min.js,yui/editor/simpleeditor-beta-min.js,javascript.js" type="text/javascript"> </script>
+    <script src="/static/detectplugins.js,AC_QuickTime.js,MochiKit/MochiKit.js,yui/yahoo-dom-event/yahoo-dom-event.js,yui/animation/animation-min.js,yui/element/element-beta-min.js,yui/container/container_core-min.js,yui/editor/simpleeditor-beta-min.js" type="text/javascript"> </script>
+    <script src="/static/javascript.js" type="text/javascript"> </script>
     <title>QuickHoney</title>
   </head>
 
@@ -175,7 +176,7 @@
           <div class="cms_title">Upload new image</div>
           <p class="cms">
             Category: <b><span id="upload_category"> </span></b><br /><br />
-            <input type="file" name="image-file" /><br />
+            Bitmap file: <input type="file" name="image-file" /><br />
           </p>
           <p class="cms">
             Client:<br />
@@ -191,6 +192,12 @@
             <input type="checkbox" name="buy-print" value="1"/> Sell as print<br/>
             <input type="checkbox" name="buy-t-shirt" value="1"/> Sell as t-shirt<br/>
             -->
+          </p>
+          <p class="cms cms_shop">
+            Price:<br />
+            <span id="shop_price_select">
+              </span><br />
+              PDF shop file: <input type="file" name="pdf-image-file" /><br />
           </p>
           <p class="cms">
             <input type="submit" name="upload" value="upload" />
@@ -262,6 +269,12 @@
             <input type="checkbox" id="edit_buy-print" name="buy-print" value="1"/> Sell as print<br/>
             <input type="checkbox" id="edit_buy-t-shirt" name="buy-t-shirt" value="1"/> Sell as t-shirt<br/>
             -->
+          </p>
+          <p class="cms cms_shop">
+            Price:<br />
+            <span id="shop_price_select">
+              </span><br />
+              PDF shop file: <input id="edit_pdf_shop" type="file" name="pdf-image-file" /><br />
           </p>
           <p class="cms">
             <button type="submit" onclick="do_edit();">edit</button>
