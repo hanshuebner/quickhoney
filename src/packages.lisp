@@ -8,7 +8,12 @@
 	   #:*webserver-port*
 	   #:*store-directory*
      #:*xml-catalog-directory*
-     #:*thirdparty-directory*))
+     #:*thirdparty-directory*
+
+     #:*paypal-user*
+     #:*paypal-password*
+     #:*paypal-signature*
+     ))
 
 (defpackage :quickhoney.imageproc
   (:use :cl

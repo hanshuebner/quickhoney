@@ -43,7 +43,8 @@ it if it is missing."
   (ensure-directories-exist
    (setf tbnl:*tmp-directory* (merge-pathnames "hunchentoot-tmp/" *store-directory*)))
   (actor-start (make-instance 'cron-actor))
-  (publish-quickhoney)
+
+  (paypal-init :user *paypal-user* :password *paypal-password* :signature *paypal-signature*)
   
   (when (probe-file "site-config.lisp")
     (format t "; loading site configuration file~%")
@@ -52,11 +53,18 @@ it if it is missing."
 
   (start-http-server))
 
-(defun start-http-server ()
+(defun stop-http-server ()
+  "Stop the running webserver, and destroy the thread it was running in."
   (when *acceptor*
     (hunchentoot:stop *acceptor*)
     (bt:destroy-thread *ht-thread*)
-    (setf *acceptor* nil))
+    (setf *acceptor* nil)))
+
+(defun start-http-server ()
+  "Restart the webserver, republishing the website as well."
+  (stop-http-server)
+
+  (publish-quickhoney)
   
   (setf *acceptor* (make-instance 'hunchentoot:acceptor
                                   :port *webserver-port*

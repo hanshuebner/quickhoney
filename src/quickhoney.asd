@@ -27,6 +27,7 @@
 	       :cl-gd
                :unit-test
                :yason
+               :cl-paypal
                #+(or) :cl-pdf)
 
   :components ((:file "packages")
