@@ -81,20 +81,19 @@ function login_status(json_result) {
     logged_in = json_result.admin;
 
     if (logged_in) {
-	replaceChildNodes("username", json_result.login);
-	$("login_status").style.visibility = 'visible';
+        replaceChildNodes("username", json_result.login);
+        $("login_status").style.visibility = 'visible';
         news_editor = new YAHOO.widget.SimpleEditor('news_editor', { toolbar: editorToolbarConfig });
         news_editor.render();
-	show_cms_window();
+        show_cms_window();
     }
 }
 
 /* CMS functionality */
 
 function show_cms_window(name) {
-
     log('show_cms_window ' + name);
-
+    
     $("cms").style.top = "106px";
     $("cms").style.left = "730px";
     $("cms").style.width = "400px";
@@ -102,31 +101,29 @@ function show_cms_window(name) {
     var elements = $("cms").childNodes;
 
     if (logged_in) {
-
-	for (var i = 0; i < elements.length; i++) {
-	    if (elements[i].id) {
-		elements[i].style.visibility = (elements[i].id == name) ? "visible" : "hidden";
-	    }
-	}
-
-	$("login_status").style.visibility = 'visible';
-
+        
+	      for (var i = 0; i < elements.length; i++) {
+	          if (elements[i].id) {
+		            elements[i].style.visibility = (elements[i].id == name) ? "visible" : "hidden";
+	          }
+	      }
+        
+	      $("login_status").style.visibility = 'visible';
+        
     } else {
-	for (var i = 0; i < elements.length; i++) {
-	    if (elements[i].id) {
-		elements[i].style.visibility = "hidden";
-	    }
-	}
+	      for (var i = 0; i < elements.length; i++) {
+	          if (elements[i].id) {
+		            elements[i].style.visibility = "hidden";
+	          }
+	      }
     }
 }
 
 function send_login() {
-
     return false;
 }
 
 function send_logout() {
-
     logged_in = false;
     show_cms_window();
     loadJSONDoc("/json-logout")
@@ -161,7 +158,7 @@ function submit_json(url, form, handler) {
                                 method: 'POST',
                                 headers: {"Content-Type":"application/x-www-form-urlencoded"},
                                 sendContent: queryString(names, values) })
-        .addCallbacks(function (req) { handler(MochiKit.Base.evalJSON(req.responseText)) },
+        .addCallbacks(function (req) { handler(MochiKit.Base.evalJSON(req.responseText)); },
                       alert);
 
 }
@@ -243,12 +240,12 @@ function set_clients(json_data) {
     client_names = json_data.clients;
     var rendered_clients = [];
     for (var i = 0; i < client_names.length; i++) {
-	var client_name = client_names[i];
-	if (client_name.search(/,/)) {
-	    rendered_clients[i] = client_name.replace(/^(.*)(\s\S+,\s*.*)$/, "<b>$1</b>$2");
-	} else {
-	    rendered_clients[i] = "<b>" + client_name + "</b>";
-	}
+	      var client_name = client_names[i];
+	      if (client_name.search(/,/)) {
+	          rendered_clients[i] = client_name.replace(/^(.*)(\s\S+,\s*.*)$/, "<b>$1</b>$2");
+	      } else {
+	          rendered_clients[i] = "<b>" + client_name + "</b>";
+	      }
     }
     $("client_names").innerHTML = rendered_clients.join("; ");
     $("upload_client_select").innerHTML = make_clients_selector('upload_client');
@@ -303,7 +300,10 @@ function getScrollXY() {
 }
 
 function permalink(path) {
-    return A({ href: '/' + path, onclick: function () { document.location.href = '#' + path; return false; } }, 'permalink');
+    return A(
+        { href: '/' + path,
+          onclick: function () { document.location.href = '#' + path; return false; } },
+        'permalink');
 }
 
 function make_upload_item(item)
@@ -311,7 +311,7 @@ function make_upload_item(item)
     var color = pages[item.category] ? pages[item.category].link_color : '000000';
     var path = item.category + '/' + item.subcategory + '/' + encodeURI(item.name);
     return DIV({ 'class': 'newsentry autonews news_' + item.category },
-               A({ href: '/#' + path, onclick: function () { jump_to(path) } },
+               A({ href: '/#' + path, onclick: function () { jump_to(path); } },
                  IMG({ src: "/image/" + encodeURI(item.name) + '/cutout-button,,' + color + ',98,98,0,' + item.category,
                              width: 98, height: 98 })),
                DIV(null,
@@ -334,7 +334,7 @@ function make_news_item(item)
                     .addCallbacks(reload_news, alert);
             }
             return false;
-        }
+        };
     }
     var text_div = DIV({ 'class': 'item-text' });
     text_div.innerHTML = item.text;
@@ -362,7 +362,7 @@ function load_news(single_entry, data)
                               }, data.items));
         $('archive-navigation').style.visibility = 'inherit';
 
-        wait_for_images(function () { hide_cue(); $('newsentries').style.visibility = 'inherit' });
+        wait_for_images(function () { hide_cue(); $('newsentries').style.visibility = 'inherit'; });
 
         current_news_item = null;
         if (logged_in) {
@@ -558,7 +558,6 @@ function process_query_result(key, json_result) {
 }
 
 function query_imagedb(directory, subdirectory, force) {
-
     log('query_imagedb - keywords: ', directory, " ", subdirectory);
 
     var key = directory + ((subdirectory == "browseall") ? "" : ("/" + subdirectory)) + ((subdirectory == "smallworld") ? "?layout=smallworld" : "");
@@ -574,7 +573,7 @@ function query_imagedb(directory, subdirectory, force) {
 
     } else {
         show_cue();
-	loadJSONDoc("/json-image-query/" + key)
+	      loadJSONDoc("/json-image-query/" + key)
             .addCallbacks(partial(process_query_result, key), alert);
     }
 }
@@ -609,34 +608,32 @@ var pages = {
 };
 
 function display_cms_window() {
-
     if (logged_in) {
-	if (current_directory == "home") {
+	      if (current_directory == "home") {
             show_cms_window();
         } else if (current_directory == "news") {
             show_cms_window("edit_news");
-	} else if (current_directory && current_subdirectory) {
-	    if (current_image) {
-		show_cms_window('edit_form');
-	    } else {
-		replaceChildNodes("upload_category", current_directory, " / ", current_subdirectory);
-		$("upload_form_element").setAttribute("action", "/upload-image/" + current_directory + "/" + current_subdirectory);
-		if (current_directory == 'pixel' && current_subdirectory == 'animation') {
-		    show_cms_window('upload_animation_form');
-		} else {
-		    show_cms_window('upload_form');
-		}
-	    }
-	} else if (current_directory == 'pixel') {
-	    show_cms_window("pixel_button_upload_form");
-	} else {
-	    show_cms_window();
-	}
+	      } else if (current_directory && current_subdirectory) {
+	          if (current_image) {
+		            show_cms_window('edit_form');
+	          } else {
+		            replaceChildNodes("upload_category", current_directory, " / ", current_subdirectory);
+		            $("upload_form_element").setAttribute("action", "/upload-image/" + current_directory + "/" + current_subdirectory);
+		            if (current_directory == 'pixel' && current_subdirectory == 'animation') {
+		                show_cms_window('upload_animation_form');
+		            } else {
+		                show_cms_window('upload_form');
+		            }
+	          }
+	      } else if (current_directory == 'pixel') {
+	          show_cms_window("pixel_button_upload_form");
+	      } else {
+	          show_cms_window();
+	      }
     }
 }
 
 function show_page(pagename, subpath) {
-
     document.title = "QuickHoney " + pagename + (subpath ? "/" + subpath : '');
 
     if (!pages[pagename]) {
@@ -777,7 +774,7 @@ function show_directory_buttons(category) {
     }
     replaceChildNodes('directory', buttons);
 
-    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'button'), seq(0, 6))) });
+    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'button'), seq(0, 6))); });
 }
 
 function show_home_buttons() {
@@ -798,7 +795,7 @@ function show_home_buttons() {
 
     replaceChildNodes('home', buttons);
 
-    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'home_'), home_buttons)) });
+    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'home_'), home_buttons)); });
 }
 
 function stop_revealing_buttons() {
@@ -1265,28 +1262,28 @@ function safari_compatibility_hack() {
     // for safari, we change the style sheet so that images are not hidden during load
     log('changing stylesheet for safari');
     for (var i = 0; i < document.styleSheets.length; i++) {
-	var rules = document.styleSheets[i][document.all ? 'rules' : 'cssRules'];
-	for (var j = 0; j < rules.length; j++) {
-	    var rule = rules[j];
-	    var ruleText = rule.selectorText.toLowerCase();
-	    if (ruleText.indexOf('img.inherited_image') != -1) {
-		rule.style['visibility'] = 'visible';
-	    }
-	}
+	      var rules = document.styleSheets[i][document.all ? 'rules' : 'cssRules'];
+	      for (var j = 0; j < rules.length; j++) {
+	          var rule = rules[j];
+	          var ruleText = rule.selectorText.toLowerCase();
+	          if (ruleText.indexOf('img.inherited_image') != -1) {
+		            rule.style['visibility'] = 'visible';
+	          }
+	      }
     }
 }
 
-function init_applicaton() {
-    log('init_applicaton');
+function init_application() {
+    log('init_application');
     if (navigator.userAgent.indexOf("Safari") != -1) {
-	safari = true;
-	safari_compatibility_hack();
+	      safari = true;
+	      safari_compatibility_hack();
     }
 
     loadJSONDoc("/json-login").addCallbacks(login_status, alert);
     loadJSONDoc("/json-clients").addCallbacks(set_clients, alert);
     loadJSONDoc('/json-news-archive/quickhoney').addCallbacks(initialize_news_archive, alert);
-
+    
     var path = 'home';
     if (document.location.pathname != '/') {
         path = document.location.pathname.substr(1);
@@ -1295,17 +1292,15 @@ function init_applicaton() {
     }
     document.location.href = "/#" + path;
 
-    log('init_applicaton done');
-
     poll_path();
 
     application_initialized = true;
-    log('init_applicaton done');
+    log('init_application done');
 }
 
 function button_images_loaded() {
     log('button_images_loaded');
-    wait_for_images(init_applicaton);
+    wait_for_images(init_application);
 }
 
 function init() {
@@ -1621,7 +1616,7 @@ function make_shout_form() {
                                              title: site.name });
                              img.onclick = partial(submit_bookmark, site);
                              return img;
-                         }, filter(function (site) { return site.action }, social_bookmark_sites))));
+                         }, filter(function (site) { return site.action; }, social_bookmark_sites))));
 }
 
 function make_ipod_image() {
@@ -1670,7 +1665,7 @@ function buy_product_button (buy_function) {
         $('overlay').style.top = top;
         callLater(2, remove_overlay);
         return false;
-    }
+    };
     return button;
 }
 
@@ -1758,7 +1753,7 @@ var make_buy_forms = {
                                                    BR(),
                                                    buy_product_button(buy_t_shirt))))),
                                  BR(), BR(),
-                                 NOTICE("Please note:  We are shipping from Germany, that's why there is a sales tax within Europe and none outside"))))
+                                 NOTICE("Please note:  We are shipping from Germany, that's why there is a sales tax within Europe and none outside"))));
     }
 };
 
@@ -1841,12 +1836,12 @@ function make_image_action_buttons()
         animator.stop();
         animator.attributes = { width: { to: 132 }, left: { to: 553 } };
         animator.animate();
-    }
+    };
     $('image_action_buttons').onmouseout = function () {
         animator.stop();
         animator.attributes = { width: { to: 61 }, left: { to: 623 } };
         animator.animate();
-    }
+    };
 
     wait_for_images(function () { $('image_action_buttons').style.visibility = 'inherit'; });
 }
