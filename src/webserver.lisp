@@ -1,4 +1,3 @@
-
 (in-package :quickhoney)
 
 (enable-interpol-syntax)
@@ -39,6 +38,9 @@
        ("/upload-button" upload-button-handler)
        ("/upload-news" upload-news-handler)
        ("/upload-shop" upload-shop-handler)
+
+       ("/pdf-admin" quickhoney-admin-pdf-handler)
+       ("/pdf-client" quickhoney-client-pdf-handler)
 
        ("/rss" rss-handler)
        ("/admin" admin-handler)

@@ -300,66 +300,6 @@
                                            (list (store-image-with-name "button-dummy"))))
                           (json:encode-array-element (store-object-id image)))))))))))))
 
-(defclass upload-shop-handler (admin-only-handler edit-object-handler)
-  ()
-  (:default-initargs :object-class 'quickhoney-image))
-
-(defmethod handle-object-form :around ((handler upload-shop-handler) action image)
-  (handler-case
-      (let* ((width (store-image-width image))
-	     (height (store-image-height image))
-	     (ratio (/ 1 (max (/ width 300) (/ height 200)))))
-
-	(call-next-method)
-
-	(with-http-response ()
-	  (with-http-body ()
-	    (html (:html
-		   (:head
-		    (:title "Upload successful")
-		    ((:script :type "text/javascript" :language "JavaScript")
-		     ;; XXX do_query is not the correct function
-		     "function done() { window.opener.do_query(); window.close(); }"))
-		   (:body
-		    (:p "Image " (:princ-safe (store-image-name image)) " PDF uploaded")
-		    (:p ((:img :src (format nil "/image/~D" (store-object-id image))
-			       :width (round (* ratio width)) :height (round (* ratio height)))))
-		    (:p ((:a :href "javascript:done()") "ok"))))))))
-    
-    (error (e)
-      (with-http-response ()
-	(with-http-body ()
-	  (html (:html
-		 (:head
-		  (:title "Error during upload"))
-		 (:body
-		  (:h2 "Error during upload")
-		  (:p "Error during upload:")
-		  (:p (:princ-safe (apply #'format nil (simple-condition-format-control e) (simple-condition-format-arguments e))))
-		  (:p ((:a :href "javascript:window.close()") "ok"))))))))))
-
-(defmethod handle-object-form ((handler upload-shop-handler) (action (eql :edit)) image)
-  (with-query-params (price-select)
-    (format t "SET PRODUCT PRICE ~A~%" price-select)))
-
-(defmethod handle-object-form ((handler upload-shop-handler) (action (eql :delete)) image)
-  (format t "DELETE PRODUCT~%"))
-
-(defmethod handle-object-form ((handler upload-shop-handler) (action (eql :upload)) image)
-  (with-query-params (price-select pdf-generate)
-    (let ((pdf-file (request-uploaded-file "pdf-image-file")))
-      (format t "UPLOAD PRODUCT ~A ~A~%" pdf-file price-select)
-      (when pdf-generate
-	;; XXX generate PDF
-	)
-
-      (when pdf-file
-	#+nil
-	(make-blob-from-file (upload-pathname pdf-file) 'quickhoney-pdf-product
-			     :price (parse-integer price-select :junk-allowed t)
-			     :type :pdf
-			     :image image)))))
-
 (defclass upload-image-handler (admin-only-handler prefix-handler)
   ())
 
