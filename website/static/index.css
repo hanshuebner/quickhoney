@@ -498,6 +498,17 @@ input.invisibleSubmit {
         background-color: #FFFF33;
 }
 
+#overlay.home h1, #overlay.home h2 {
+    color: #845ef9;
+}
+
+#overlay p.pdf-info {
+    width: 230px;
+    padding: 10px;
+    padding-top: 0px;
+}
+
+
 #overlay #hey {
 	padding: 10px 15px 10px 10px;
 }
@@ -669,17 +680,18 @@ body.pen .button-section-items {
 }
 
 /* styles for the pricetags */
-#menu a img#pricetag-big {
+img#pricetag-big {
     background-color: transparent;
     position: absolute;
-    top: 33px;
-    left: 161px;
-    
+    top: 63px;
+    left: 197px;
+    z-index: 2;
 }
 
-#menu a img#pricetag-medium {
+img#pricetag-medium {
     background-color: transparent;
     position: absolute;
-    top: 33px;
-    left: 171px;
+    top: 63px;
+    left: 207px;
+    z-index: 2;
 }

@@ -1488,8 +1488,13 @@ function make_shop_overlay() {
                              NOTICE("Please note:  Our shop is operating from Germany, that's why there is a sales tax within Europe and none outside"))));
 }
 
+INFOTITLE = partial(SPAN, { 'class': 'notice' });
+
 function make_pdf_info_overlay() {
-    // XXX make pdf info overlay
+    make_overlay('pdf-info', 'Download Art as Vector PDF',
+		 280,
+		 P({'class': 'pdf-info'},
+		   "Selected Artwork available for download as vector pdf file! Look for the pricetag!"));
 }
 
 function make_post_mail_form() {

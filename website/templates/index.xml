@@ -20,12 +20,10 @@
     </div>
 
     <a id="checkout" href="#cart" onclick="show_page('cart');"><img src="/image/checkout" alt="" width="112" height="24"/></a>
-
+ 
     <div id="menu">
       <a onclick="show_home_buttons()" href="#home" id="m_home">
         <img alt="" class="menu" src="/image/quickhoney" />
-	<img id="pricetag-big" src="/image/pricetag-big" style="visibility: hidden"/>
-	<img id="pricetag-medium" src="/image/pricetag-medium" style="visibility: hidden"/>
       </a>
       <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
         <img alt="" class="unselected" src="/image/pixel-unselected" />
@@ -54,6 +52,11 @@
         <img alt="" class="selected" src="/image/contact-selected" />
       </a>
     </div>
+
+    <a href="#">
+      <img id="pricetag-big" onclick="make_pdf_info_overlay()" src="/image/pricetag-big" style="visibility: hidden"/>
+      <img id="pricetag-medium" onclick="make_pdf_info_overlay()" src="/image/pricetag-medium" style="visibility: hidden"/>
+    </a>
 
     <div id="path-and-version">
       <div id="path" class="text"> </div>
