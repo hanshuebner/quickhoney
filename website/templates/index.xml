@@ -195,7 +195,7 @@
           </p>
           <p class="cms cms_shop">
             Price:<br />
-            <span id="shop_price_select">
+            <span id="upload_price_select">
               </span><br />
               PDF shop file: <input type="file" name="pdf-image-file" /><br />
           </p>
@@ -272,7 +272,7 @@
           </p>
           <p class="cms cms_shop">
             Price:<br />
-            <span id="shop_price_select">
+            <span id="edit_price_select">
               </span><br />
               PDF shop file: <input id="edit_pdf_shop" type="file" name="pdf-image-file" /><br />
           </p>

@@ -267,6 +267,23 @@ function shop () {
     directory('shop', 'shop');
 }
 
+function init_shop() {
+    $("upload_price_select").innerHTML = make_price_selector();
+    $("edit_price_select").innerHTML = make_price_selector();
+}
+
+var pdf_prices = [12, 15];
+
+function make_price_selector() {
+    var price_options = '<select name="price-select" size="1">';
+    for (var i = 0; i < pdf_prices.length; i++) {
+	price_options += '<option value="' + pdf_prices[i] + '">' + pdf_prices[i] + '</option>';
+    }
+    price_options += '</select>';
+
+    return price_options;
+}
+
 /* news */
 
 var current_news_item;
@@ -1283,6 +1300,8 @@ function init_application() {
     loadJSONDoc("/json-login").addCallbacks(login_status, alert);
     loadJSONDoc("/json-clients").addCallbacks(set_clients, alert);
     loadJSONDoc('/json-news-archive/quickhoney').addCallbacks(initialize_news_archive, alert);
+
+    init_shop();
     
     var path = 'home';
     if (document.location.pathname != '/') {
