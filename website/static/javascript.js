@@ -104,7 +104,7 @@ function show_cms_window(name) {
         
 	      for (var i = 0; i < elements.length; i++) {
 	          if (elements[i].id) {
-		            elements[i].style.visibility = (elements[i].id == name) ? "visible" : "hidden";
+		      elements[i].style.visibility = (elements[i].id == name) ? "visible" : "hidden";
 	          }
 	      }
         
@@ -117,6 +117,8 @@ function show_cms_window(name) {
 	          }
 	      }
     }
+
+    log('show_cms_window ' + name + ' done');
 }
 
 function send_login() {
@@ -152,6 +154,9 @@ function submit_json(url, form, handler) {
                 }
             }, all_inputs(form));
     }
+
+    log("values " + queryString(names, values));
+    log("url " + url);
 
     MochiKit.Async.doXHR(url, { mimeType: 'text/plain',
                                 headers: [['Accept', 'application/json']],
@@ -269,13 +274,12 @@ function shop () {
 
 function init_shop() {
     $("upload_price_select").innerHTML = make_price_selector();
-    $("edit_price_select").innerHTML = make_price_selector();
 }
 
-var pdf_prices = [12, 15];
+var pdf_prices = [0, 12, 15];
 
 function make_price_selector() {
-    var price_options = '<select name="price-select" size="1">';
+    var price_options = '<select name="price-select" id="pdf_price_select" size="1">';
     for (var i = 0; i < pdf_prices.length; i++) {
 	price_options += '<option value="' + pdf_prices[i] + '">' + pdf_prices[i] + '</option>';
     }
@@ -283,6 +287,37 @@ function make_price_selector() {
 
     return price_options;
 }
+
+function shop_set_price_selector(price) {
+    log("shop set price " + price);
+    var selector = $("pdf_price_select");
+    if (selector) {
+	for (var i in selector.options) {
+	    if (selector.options[i].value == price) {
+		selector.selectedIndex = i;
+		break;
+	    }
+	}
+    }
+}
+
+function shop_show_form_for_image(current_image) {
+    log("shop show form");
+    $("shop_upload_form_element").action = "/upload-shop/" + current_image.id;
+    if (current_image.shop_file != undefined) {
+	$("upload_pdf_field").style.visibility = "hidden";
+	$("upload_pdf_button").style.visibility = "hidden";
+	$("edit_pdf_button").style.visibility = "visible";
+	$("delete_pdf_button").style.visibility = "visible";
+	shop_set_price_selector(current_image.shop_price);
+    } else {
+	$("upload_pdf_field").style.visibility = "visible";
+	$("upload_pdf_button").style.visibility = "visible";
+	$("edit_pdf_button").style.visibility = "hidden";
+	$("delete_pdf_button").style.visibility = "hidden";
+    }
+}
+    
 
 /* news */
 
@@ -626,27 +661,27 @@ var pages = {
 
 function display_cms_window() {
     if (logged_in) {
-	      if (current_directory == "home") {
+	if (current_directory == "home") {
             show_cms_window();
         } else if (current_directory == "news") {
             show_cms_window("edit_news");
-	      } else if (current_directory && current_subdirectory) {
-	          if (current_image) {
-		            show_cms_window('edit_form');
-	          } else {
-		            replaceChildNodes("upload_category", current_directory, " / ", current_subdirectory);
-		            $("upload_form_element").setAttribute("action", "/upload-image/" + current_directory + "/" + current_subdirectory);
-		            if (current_directory == 'pixel' && current_subdirectory == 'animation') {
-		                show_cms_window('upload_animation_form');
-		            } else {
-		                show_cms_window('upload_form');
-		            }
-	          }
-	      } else if (current_directory == 'pixel') {
-	          show_cms_window("pixel_button_upload_form");
-	      } else {
-	          show_cms_window();
-	      }
+	} else if (current_directory && current_subdirectory) {
+	    if (current_image) {
+		show_cms_window('edit_form');
+	    } else {
+		replaceChildNodes("upload_category", current_directory, " / ", current_subdirectory);
+		$("upload_form_element").setAttribute("action", "/upload-image/" + current_directory + "/" + current_subdirectory);
+		if (current_directory == 'pixel' && current_subdirectory == 'animation') {
+		    show_cms_window('upload_animation_form');
+		} else {
+		    show_cms_window('upload_form');
+		}
+	    }
+	} else if (current_directory == 'pixel') {
+	    show_cms_window("pixel_button_upload_form");
+	} else {
+	    show_cms_window();
+	}
     }
 }
 
@@ -1189,12 +1224,15 @@ function display_image(index) {
         replaceChildNodes('image_detail',
                           DIV({ style: 'margin-top: ' + top_padding + 'px; margin-left: ' + left_padding + 'px' },
                               may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img));
-        wait_for_images(function () { img.style.visibility = 'inherit' });
+        wait_for_images(function () { img.style.visibility = 'inherit'; });
     }
 
     if (logged_in) {
 	$("edit_client").value = current_image.client;
         $("edit_keywords").value = current_image.spider_keywords || "";
+
+	shop_show_form_for_image(current_image);
+	
         map(function(keyword) {
                 $('edit_' + keyword).checked = current_image.keywords[keyword] ? true : false;
             }, ['explicit']);
@@ -1302,7 +1340,7 @@ function init_application() {
     loadJSONDoc('/json-news-archive/quickhoney').addCallbacks(initialize_news_archive, alert);
 
     init_shop();
-    
+
     var path = 'home';
     if (document.location.pathname != '/') {
         path = document.location.pathname.substr(1);
@@ -1342,7 +1380,7 @@ function jump_to(path) {
 function poll_path() {
     var url_path = (document.location.href + "#").split("#")[1];
     if (url_path && (url_path != document.current_path)) {
-        if (pageTracker) {
+        if ((typeof pageTracker != "undefined") && pageTracker) {
             try {
                 pageTracker._trackPageview(document.location.href.replace("#", "/").replace(/^[^\/]+:\/\/[^\/]+/, ""));
             }

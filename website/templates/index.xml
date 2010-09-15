@@ -193,18 +193,12 @@
             <input type="checkbox" name="buy-t-shirt" value="1"/> Sell as t-shirt<br/>
             -->
           </p>
-          <p class="cms cms_shop">
-            Price:<br />
-            <span id="upload_price_select">
-              </span><br />
-              PDF shop file: <input type="file" name="pdf-image-file" /><br />
-          </p>
           <p class="cms">
             <input type="submit" name="upload" value="upload" />
           </p>
         </form>
       </div>
-      
+
       <div id="pixel_button_upload_form" class="cms_form">
         <form action="/upload-button" method="post"
               enctype="multipart/form-data" target="upload_result" onsubmit="do_button_upload(this.target);">
@@ -270,17 +264,32 @@
             <input type="checkbox" id="edit_buy-t-shirt" name="buy-t-shirt" value="1"/> Sell as t-shirt<br/>
             -->
           </p>
-          <p class="cms cms_shop">
-            Price:<br />
-            <span id="edit_price_select">
-              </span><br />
-              PDF shop file: <input id="edit_pdf_shop" type="file" name="pdf-image-file" /><br />
-          </p>
           <p class="cms">
             <button type="submit" onclick="do_edit();">edit</button>
             <button type="submit" onclick="do_delete();">delete</button>
           </p>
         </form>
+
+	<br />
+
+	<form id="shop_upload_form_element" action="/upload-shop" method="post"
+	      enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">
+	  <div class="cms_title">Upload shop PDF file</div>
+          <p class="cms cms_shop">
+            Price:<br />
+            <span id="upload_price_select">
+              </span><br />
+	      <span id="upload_pdf_field">
+              PDF shop file: <input type="file" name="pdf-image-file" /><br />
+	      <input type="checkbox" id="pdf-generate-upload" name="pdf-generate" value="1" /> PDF file generieren<br/>
+	      </span>
+          </p>
+          <p class="cms">
+            <input type="submit" name="action" value="upload" id="upload_pdf_button" />
+            <input type="submit" name="action" value="edit" id="edit_pdf_button" />
+	    <input type="submit" name="action" value="delete" id="delete_pdf_button" />
+          </p>
+	</form>
       </div>
       
       <div id="edit_news" class="cms_form">
@@ -338,7 +347,8 @@
     </div>
 
     <div id="cue"><img alt="" src="/static/spinner.gif" width="16" height="16"/></div>
-    
+
+    <!--
     <script type="text/javascript">
       var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
       document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -349,6 +359,7 @@
           pageTracker._trackPageview();
       }
     </script>
+    -->
     <script language="javascript" type="text/javascript">
       init();
     </script>
