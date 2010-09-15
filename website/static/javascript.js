@@ -102,14 +102,19 @@ function show_cms_window(name) {
 
     if (logged_in) {
         
-	      for (var i = 0; i < elements.length; i++) {
-	          if (elements[i].id) {
-		      elements[i].style.visibility = (elements[i].id == name) ? "visible" : "hidden";
-	          }
-	      }
+	for (var i = 0; i < elements.length; i++) {
+	    if (elements[i].id) {
+		elements[i].style.visibility = (elements[i].id == name) ? "visible" : "hidden";
+	    }
+	}
         
-	      $("login_status").style.visibility = 'visible';
-        
+	$("login_status").style.visibility = 'visible';
+	
+	if (name == "edit_form") {
+	    shop_show_form_for_image(current_image);
+	} else {
+	    shop_hide_form();
+	}
     } else {
 	      for (var i = 0; i < elements.length; i++) {
 	          if (elements[i].id) {
@@ -180,10 +185,7 @@ function do_edit() {
     return false;
 }
 
-function image_edited(json_data) {
-    if (json_data.result == 'error') {
-        alert(json_data.message);
-    }
+function after_image_edit() {
     show_cms_window("image_edited_form");
     setTimeout("show_cms_window('edit_form')", 2000);
 }
@@ -192,8 +194,7 @@ function image_edited(json_data) {
     if (json_data.result == 'error') {
         alert(json_data.message);
     }
-    show_cms_window("image_edited_form");
-    setTimeout("show_cms_window('edit_form')", 2000);
+    after_image_edit();
 }
 
 function news_edited(json_data) {
@@ -317,7 +318,13 @@ function shop_show_form_for_image(current_image) {
 	$("delete_pdf_button").style.visibility = "hidden";
     }
 }
-    
+
+function shop_hide_form() {
+    $("upload_pdf_field").style.visibility = "hidden";
+    $("upload_pdf_button").style.visibility = "hidden";
+    $("edit_pdf_button").style.visibility = "hidden";
+    $("delete_pdf_button").style.visibility = "hidden";    
+}
 
 /* news */
 
@@ -1260,8 +1267,6 @@ function display_image(index) {
 	$("edit_client").value = current_image.client;
         $("edit_keywords").value = current_image.spider_keywords || "";
 
-	shop_show_form_for_image(current_image);
-	
         map(function(keyword) {
                 $('edit_' + keyword).checked = current_image.keywords[keyword] ? true : false;
             }, ['explicit']);
