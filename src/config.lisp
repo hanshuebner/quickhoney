@@ -1,7 +1,7 @@
 (in-package :quickhoney.config)
 
 ;; URL für BASE HREFs
-(defparameter *website-url* "http://quickhoney.com")
+(defparameter *website-url* "http://quickhoney.ruinwesen.com")
 
 ;; this is kind of a dirty hack to get the root of the thirdparty directory
 (defparameter *thirdparty-directory*
@@ -16,3 +16,12 @@
 (defparameter *xml-catalog-directory* (asdf:system-relative-pathname :quickhoney #p"../xml/"))
 
 (defparameter *webserver-port* 8081)
+
+
+;; paypal configuration, should be encrypted so that it doesn't lie around in the repository
+
+(defparameter *paypal-user* "larve1_1284454514_biz_api1.bl0rg.net")
+
+(defparameter *paypal-password* "1284454523")
+
+(defparameter *paypal-signature* "AzfqBFUGNgH7udd-MtFLWWxWZWNgAPxKDWtYjO5EMo-JeQzKmQUEYPrW")
