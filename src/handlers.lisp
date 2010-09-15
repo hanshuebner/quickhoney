@@ -65,6 +65,10 @@
     (json:encode-object-element "width" (store-image-width image))
     (json:encode-object-element "height" (store-image-height image))
     (json:encode-object-element "client" (or (quickhoney-image-client image) ""))
+    (let ((product (quickhoney-image-pdf-product image)))
+      (when product
+	(json:encode-object-element "shop_file" (store-object-id product))
+	(json:encode-object-element "shop_price" (quickhoney-product-price product))))
     (when (typep image 'quickhoney-animation-image)
       (json:encode-object-element "animation_type"
                              (image-content-type (blob-mime-type (quickhoney-animation-image-animation image)))))
@@ -296,6 +300,32 @@
                                            (list (store-image-with-name "button-dummy"))))
                           (json:encode-array-element (store-object-id image)))))))))))))
 
+(defclass upload-shop-handler (admin-only-handler edit-object-handler)
+  ()
+  (:default-initargs :object-class 'quickhoney-image))
+
+(defmethod handle-object-form ((handler upload-shop-handler) (action (eql :edit)) image)
+  (with-query-params (price-select)
+    (format t "SET PRODUCT PRICE ~A~%" price-select)))
+
+(defmethod handle-object-form ((handler upload-shop-handler) (action (eql :delete)) image)
+  (format t "DELETE PRODUCT~%"))
+
+(defmethod handle-object-form ((handler upload-shop-handler) (action (eql :upload)) image)
+  (with-query-params (price-select pdf-generate)
+    (let ((pdf-file (request-uploaded-file "pdf-image-file")))
+      (format t "UPLOAD PRODUCT ~A ~A~%" pdf-file price-select)
+      (when pdf-generate
+	;; XXX generate PDF
+	)
+      
+      (when pdf-file
+	#+nil
+	(make-blob-from-file (upload-pathname pdf-file) 'quickhoney-pdf-product
+			     :price (parse-integer price-select :junk-allowed t)
+			     :type :pdf
+			     :image image)))))
+
 (defclass upload-image-handler (admin-only-handler prefix-handler)
   ())
 
@@ -312,9 +342,8 @@
     t))
 
 (defmethod handle ((handler upload-image-handler))
-  (with-query-params (client spider-keywords price-select)
-    (let ((uploaded-file (request-uploaded-file "image-file"))
-          (pdf-file (request-uploaded-file "pdf-image-file")))
+  (with-query-params (client spider-keywords)
+    (let ((uploaded-file (request-uploaded-file "image-file")))
       (handler-case
           (progn
             (unless uploaded-file
@@ -334,11 +363,6 @@
                                                                 :client client
                                                                 :spider-keywords spider-keywords))))
 
-		  (when pdf-file
-		    (make-blob-from-file (upload-pathname pdf-file) 'quickhoney-pdf-product
-					 :price (parse-integer price-select :junk-allowed t)
-					 :type :pdf
-					 :image image))
 					 
                   (with-http-response ()
                     (with-http-body ()

@@ -38,6 +38,7 @@
        ("/upload-animation" upload-animation-handler)
        ("/upload-button" upload-button-handler)
        ("/upload-news" upload-news-handler)
+       ("/upload-shop" upload-shop-handler)
 
        ("/rss" rss-handler)
        ("/admin" admin-handler)
