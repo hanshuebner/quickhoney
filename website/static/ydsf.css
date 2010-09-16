@@ -7,13 +7,13 @@
 	display: block;
 	position: relative;
 	margin: 4px -4px -4px 4px;
-	background: url(shadow-grid.gif) repeat;
+/*	background: url(shadow-grid.gif) repeat; */
 }
 
 /* ie6 ignores this selector */
 html>body .ydsf {
 	margin: 10px -10px -10px 10px;
-	background: url(shadow.png) right bottom no-repeat;
+/*	background: url(shadow.png) right bottom no-repeat; */
 }
 
 /* shadow corners */
@@ -61,7 +61,7 @@ html>body .ydsf .inner {
 	position: relative;
 	border: 1px solid #999;
 	padding: 10px;
-	background: #fff url(gradient.jpg) left top repeat-x;
+/*	background: #fff url(gradient.jpg) left top repeat-x; */
 }
 
 .clear {
