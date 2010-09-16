@@ -151,7 +151,7 @@ function make_shop_overlay(image, json) {
 				 'target': '_parent',
 				'href': paypalLink },
 				IMG({'src': buttonLink}))),
-			  BR(), BR()
+			  BR())
 		      )));
 
     wait_for_images(hide_cue);
