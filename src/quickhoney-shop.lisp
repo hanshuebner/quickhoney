@@ -53,7 +53,7 @@
 (defclass upload-shop-handler (admin-only-handler edit-object-handler)
   ()
   (:default-initargs :object-class 'quickhoney-image))
-.
+
 (defmethod handle-object-form :around ((handler upload-shop-handler) action image)
   (handler-case
       (with-http-response ()
