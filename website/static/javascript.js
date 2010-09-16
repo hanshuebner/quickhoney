@@ -277,7 +277,7 @@ function init_shop() {
     $("upload_price_select").innerHTML = make_price_selector();
 }
 
-var pdf_prices = [0, 12, 15];
+var pdf_prices = [12, 15];
 
 function make_price_selector() {
     var price_options = '<select name="price-select" id="pdf_price_select" size="1">';
