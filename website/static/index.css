@@ -695,3 +695,19 @@ img#pricetag-medium {
     left: 207px;
     z-index: 2;
 }
+
+img.image_pricetag_micro {
+    width: 11px;
+    height: 31px;
+    position: absolute;
+    right: 15px;
+    z-index: 2;
+}
+
+img.image_pricetag {
+    width: 17px;
+    height: 41px;
+    position: absolute;
+    bottom: -41px;
+    z-index: 2;
+}

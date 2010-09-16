@@ -1125,8 +1125,33 @@ function display_thumbnail_page() {
                                      width: cell_width,
                                      height: cell_height});
             imageElement.src = '/image/' + encodeURI(image.name) + '/cell,ffffff,' + cell_width + ',' + cell_height + ',8';
-	    thumbnail_nodes.push(A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name) },
-                                   imageElement));
+	    var priceTag = null;
+	    if ((image.shop_file != undefined) && (image.shop_price != undefined)) {
+		var border_width = 5;
+		var img_ratio = Math.max(image.width / (cell_width - (2 * border_width)),
+					 image.height / (cell_height - (2 * border_width)));
+		var tb_height = Math.min(image.height, Math.round(image.height / img_ratio));
+		var y_offset = Math.round((cell_height - tb_height) / 2);
+		var tb_width = Math.min(image.width, Math.round(image.width / img_ratio));
+		var x_offset = Math.round((cell_width - tb_width) / 2);
+
+		var right_offset = 5 + x_offset;
+		var top_offset = -cell_height  + 13 + y_offset + 3;
+		log("cell_height " + cell_height + " tb_height " + tb_height + " y_offset " + y_offset);
+		log("cell_width " + cell_width + " tb_width " + tb_width + " y_offset " + x_offset);
+		log("right " + right_offset + " top " + top_offset);
+		
+		priceTag = IMG({'class': 'image_pricetag_micro',
+				'src': "/image/pricetag-micro",
+			       'style': "top: " + top_offset + "px; right: " + right_offset + "px"});
+	    }
+
+	    var imageLink = A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name) },
+
+                              imageElement
+			     );
+	    var imageSpan = SPAN({'style': "position:relative"}, imageLink, priceTag);
+	    thumbnail_nodes.push(imageSpan);
         }
         thumbnail_nodes.push(BR());
     }
@@ -1257,9 +1282,19 @@ function display_image(index) {
                         height: display_height,
                         style: 'visibility: hidden',
                         src: '/image/' + encodeURI(current_image.name) + imageproc_ops });
-        replaceChildNodes('image_detail',
-                          DIV({ style: 'margin-top: ' + top_padding + 'px; margin-left: ' + left_padding + 'px' },
-                              may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img));
+
+	var priceTag = null;
+	if ((current_image.shop_file != undefined) && (current_image.shop_price != undefined)) {
+	    priceTag = IMG({'class': 'image_pricetag',
+			    'src': "/image/pricetag-small-" + current_image.shop_price,
+			    'style': "right: " + (648 - display_width) / 2 + "px;",
+			    'onclick': "make_shop_overlay(current_image)"});
+	}
+	
+	var divNode = DIV({ style: 'position: relative; margin-top: ' + top_padding + 'px; margin-left: ' + left_padding + 'px' },
+                              may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img,
+			 priceTag);
+        replaceChildNodes('image_detail', divNode);
         wait_for_images(function () { img.style.visibility = 'inherit'; });
     }
 
@@ -1474,10 +1509,10 @@ function make_overlay(id, title, width)
     overlay.style.visibility = 'inherit';
 }
 
-function make_shop_overlay() {
+function make_shop_overlay(image) {
     make_overlay('buy-file', 'Buy Art as Vector PDF File', 426,
                  FORM({ action: '#', onsubmit: 'return false' },
-                      SPACER("Download Artwork ", ARTWORK_NAME(current_image.name), " for one-time private use only.  ",
+                      SPACER("Download Artwork ", ARTWORK_NAME(image.name), " for one-time private use only.  ",
                              "Please read our ",
                              A({ href: '/static/user-agreement.html', target: 'user-agreement' }, "User Agreement"),
                              " and tick the box below to indicate that you agree to be bound to it.",
@@ -1485,12 +1520,10 @@ function make_shop_overlay() {
                              INPUT({ type: 'checkbox', name: 'agree-to-license'}),
                              " I have read and understood the 'User Agreement' and agree to be bound to the terms set forth in it",
                              BR(), BR(),
-                             PRICE('45 €'), NOTICE(' (inside EU, incl. tax)*'), BR(),
-                             PRICE('37.82 €'), NOTICE(' (outside EU, tax free)*'), BR(),
-                             BR(),
-                             buy_product_button(buy_file),
-                             BR(), BR(),
-                             NOTICE("Please note:  Our shop is operating from Germany, that's why there is a sales tax within Europe and none outside"))));
+                             PRICE(image.shop_price + "$"), 
+                             BR()
+//                             buy_product_button(buy_file),
+			    )));
 }
 
 INFOTITLE = partial(SPAN, { 'class': 'notice' });
