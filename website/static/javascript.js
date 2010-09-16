@@ -187,6 +187,7 @@ function do_edit() {
 
 function after_image_edit() {
     show_cms_window("image_edited_form");
+    display_current_image();
     setTimeout("show_cms_window('edit_form')", 2000);
 }
 
@@ -1199,6 +1200,10 @@ function display_image(index) {
 
     log('display_image index ' + index);
 
+    display_current_image();
+}
+
+function display_current_image() {
     overlay_remove();
     display_path();
     make_images_navbar();
