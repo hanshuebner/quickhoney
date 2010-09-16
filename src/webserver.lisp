@@ -42,6 +42,7 @@
 
        ("/paypal-success" paypal-success-handler)
        ("/paypal-cancel" paypal-cancel-handler)
+       ("/paypal-txn" paypal-transaction-handler)
 
        ("/pdf-admin" quickhoney-admin-pdf-handler)
        ("/pdf-client" quickhoney-client-pdf-handler)
