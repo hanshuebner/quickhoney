@@ -13,6 +13,7 @@
      #:*paypal-user*
      #:*paypal-password*
      #:*paypal-signature*
+     #:*paypal-secure-merchant-id*
      ))
 
 (defpackage :quickhoney.imageproc

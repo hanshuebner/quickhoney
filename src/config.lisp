@@ -25,3 +25,6 @@
 (defparameter *paypal-password* "1284454523")
 
 (defparameter *paypal-signature* "AzfqBFUGNgH7udd-MtFLWWxWZWNgAPxKDWtYjO5EMo-JeQzKmQUEYPrW")
+
+(defparameter *paypal-secure-merchant-id* "W7PDYJMZUSC5E")
+
