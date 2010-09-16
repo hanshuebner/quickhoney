@@ -68,7 +68,9 @@
     (let ((product (quickhoney-image-pdf-product image)))
       (when product
 	(json:encode-object-element "shop_file" (store-object-id product))
-	(json:encode-object-element "shop_price" (quickhoney-product-price product))))
+	(json:encode-object-element "shop_price" (quickhoney-product-price product))
+	(json:encode-object-element "shop_size" (blob-size product))
+	))
     (when (typep image 'quickhoney-animation-image)
       (json:encode-object-element "animation_type"
                              (image-content-type (blob-mime-type (quickhoney-animation-image-animation image)))))

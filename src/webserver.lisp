@@ -40,6 +40,9 @@
        ("/upload-news" upload-news-handler)
        ("/upload-shop" upload-shop-handler)
 
+       ("/paypal-success" paypal-success-handler)
+       ("/paypal-cancel" paypal-cancel-handler)
+
        ("/pdf-admin" quickhoney-admin-pdf-handler)
        ("/pdf-client" quickhoney-client-pdf-handler)
 
