@@ -32,6 +32,7 @@
        ("/json-edit-news" json-edit-news-item-handler)
        ("/json-news-archive" json-news-archive-handler)
        ("/json-news" json-news-handler)
+       ("/json-paypal" json-paypal-checkout-handler)
 
        ("/upload-image" upload-image-handler)
        ("/upload-animation" upload-animation-handler)

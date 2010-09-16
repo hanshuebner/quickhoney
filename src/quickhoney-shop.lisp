@@ -29,6 +29,10 @@
     :documentation
     "Product that this transaction relates to")
    (transaction-id :read)
+   (download-id :read
+		:index-type unique-index
+		:index-reader transaction-with-download-id
+		:documentation "Unique and obfuscated ID used to handle PDF downloads")
    (date :read))
   (:documentation
    "Transaction class when a product is bought over paypal. Fields are speculative for now"))
@@ -151,10 +155,13 @@
 				:width (round (* ratio width)) :height (round (* ratio height)))))
 		     (:p ((:a :href "javascript:window.close()") "ok"))))))))))))
 
+;;; PDF Handlers
+
 (defclass quickhoney-admin-pdf-handler (admin-only-handler object-handler)
   ()
   (:default-initargs :object-class 'quickhoney-pdf-product))
 
-(defclass quickhoney-client-pdf-handler (prefix-handler)
-  ())
-  
+(defclass quickhoney-client-pdf-handler (object-handler)
+  ()
+  (:default-initargs :query-function #'transaction-with-download-id))
+

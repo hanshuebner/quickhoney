@@ -11,3 +11,16 @@
    :useraction "commit"
    :currencycode "USD"))
 
+(defclass json-paypal-checkout-handler (page-handler)
+  ())
+
+(defmethod handle ((handler json-paypal-checkout-handler))
+  (with-json-response ()
+    (json:with-object-element ("queryResult")
+      (json:with-object ()
+	(with-query-params (price)
+	  (json:encode-object-element
+	   "paypalLink"
+	   ;;(cl-paypal:make-express-checkout-url price *website-url* )
+	   "/foobar"
+	   ))))))
