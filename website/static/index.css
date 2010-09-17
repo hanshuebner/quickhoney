@@ -119,6 +119,11 @@ a.debugger {
 #menu.contact a#m_contact img.selected { visibility: inherit; }
 #menu.contact a#m_contact img.unselected { visibility: hidden }
 
+#menu.paypal a img { background-color: #ff00ff; }
+.paypal a { color: #ff00ff; }
+#menu.paypal a#m_pixel img.selected { visibility: inherit; }
+#menu.paypal a#m_pixel img.unselected { visibility: hidden }
+
 #m_home { top: 30px; left: 36px; }
 /*
 #m_pixel { top: 36px; left: 247px; }
@@ -458,7 +463,7 @@ input.invisibleSubmit {
 	font-size: 110%;
 }
 
-#overlay {
+.overlay {
 	position: absolute;
 	z-index: 100;
 	left: 36px;
@@ -468,87 +473,87 @@ input.invisibleSubmit {
 	padding: 0px;
 }
 
-#overlay #close {
+.overlay #close {
 	position: absolute;
 	top: 12px;
 }
 
-#overlay h1 {
+.overlay h1 {
 	font-size: 120%;
 	margin-top: 12px;
 	padding-left: 10px;
 }
 
-#overlay.pixel h1, #overlay.pixel h2, #overlay.pixel .artwork-name {
+.overlay.pixel h1, .overlay.pixel h2, .overlay.pixel .artwork-name {
 	color: #ff00ff;
 }
 
-#overlay.vector h1, #overlay.vector h2, #overlay.vector .artwork-name {
+.overlay.vector h1, .overlay.vector h2, .overlay.vector .artwork-name {
 	color: #00ccff;
 }
 
-#overlay.pen h1, #overlay.pen h2, #overlay.pen .artwork-name {
+.overlay.pen h1, .overlay.pen h2, .overlay.pen .artwork-name {
 	color: #ff0000;
 }
 
-#overlay h1.confirmation {
+.overlay h1.confirmation {
 	padding: 20px;
         text-align: center;
 	color: #000;
         background-color: #FFFF33;
 }
 
-#overlay.home h1, #overlay.home h2 {
+.overlay.home h1, .overlay.home h2 {
     color: #845ef9;
 }
 
-#overlay p.pdf-info {
+.overlay p.pdf-info {
     width: 230px;
     padding: 10px;
     padding-top: 0px;
 }
 
 
-#overlay #hey {
+.overlay #hey {
 	padding: 10px 15px 10px 10px;
 }
 
-#overlay #hey #hey_from, #overlay #hey #hey_to, #overlay #hey textarea {
+.overlay #hey #hey_from, .overlay #hey #hey_to, .overlay #hey textarea {
 	width: 100%;
 }
 
-#overlay #hey #hey_send {
+.overlay #hey #hey_send {
 	margin-top: 5px;
 }
 
-#overlay #shoot div {
+.overlay #shoot div {
 	margin: 0px 5px 1em 5px;
 }
 
-#overlay #shoot img {
+.overlay #shoot img {
 	margin: 8px;
 }
 
-#overlay span.notice {
+.overlay span.notice {
 	color: #999999;
 }
 
-#overlay span.price {
+.overlay span.price {
 	color: #33cc00;
 }
 
-#overlay div.spacer {
+.overlay div.spacer {
 	padding: 12px;
 }
 
-#overlay td.t-shirt-sample {
+.overlay td.t-shirt-sample {
 	width: 196px;
 	height: 132px;
 	background-image: url(/image/t-shirt-sample-background);
 	background-repeat: no-repeat;
 }
 
-#overlay img#t-shirt-sample {
+.overlay img#t-shirt-sample {
 	padding-left: 44px;
 	padding-top: 16px;
 }
