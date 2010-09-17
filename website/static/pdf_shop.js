@@ -110,8 +110,9 @@ function check_eula_agreed() {
 
 var pricetag_animation;
 
-function pulsate_pricetag() {
-    pricetag_animation = pulsate('pricetag-small', {'pulses': 100, duration: 100, afterFinish: pulsate_pricetag});
+function pulsate_pricetag(id) {
+    var pricetag = $('pricetag-small') || $('pricetag-micro-' + id);
+    pricetag_animation = pulsate(pricetag, {'pulses': 100, duration: 100, afterFinish: pulsate_pricetag});
 }
 
 function pulsate_pricetag_stop() {
@@ -120,7 +121,7 @@ function pulsate_pricetag_stop() {
 }
 
 function init_shop_overlay(image) {
-    pulsate_pricetag();
+    pulsate_pricetag(image.id);
     submit_json('/json-paypal-checkout?price=' + image.shop_price +
 		'&image=' + image.id +
 		'&color=' + pages[current_directory].link_color,

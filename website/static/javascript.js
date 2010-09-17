@@ -1020,6 +1020,7 @@ function display_thumbnail_page() {
 		priceTag = A({ href: window.location.hash},
 			     IMG({'class': 'image_pricetag_micro',
 				  'src': "/image/pricetag-micro",
+				  'id': 'pricetag-micro-' + image.id,
 				  'onclick': "init_shop_overlay(query_result_pages[" +
 				  current_page_index +"][" + row_index + "][" + image_index + "])",
 				  'style': "top: " + top_offset + "px; right: " + right_offset + "px"}));
