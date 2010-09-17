@@ -1,6 +1,10 @@
 // Copyright 2005-2008 Hans Huebner, hans.huebner@gmail.com
 // All rights reserved.
 
+/* safari global variable - used to trigger some compatibility hacks */
+
+var safari = false;
+
 /* configuration */
 
 var max_news_items = 50;        /* maximum number of news items to display */
@@ -47,32 +51,15 @@ var editorToolbarConfig = {
     ]
 };
 
-/* safari global variable - used to trigger some compatibility hacks */
-
-var safari = false;
-
 /* logged_in - will be set when the user has CMS access */
 
 var logged_in;
 var application_initialized = false;
+var news_editor;
 
 /* current colors */
 
-/* ie 5 / mac compatibility routine */
-
-function push(array, item) {
-    array[array.length] = item;
-}
-
-/* the usual shortcut */
-
-function $(id) {
-    return document.getElementById(id);
-}
-
 /* login status */
-
-var news_editor;
 
 function login_status(json_result) {
 
@@ -258,20 +245,6 @@ function set_clients(json_data) {
     $("upload_client_select").innerHTML = make_clients_selector('upload_client');
     $("upload_animation_client_select").innerHTML = make_clients_selector('upload_client');
     $("edit_client_select").innerHTML = make_clients_selector('edit_client');
-}
-
-/* shop */
-
-var cart = {
-    products: [],
-    add: function (product) {
-        this.products.push(product);
-        $('checkout').style.visibility = 'visible';
-    }
-};
-
-function shop () {
-    directory('shop', 'shop');
 }
 
 /* news */
@@ -607,9 +580,10 @@ var pages = {
                      partial(directory, 'pen')),
     news: new Page('30be01',
                    news),
+    paypal: new Page('ff00ff', show_paypal_page),
+    /* no shopping cart for now
     shop: new Page('0054ff',
                    shop),
-    /* no shopping cart for now
     cart: new Page('0054ff',
                    show_shopping_cart),
      */
@@ -825,14 +799,6 @@ function reveal_buttons_nicely(images, n) {
     }
 }
 
-function seq(start, end) {
-    var retval = [];
-    for (var i = start; i < end; i++) {
-        retval.push(i);
-    }
-    return retval;
-}
-
 function load_button_images(callback) {
 
     loadJSONDoc('/json-buttons'
@@ -846,7 +812,7 @@ function load_button_images(callback) {
             }, alert);
 }
 
-function directory(directory_name, subpath) {
+function directory(directory_name, subpath, image_name) {
 
     log('directory: ' + directory_name + ' subpath: ' + subpath + ' current_directory: ' + current_directory);
 
@@ -864,6 +830,9 @@ function directory(directory_name, subpath) {
         } else {
             document.show_picture = components[1];
         }
+	if (image_name != undefined) {
+	    document.show_picture = image_name;	    
+	}
         subdirectory(components[0]);
     } else {
         show_directory_buttons(directory_name);
@@ -991,22 +960,6 @@ function make_pages_navbar() {
     } else {
 	replaceChildNodes("page_navbar");
 	replaceChildNodes("result_page_count");
-    }
-}
-
-function wait_for_images(callback) {
-    var waiting = 0;
-    map(function (image) {
-            if (!image.complete) {
-                waiting++;
-            }
-        }, getElementsByTagAndClassName('img', null));
-
-    if (waiting == 0 || window.opera) {
-        hide_cue();
-        callback();
-    } else {
-        callLater(.2, partial(wait_for_images, callback));
     }
 }
 
@@ -1416,12 +1369,11 @@ function overlay_remove()
  * are added to the overlay window.
  */
 
-function make_overlay(id, title, width)
-{
-    log('make_overlay ' + id);
-    var overlay = $('overlay');
+function make_overlay_content(overlay, id, title, width) {
+    log("make_overlay " + id + " " + overlay);
+    log(JSON.stringify(arguments));
     overlay.style.top = '144px';
-    overlay.className = current_directory;
+    overlay.className = current_directory + " overlay";
     var inner = DIV({ 'class': 'inner', style: 'background: white'},
                     H1(null, title),
                     IMG({ src: '/image/overlay-close/color,000000,' + pages[current_directory].link_color,
@@ -1432,13 +1384,21 @@ function make_overlay(id, title, width)
                           inner));
     overlay.style.width = width + 'px';
     $('close').style.left = (width - 23) + 'px';
-    $('close').onclick = overlay_remove;
+    $('close').onclick = function () { overlay.style.visibility = 'hidden'; replaceChildNodes(overlay); };
     var elements = [];
-    for (var i = 3; i < arguments.length; i++) {
+    for (var i = 4; i < arguments.length; i++) {
         elements.push(arguments[i]);
     }
     appendChildNodes(inner, DIV({id: id}, elements));
     overlay.style.visibility = 'inherit';
+}
+
+function make_overlay(id, title, width)
+{
+    log('make_overlay ' + id);
+    log(JSON.stringify(arguments));
+    var overlay = $('overlay');
+    partial(make_overlay_content, overlay).apply(this, arguments);
 }
 
 function make_post_mail_form() {
@@ -1689,12 +1649,6 @@ NOTICE = partial(SPAN, { 'class': 'notice' });
 PRICE = partial(SPAN, { 'class': 'price' });
 SPACER = partial(DIV, { 'class': 'spacer' });
 ARTWORK_NAME = partial(SPAN, { 'class': 'artwork-name' });
-
-function remove_overlay()
-{
-    $('overlay').style.visibility = 'hidden';
-    replaceChildNodes('overlay');
-}
 
 function recolored_image_path(name)
 {
