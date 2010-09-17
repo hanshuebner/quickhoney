@@ -1434,8 +1434,7 @@ function make_overlay_content(overlay, options) {
     return overlay;
 }
 
-function make_overlay(id, title, width)
-{
+function make_overlay(id, title, width) {
     log('make_overlay ' + id);
     var overlay = $('overlay');
     var args = [];

@@ -115,7 +115,7 @@ function pulsate_pricetag(id) {
     pricetag_animation = pulsate(pricetag, {'pulses': 100, duration: 100, afterFinish: pulsate_pricetag});
 }
 
-function pulsate_pricetag_stop() {
+function pulsate_pricetag_stop(id) {
     pricetag_animation.cancel();
     var pricetag = $('pricetag-small') || $('pricetag-micro-' + id);
     appear(pricetag);    
@@ -148,7 +148,7 @@ function make_shop_overlay(image, json) {
 			     width: 426,
 			     fade: true,
 			     waitForImages: true,
-			     onShow:     pulsate_pricetag_stop
+			     onShow:     partial(pulsate_pricetag_stop, image.id)
 			 },
                  FORM({ action: '#', onsubmit: 'return false' },
 		      DIV({'align': 'center'},
