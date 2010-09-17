@@ -117,7 +117,8 @@ function pulsate_pricetag(id) {
 
 function pulsate_pricetag_stop() {
     pricetag_animation.cancel();
-    appear('pricetag-small');    
+    var pricetag = $('pricetag-small') || $('pricetag-micro-' + id);
+    appear(pricetag);    
 }
 
 function init_shop_overlay(image) {
