@@ -1,3 +1,14 @@
+/* shop */
+
+var cart = {
+    products: [],
+    add: function (product) {
+        this.products.push(product);
+        $('checkout').style.visibility = 'visible';
+    }
+};
+
+
 function buy_file()
 {
     cart.add([ 'file', current_image.name ]);
