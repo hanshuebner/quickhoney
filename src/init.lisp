@@ -45,6 +45,8 @@ it if it is missing."
   (actor-start (make-instance 'cron-actor))
 
   (paypal-init :user *paypal-user* :password *paypal-password* :signature *paypal-signature*)
+  ;; XXX for test purposes
+  (setf cl-paypal:*paypal-max-transaction-per-ip* 100)
   
   (when (probe-file "site-config.lisp")
     (format t "; loading site configuration file~%")
