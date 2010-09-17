@@ -1172,6 +1172,7 @@ function display_current_image() {
 			 },
 			 IMG({'class': 'image_pricetag',
 			      'src': "/image/pricetag-small-" + current_image.shop_price,
+			      'id': "pricetag-small",
 			      'style': "right: " + (648 - display_width) / 2 + "px;",
 			      'onclick': "init_shop_overlay(current_image)"}));
 	}
@@ -1369,33 +1370,78 @@ function overlay_remove()
  * are added to the overlay window.
  */
 
-function make_overlay_content(overlay, id, title, width) {
+function fade_out_page(to) {
+    to = to || 0.3;
+    fade('menu', {to: to});
+    fade('path-and-version', {to: to});
+    fade('image_browser', {to: to});
+    fade('footer', {to: to});
+}
+
+function make_overlay_content(overlay, options) {
+    log("options " + JSON.stringify(options));
+    var id = options.id;
+    var title = options.title;
+    var width = options.width;
+    var closeID = 'close' + id;
+
+    overlay.style.visibility = 'hidden';
     overlay.style.top = '144px';
     overlay.className = current_directory + " overlay";
+
     var inner = DIV({ 'class': 'inner', style: 'background: white'},
                     H1(null, title),
                     IMG({ src: '/image/overlay-close/color,000000,' + pages[current_directory].link_color,
-                          id: 'close', width: 13, height: 13}),
+                          id: closeID, 'class': 'close',
+			  width: 13, height: 13}),
                     BR());
     replaceChildNodes(overlay,
                       DIV({ 'class': 'ydsf' },
                           inner));
     overlay.style.width = width + 'px';
-    $('close').style.left = (width - 23) + 'px';
-    $('close').onclick = function () { overlay.style.visibility = 'hidden'; replaceChildNodes(overlay); };
+    $(closeID).style.left = (width - 23) + 'px';
+    $(closeID).onclick = function () {
+	overlay.style.visibility = 'hidden';
+	replaceChildNodes(overlay);
+	if (options.fade) {
+	    fade_out_page(1.0);
+	}
+	if (options.callback != undefined) {
+	    options.callback();
+	}
+    };
     var elements = [];
-    for (var i = 4; i < arguments.length; i++) {
+    for (var i = 2; i < arguments.length; i++) {
         elements.push(arguments[i]);
     }
     appendChildNodes(inner, DIV({id: id}, elements));
-    overlay.style.visibility = 'inherit';
+
+    var showOverlay = function () {
+	if (options.fade) {
+	    fade_out_page(0.3);
+	}
+	if (options.onShow) {
+	    options.onShow();
+	}
+	overlay.style.visibility = 'inherit';
+    };
+    if (options.waitForImages) {
+	wait_for_images(showOverlay);
+    } else {
+	showOverlay();
+    }
+    return overlay;
 }
 
 function make_overlay(id, title, width)
 {
     log('make_overlay ' + id);
     var overlay = $('overlay');
-    partial(make_overlay_content, overlay).apply(this, arguments);
+    var args = [];
+    for (var i = 3; i < arguments.length; i++) {
+	args[i-3] = arguments[i];	
+    }
+    partial(make_overlay_content, overlay, { id: id, title: title, width: width}).apply(this, args);
 }
 
 function make_post_mail_form() {

@@ -473,7 +473,7 @@ input.invisibleSubmit {
 	padding: 0px;
 }
 
-.overlay #close {
+.overlay .close {
 	position: absolute;
 	top: 12px;
 }

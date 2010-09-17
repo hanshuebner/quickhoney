@@ -98,16 +98,6 @@ function handle_eula_agreed() {
     }
 }
 
-function init_shop_overlay(image) {
-    show_cue();
-    submit_json('/json-paypal-checkout?price=' + image.shop_price +
-		'&image=' + image.id +
-		'&color=' + pages[current_directory].link_color,
-		null, // no form
-		partial(make_shop_overlay, image)
-	       );
-}
-
 function check_eula_agreed() {
     var eula_checkbox = $("eula-checkbox");
     if (!eula_checkbox.checked) {
@@ -118,17 +108,46 @@ function check_eula_agreed() {
     }
 }
 
+var pricetag_animation;
+
+function pulsate_pricetag() {
+    pricetag_animation = pulsate('pricetag-small', {'pulses': 100, duration: 100, afterFinish: pulsate_pricetag});
+}
+
+function pulsate_pricetag_stop() {
+    pricetag_animation.cancel();
+    appear('pricetag-small');    
+}
+
+function init_shop_overlay(image) {
+    pulsate_pricetag();
+    submit_json('/json-paypal-checkout?price=' + image.shop_price +
+		'&image=' + image.id +
+		'&color=' + pages[current_directory].link_color,
+		null, // no form
+		partial(make_shop_overlay, image)
+	       );
+}
+
 function make_shop_overlay(image, json) {
     if (json.error) {
 	// XXX error while doing paypal stuff
 	alert("error while paypal: " + json.error);
 	return;
     }
-    
+
     var paypalLink = json.paypalLink;
     var buttonLink = json.buttonLink;
     log("link " + paypalLink);
-    make_overlay('buy-file', 'Buy Art as Vector PDF File', 426,
+    var overlay = make_overlay_content($('overlay'),
+			 {
+			     id: 'buy-file',
+			     title: 'Buy Art as Vector PDF File',
+			     width: 426,
+			     fade: true,
+			     waitForImages: true,
+			     onShow:     pulsate_pricetag_stop
+			 },
                  FORM({ action: '#', onsubmit: 'return false' },
 		      DIV({'align': 'center'},
 			   IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})),
@@ -157,8 +176,8 @@ function make_shop_overlay(image, json) {
 				IMG({'src': buttonLink}))),
 			  BR()
 		      )));
-
-    wait_for_images(hide_cue);
+    overlay.style.visibility = 'hidden';
+    wait_for_images(function () {overlay.style.visibility = 'visible';});
 }
 
 INFOTITLE = partial(SPAN, { 'class': 'notice' });
@@ -182,7 +201,10 @@ function make_paypal_overlay(json) {
     if (json.valid) {
 	var image = json.image;
 	var pdfLink = partial(A, {'href': "/pdf-client/" + json.token, 'target': '_blank'});
-	make_overlay_content(overlay2, 'buy-file', 'Download your Vector PDF File!', 426,
+	make_overlay_content(overlay2, { id: 'buy-file',
+					 title: 'Download your Vector PDF File!',
+					 width: 426,
+					 fade: true },
 		     DIV({'align': 'center'},
 			 pdfLink(IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}))),
                      SPACER(
@@ -190,8 +212,8 @@ function make_paypal_overlay(json) {
 			 "Filetype: Vector PDF", BR(),
 			 "Filesize: " + format_file_size(image.shop_size), BR(),
 			 "Price: $" + image.shop_price, BR(),
-			 "Bought on: " + "", BR(),
-			 "Download valid until: " + "", BR(),
+			 "Bought on: " + json.bought_on, BR(),
+			 "Download valid until: " + json.valid_until, BR(),
 			 BR(),
 			 
 			 "Download Artwork ", pdfLink(ARTWORK_NAME(image.name)), " for one-time private use only.  ",
@@ -199,7 +221,12 @@ function make_paypal_overlay(json) {
 		     ));
     } else if (json.expired && (json.status == "successful")) {
 	var image = json.image;
-	make_overlay_content(overlay2, 'buy-file', 'Your Vector PDF File has expired!', 426,
+	make_overlay_content(overlay2,
+			     { id: 'buy-file',
+			       title: 'Your Vector PDF File has expired!',
+			       width: 426,
+			       fade: true
+			       },
 		     DIV({'align': 'center'},
 			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})),
                      SPACER(
@@ -207,8 +234,8 @@ function make_paypal_overlay(json) {
 			 "Filetype: Vector PDF", BR(),
 			 "Filesize: " + format_file_size(image.shop_size), BR(),
 			 "Price: $" + image.shop_price, BR(),
-			 "Bought: " + "",
-			 "Download valid until: " + "", BR(),
+			 "Bought: " + json.bought_on, BR(),
+			 "Download valid until: " + json.valid_until, BR(),
 			 BR(),
 			 
 			 "Sadly, your PDF download has expired!",
@@ -218,7 +245,11 @@ function make_paypal_overlay(json) {
 	/* do nothing */
     } else {
 	var image = json.image;
-	make_overlay_content(overlay2, 'buy-file', 'Wrong Paypal Transaction!', 426,
+	make_overlay_content(overlay2,
+			     {id: 'buy-file',
+			      title: 'Wrong Paypal Transaction!',
+			      width: 426,
+			      fade:true },
 		     DIV({'align': 'center'},
 			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})),
                      SPACER(
