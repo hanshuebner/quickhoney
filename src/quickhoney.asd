@@ -42,7 +42,7 @@
                (:file "twitter" :depends-on ("packages"))
                (:file "handlers" :depends-on ("layout" "config" "image" "news" "quickhoney-shop"))
                (:file "tags" :depends-on ("image"))
-               (:file "paypal-handlers" :depends-on ("config"))
+               (:file "paypal-handlers" :depends-on ("config" "handlers"))
                (:file "webserver" :depends-on ("handlers" "paypal-handlers"))
 
                (:file "daily" :depends-on ("config"))
