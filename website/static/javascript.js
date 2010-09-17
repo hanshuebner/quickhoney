@@ -1370,8 +1370,6 @@ function overlay_remove()
  */
 
 function make_overlay_content(overlay, id, title, width) {
-    log("make_overlay " + id + " " + overlay);
-    log(JSON.stringify(arguments));
     overlay.style.top = '144px';
     overlay.className = current_directory + " overlay";
     var inner = DIV({ 'class': 'inner', style: 'background: white'},
@@ -1396,7 +1394,6 @@ function make_overlay_content(overlay, id, title, width) {
 function make_overlay(id, title, width)
 {
     log('make_overlay ' + id);
-    log(JSON.stringify(arguments));
     var overlay = $('overlay');
     partial(make_overlay_content, overlay).apply(this, arguments);
 }
