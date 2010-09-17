@@ -196,6 +196,42 @@
   ()
   (:default-initargs :object-class 'quickhoney-image))
 
+(defmacro with-html-email ((&rest attachments) &rest body)
+  (let ((s (gensym "s")))
+    (if attachments
+	`(make-instance 'cl-mime:multipart-mime
+			:subtype "mixed"
+			:content (list
+				  (make-instance 'cl-mime:mime
+						 :type "text" :subtype "html"
+						 :content
+						 (with-output-to-string (,s)
+						   (html-stream ,s
+								,@body)))
+				  ,@attachments))
+	`(make-instance 'cl-mime:mime
+			:type "text" :subtype "html"
+			:content (with-output-to-string (,s)
+				   (html-stream ,s ,@body))))))
+
+(defun make-text-html-email (text html)
+  (make-instance 'cl-mime:multipart-mime
+		 :subtype "alternative"
+		 :content (list
+			   (make-instance 'cl-mime:mime
+					  :type "text" :subtype "plain"
+					  :content text)
+			   html
+			   )))
+
+(defmethod image-to-mime ((image store-image))
+  (make-instance 'cl-mime:mime
+		 :type "image"
+		 :subtype (string-downcase (symbol-name (blob-type image)))
+		 :encoding :base64
+		 :content (flexi-streams:with-output-to-sequence (s)
+			    (blob-to-stream image s))))
+
 (defmethod handle-object ((handler digg-image-handler) (image quickhoney-image))
   (with-query-params (from to text)
     (cl-smtp:with-smtp-mail (smtp "localhost"
@@ -209,41 +245,27 @@
                                      (mapcar (alexandria:compose #'user-email #'find-user) (list "n" "p")))))
       (cl-mime:print-mime
        smtp
-       (make-instance
-        'cl-mime:multipart-mime
-        :subtype "mixed"
-        :content (list
-                  (make-instance
-                   'cl-mime:mime
-                   :type "text" :subtype "html"
-                   :content (with-output-to-string (s)
-                              (html-stream s
-                                           (:html
-                                            (:head
-                                             (:title "Picture comment"))
-                                            (:body
-                                             (:table
-                                              (:tbody
-                                               (:tr
-                                                ((:td :colspan "2")
-                                                 "Comment on picture "
-                                                 ((:a :href (make-image-link image))
-                                                  (:princ-safe (store-image-name image)))))
-                                               (:tr
-                                                (:td (:b "From"))
-                                                (:td (:princ-safe from))))
-                                               (:tr
-                                                ((:td :valign "top") (:b "Text"))
-                                                (:td (:princ-safe text)))))))))
-                  (make-instance
-                   'cl-mime:mime
-                   :type "image"
-                   :subtype (string-downcase (symbol-name (blob-type image)))
-                   :encoding :base64
-                   :content (flexi-streams:with-output-to-sequence (s)
-                              (blob-to-stream image s)))))
+       
+       (with-html-email ((image-to-mime image))
+	 (:html
+	  (:head
+	   (:title "Picture comment"))
+	  (:body
+	   (:table
+	    (:tbody
+	     (:tr
+	      ((:td :colspan "2")
+	       "Comment on picture "
+	       ((:a :href (make-image-link image))
+		(:princ-safe (store-image-name image)))))
+	     (:tr
+	      (:td (:b "From"))
+	      (:td (:princ-safe from))))
+	    (:tr
+	     ((:td :valign "top") (:b "Text"))
+	     (:td (:princ-safe text)))))))
        t t))))
-
+  
 (defclass json-buttons-handler (prefix-handler quickhoney-image-dependent-handler)
   ())
 

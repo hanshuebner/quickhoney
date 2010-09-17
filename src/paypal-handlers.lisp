@@ -101,6 +101,58 @@
 (defclass paypal-success-handler (page-handler)
   ())
 
+(defmethod paypal-process-successful-transaction ((txn paypal-product-transaction))
+  (with-slots (status product token creation-time valid-time paypal-info) txn
+    (let ((image (quickhoney-product-image product))
+	  (from "manuel@bl0rg.net")
+	  (to "manuel@bl0rg.net")
+	  (subject "Download your Vector PDF File!"))
+      (when (eql status :successful)
+	(cl-smtp:with-smtp-mail (smtp "localhost"
+				      from
+				      (list to))
+	  (cl-smtp::send-mail-headers smtp
+				     :from from
+				     :to (list to)
+				     :subject subject)
+	  (cl-mime:print-mime
+	   smtp
+	   (make-text-html-email
+	    (with-output-to-string (s)
+	      (format s "Download your Vector PDF File!~%~%")
+	      (format s "Dear ~A ~A,~%Thank you for purchasing the following Vector PDF File!~%"
+		      (getf paypal-info :firstname) (getf paypal-info :lastname))
+	      (format s "FILE#: ~A~%" (store-object-id image))
+	      (format s "Filetype: Vector PDF~%")
+	      (format s "Filesize: ~Akb~%" (floor (blob-size image) 1024))
+	      (format s "Price: ~A$~%"(quickhoney-product-price product))
+	      (format s "Download Artwork ~A for one-time private use only at the following URL:~% ~A/#paypal/~A~%~%"
+		      (store-image-name image)
+		      *website-url* token)
+	      (format s "Thank you very much for your purchase,~%Quickhoney~%"))
+	   (with-html-email ()
+	     (:html
+	      (:head (:title "Download your Vector PDF File!"))
+	      (:body
+	       "Dear " (:princ-safe (getf paypal-info :firstname)) " " (:princ-safe (getf paypal-info :lastname)) ", "
+	       (:br)(:br)
+	       "Thank you for purchasing the following Vector PDF File!"
+	       (:br) (:br)
+	       ((:img :src (format nil "~A/image/~A/thumbnail,,160,160" *website-url* (store-object-id image))))
+	       (:br)(:br)
+	       "FILE#: " (:princ-safe (store-object-id image)) (:br)
+	       "Filetype: Vector PDF" (:br)
+	       "Filesize: " (:princ-safe (floor (blob-size image) 1024)) "kb" (:br)
+	       "Price: " (:princ-safe (quickhoney-product-price product)) "$" (:br)(:br)
+	       "Download Artwork " ((:a :href (format nil "~A/#paypal/~A" *website-url* token))
+				    (:princ-safe (store-image-name image)))
+	       " for one-time private use only." (:br) (:br)
+	       "If you have trouble clicking the above link, please follow this link "
+	       (:princ-safe (format nil "~A/#paypal/~A" *website-url* token)) (:br) (:br)
+	       "Thank you very much for your purchase," (:br) "Quickhoney")
+	       )))
+	   t t))))))
+
 (defmethod handle ((handler paypal-success-handler))
   (let* ((token (get-parameter "token"))
 	 (payerid (get-parameter "PayerID"))
@@ -118,12 +170,15 @@
 		     :token token)
 
       (if (string-equal (getf result :ACK) "Success")
-	  (with-transaction ()
-	    (setf (paypal-product-transaction-creation-time txn) (get-universal-time)
-		  (paypal-product-transaction-paypal-result txn) result
-		  (paypal-product-transaction-paypal-info txn) response
-		  (paypal-product-transaction-valid-time txn) (get-universal-time)
-		  (paypal-product-transaction-status txn) :successful))
+	  (progn
+	    (with-transaction ()
+	      (setf (paypal-product-transaction-creation-time txn) (get-universal-time)
+		    (paypal-product-transaction-paypal-result txn) result
+		    (paypal-product-transaction-paypal-info txn) response
+		    (paypal-product-transaction-valid-time txn) (get-universal-time)
+		    (paypal-product-transaction-status txn) :successful))
+	    (paypal-process-successful-transaction txn))
+
 	  (with-transaction ()
 	    (setf (paypal-product-transaction-creation-time txn) (get-universal-time)
 		  (paypal-product-transaction-paypal-result txn) result
