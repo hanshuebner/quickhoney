@@ -30,21 +30,24 @@
 	  :index-reader paypal-transaction-for-token
 	  :index-values all-paypal-transactions)
    (status :update :initform :ongoing
-	   :documentation "Can be either :ONGOING, :CANCELLED, :SUCCESSFUL")
+	   :documentation "Can be either :ONGOING, :CANCELLED, :SUCCESSFUL, :ERROR")
    (creation-time :update :initform (get-universal-time))
-   (buyer-info :update
-	       :initform nil
-	       :documentation "Paypal user information")))
+   (valid-time :update :initform (get-universal-time))
+   (paypal-result :update :initform nil)
+   (paypal-info :update :initform nil)))
 
 (defmethod paypal-txn-valid-p ((txn paypal-product-transaction))
   (and (eql (paypal-product-transaction-status txn)
 	    :successful)
        (not (paypal-txn-expired-p txn))))
 
+(defmethod paypal-txn-valid-until ((txn paypal-product-transaction))
+  (+ (paypal-product-transaction-valid-time txn)
+     (* *product-validity-time* 24 3600)))
+
 (defmethod paypal-txn-expired-p ((txn paypal-product-transaction))
-  (< (+ (paypal-product-transaction-creation-time txn)
-	 (* 3 24 3600))
-      (get-universal-time)))
+  (< (paypal-txn-valid-until txn)
+     (get-universal-time)))
 
 (defclass json-paypal-checkout-handler (page-handler)
   ())
@@ -114,12 +117,20 @@
 		     :result response
 		     :token token)
 
-      (with-transaction ()
-	(setf (paypal-product-transaction-creation-time txn) (get-universal-time)
-	      (paypal-product-transaction-status txn) :successful))
+      (if (string-equal (getf result :ACK) "Success")
+	  (with-transaction ()
+	    (setf (paypal-product-transaction-creation-time txn) (get-universal-time)
+		  (paypal-product-transaction-paypal-result txn) result
+		  (paypal-product-transaction-paypal-info txn) response
+		  (paypal-product-transaction-valid-time txn) (get-universal-time)
+		  (paypal-product-transaction-status txn) :successful))
+	  (with-transaction ()
+	    (setf (paypal-product-transaction-creation-time txn) (get-universal-time)
+		  (paypal-product-transaction-paypal-result txn) result
+		  (paypal-product-transaction-paypal-info txn) response
+		  (paypal-product-transaction-valid-time txn) (get-universal-time)
+		  (paypal-product-transaction-status txn) :error)))
       
-      (setf *paypal-success-res* result
-	    *paypal-success-response* response)
       (redirect (format nil "/#paypal/~A" token)))))
 
 (defclass paypal-cancel-handler (page-handler)
@@ -140,9 +151,9 @@
       
       (with-transaction ()
 	(setf (paypal-product-transaction-creation-time txn) (get-universal-time)
+	      (paypal-product-transaction-paypal-info txn) response
 	      (paypal-product-transaction-status txn) :cancelled))
       
-      (setf *paypal-cancel-res* response)
       (redirect (format nil "/#paypal/~A" token)))))
 
 (defun transaction-with-download-id (id)
@@ -175,6 +186,58 @@
       (json:encode-object-element "token" token)
       (json:encode-object-element "status" status)
       (json:encode-object-element "valid" (paypal-txn-valid-p txn))
+      (json:encode-object-element "bought-on" (format-date-time (paypal-product-transaction-creation-time txn)))
+      (json:encode-object-element "valid-until" (format-date-time (paypal-txn-valid-until txn)))
       (json:encode-object-element "expired" (paypal-txn-expired-p txn))
       (json:with-object-element ("image")
 	(image-to-json (quickhoney-product-image product))))))
+
+(defclass json-paypal-admin-handler (object-handler admin-only-handler)
+  ())
+
+(defmethod paypal-txn-to-json ((txn paypal-product-transaction))
+  (json:with-object ()
+    (with-slots (product token status creation-time valid-time paypal-result paypal-info) txn
+      (json:encode-object-element "token" token)
+      (json:encode-object-element "status" status)
+      (json:with-object-element ("image")
+	(image-to-json (quickhoney-product-image product)))
+      (json:encode-object-element "bought-on" (format-date-time (paypal-product-transaction-creation-time txn)))
+      (json:encode-object-element "valid-until" (format-date-time (paypal-txn-valid-until txn)))
+      (json:encode-object-element "valid" (paypal-txn-valid-p txn))
+      (json:encode-object-element "expired" (paypal-txn-expired-p txn))
+      (json:encode-object-element "paypal-result" paypal-result)
+      (json:encode-object-element "paypal-info" paypal-info))))
+
+;; XXX this is like the less efficient function i've ever written
+(defun find-paypal-transactions (&key token id from until count status)
+  (cond ((not (null token))
+	 (list (paypal-transaction-for-token token)))
+	((not (null id))
+	 (list (find-store-object id :class 'paypal-product-transaction)))
+	(t (let ((txs (copy-list (all-paypal-transactions))))
+	     (unless (null status)
+	       (setf txs (remove-if-not #'(lambda (x) (eql x status)) txs
+					:key #'paypal-product-transaction-status)))
+	     (unless (null from)
+	       (setf txs (remove-if-not #'(lambda (x) (> x from)) txs
+					:key #'paypal-product-transaction-creation-time)))
+	     (unless (null until)
+	       (setf txs (remove-if-not #'(lambda (x) (< x until)) txs
+					:key #'paypal-product-transaction-creation-time)))
+	     (setf txs (sort txs #'< :key #'paypal-product-transaction-creation-time))
+	     (if count
+		 (subseq txs 0 (min count (length txs)))
+		 txs)))))
+
+(defmethod object-handler-get-object ((handler json-paypal-admin-handler))
+  (with-query-params (token id from until count status)
+    (when status
+      (setf status (make-keyword-from-string status)))
+    (when from
+      (setf from (parse-integer from)))
+    (when until
+      (setf until (parse-integer until)))
+    (when count
+      (setf count (parse-integer count)))
+    (find-paypal-transactions :id id :token token :from from :until until :count count :status status)))
