@@ -14,6 +14,8 @@
      #:*paypal-password*
      #:*paypal-signature*
      #:*paypal-secure-merchant-id*
+
+     #:*product-validity-time*
      ))
 
 (defpackage :quickhoney.imageproc

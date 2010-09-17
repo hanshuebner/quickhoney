@@ -28,3 +28,5 @@
 
 (defparameter *paypal-secure-merchant-id* "W7PDYJMZUSC5E")
 
+;; 3 days
+(defparameter *product-validity-time* 3)
