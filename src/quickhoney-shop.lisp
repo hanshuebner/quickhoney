@@ -20,23 +20,6 @@
   ()
   (:documentation "Download PDF Quickhoney product. The blob data is the PDF file"))
 
-(define-persistent-class quickhoney-paypal-transaction ()
-  ((product
-    :read
-    :type quickhoney-product
-    :index-type hash-index
-    :index-reader transactions-for-product
-    :documentation
-    "Product that this transaction relates to")
-   (transaction-id :read)
-   (download-id :read
-		:index-type unique-index
-		:index-reader transaction-with-download-id
-		:documentation "Unique and obfuscated ID used to handle PDF downloads")
-   (date :read))
-  (:documentation
-   "Transaction class when a product is bought over paypal. Fields are speculative for now"))
-
 (defmethod quickhoney-image-pdf-product-p ((image quickhoney-image))
   (let ((products (products-for-image image)))
     (not (emptyp (remove-if-not #'(lambda (product)
@@ -170,48 +153,3 @@
       (copy-stream blob-data (send-headers) :element-type '(unsigned-byte 8)))))
   
 
-(defun transaction-with-download-id (id)
-  (store-object-with-id id))
-
-(defclass quickhoney-client-pdf-handler (object-handler)
-  ()
-  (:default-initargs :query-function #'transaction-with-download-id
-    :object-class 'paypal-product-transaction))
-
-(defmethod handle-object ((handler quickhoney-client-pdf-handler) txn)
-  (cond ((and (eql (paypal-product-transaction-status txn) :successful)
-	      (> (+ (paypal-product-transaction-creation-time txn)
-		    (* 3 24 3600))
-		 (get-universal-time)))
-	 (let ((product (paypal-product-transaction-product txn)))
-	   (handle-if-modified-since (blob-timestamp product))
-	   (setf (header-out :last-modified) (rfc-1123-date (blob-timestamp product)))
-	   (with-http-response (:content-type "application/pdf")
-	     (setf (header-out :content-length) (blob-size product))
-	     (with-open-file (blob-data (blob-pathname product) :element-type '(unsigned-byte 8))
-	       (copy-stream blob-data (send-headers) :element-type '(unsigned-byte 8))))))
-	((and (eql (paypal-product-transaction-status txn) :successful)
-	      (< (+ (paypal-product-transaction-creation-time txn)
-		    (* 3 24 3600))
-		 (get-universal-time)))
-	 (error "XXX PDF transaction expired"))
-	(t (error "You are not allowed to download this PDF file"))))
-	
-(defclass paypal-transaction-handler (object-handler)
-  ()
-  (:default-initargs :query-function #'transaction-with-download-id
-    :object-class 'paypal-product-transaction))
-
-(defmethod handle-object ((handler paypal-transaction-handler) txn)
-  (cond ((and (eql (paypal-product-transaction-status txn) :successful)
-	      (> (+ (paypal-product-transaction-creation-time txn)
-		    (* 3 24 3600))
-		 (get-universal-time)))
-	 )
-	((and (eql (paypal-product-transaction-status txn) :successful)
-	      (< (+ (paypal-product-transaction-creation-time txn)
-		    (* 3 24 3600))
-		 (get-universal-time)))
-	 (error "XXX PDF transaction expired"))
-	(t (error "You are not allowed to download this PDF file"))))
-  
