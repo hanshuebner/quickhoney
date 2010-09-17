@@ -32,7 +32,8 @@
        ("/json-edit-news" json-edit-news-item-handler)
        ("/json-news-archive" json-news-archive-handler)
        ("/json-news" json-news-handler)
-       ("/json-paypal" json-paypal-checkout-handler)
+       ("/json-paypal-checkout" json-paypal-checkout-handler)
+       ("/json-paypal-txn" json-paypal-transaction-info-handler)
 
        ("/upload-image" upload-image-handler)
        ("/upload-animation" upload-animation-handler)
@@ -42,7 +43,6 @@
 
        ("/paypal-success" paypal-success-handler)
        ("/paypal-cancel" paypal-cancel-handler)
-       ("/paypal-txn" paypal-transaction-handler)
 
        ("/pdf-admin" quickhoney-admin-pdf-handler)
        ("/pdf-client" quickhoney-client-pdf-handler)
