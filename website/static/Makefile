@@ -1,3 +1,3 @@
 all:
-	ctags -R -e *js
+	ctags -R --options=ctags-js.cnf -e *js
 
