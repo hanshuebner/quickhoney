@@ -199,7 +199,7 @@ function make_paypal_overlay(json) {
 		     ));
     } else if (json.expired && (json.status == "successful")) {
 	var image = json.image;
-	make_overlay(overlay2, 'buy-file', 'Your Vector PDF File has expired!', 426,
+	make_overlay_content(overlay2, 'buy-file', 'Your Vector PDF File has expired!', 426,
 		     DIV({'align': 'center'},
 			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})),
                      SPACER(
@@ -214,9 +214,11 @@ function make_paypal_overlay(json) {
 			 "Sadly, your PDF download has expired!",
 			 BR()
 		     ));
+    } else if (json.status == "cancelled") {
+	/* do nothing */
     } else {
 	var image = json.image;
-	make_overlay(overlay2, 'buy-file', 'Wrong Paypal Transaction!', 426,
+	make_overlay_content(overlay2, 'buy-file', 'Wrong Paypal Transaction!', 426,
 		     DIV({'align': 'center'},
 			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})),
                      SPACER(
@@ -226,8 +228,8 @@ function make_paypal_overlay(json) {
 			 "Price: $" + image.shop_price, BR(),
 			 BR(),
 			 
-			 "Something went wrong with your Paypal transaction!",
-			 "No money has been debited from your Paypal account.",
+			 "Something went wrong with your Paypal transaction! ",
+			 "No money has been debited from your Paypal account. ",BR(),
 			 "Please try to buy the item again.",
 			 BR()
 		     ));
