@@ -1,3 +1,0 @@
-[submodule "vendor/functional-javascript"]
-	path = vendor/functional-javascript
-	url = git://github.com/osteele/functional-javascript.git
