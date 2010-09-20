@@ -1,3 +1,3 @@
 all:
-	ctags -R --options=ctags-js.cnf -e *js
+	ctags -R --options=ctags-js.cnf -e *js MochiKit
 
