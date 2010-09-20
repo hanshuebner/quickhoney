@@ -7,9 +7,9 @@
    xmlns:quickhoney="http://quickhoney.com/"
    >
   <head>
-    <link rel="stylesheet" href="/static/yui/reset-fonts/reset-fonts.css" />
-    <link rel="stylesheet" href="/static/login.css" />
-    <script src="/static/MochiKit/MochiKit.js,login.js" type="text/javascript"> </script> 
+    <link rel="stylesheet" href="/static/js,yui/reset-fonts/reset-fonts.css" />
+    <link rel="stylesheet" href="/static/css/login.css" />
+    <script src="/static/js,MochiKit/MochiKit.js,js/login.js" type="text/javascript"> </script> 
     <title>QuickHoney CMS Login</title>
   </head>
 
