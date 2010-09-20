@@ -190,19 +190,3 @@
       (copy-stream blob-data (send-headers) :element-type '(unsigned-byte 8)))))
   
 
-;;; PDF watermarking
-
-(defparameter *signature-svg-pathname*
-  (merge-pathnames "files/signature.svg" *root-directory*))
-
-(defmethod add-transaction-watermark ((tx paypal-product-transaction) pathname)
-  (with-slots (product paypal-info) tx
-    (let* ((image (quickhoney-product-image product))
-	   (pdf-location (blob-pathname product))
-	   (firstname (getf paypal-info :firstname))
-	   (lastname (getf paypal-info :lastname))
-	   (watermark-path (merge-pathnames "bin/watermark-pdf.sh" *root-directory*)))
-      (run-shell-command-to-string "\"~A\" \"~A\" \"~A\" \"~A\" \"~A ~A\""
-				   watermark-path pdf-location pathname *signature-svg-pathname* firstname lastname))))
-	   
-      
