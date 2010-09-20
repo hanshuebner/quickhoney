@@ -31,6 +31,8 @@
 	  :index-values all-paypal-transactions)
    (status :update :initform :ongoing
 	   :documentation "Can be either :ONGOING, :CANCELLED, :SUCCESSFUL, :ERROR")
+   (watermarked-pdf :update :initform nil
+		    :documentation "Path to watermarked PDF")
    (creation-time :update :initform (get-universal-time))
    (valid-time :update :initform (get-universal-time))
    (paypal-result :update :initform nil)
@@ -101,57 +103,59 @@
 (defclass paypal-success-handler (page-handler)
   ())
 
-(defmethod paypal-process-successful-transaction ((txn paypal-product-transaction))
+(defmethod send-transaction-email ((txn paypal-product-transaction))
   (with-slots (status product token creation-time valid-time paypal-info) txn
     (let ((image (quickhoney-product-image product))
 	  (from "manuel@bl0rg.net")
 	  (to "manuel@bl0rg.net")
 	  (subject "Download your Vector PDF File!"))
-      (when (eql status :successful)
-	(cl-smtp:with-smtp-mail (smtp "localhost"
-				      from
-				      (list to))
-	  (cl-smtp::send-mail-headers smtp
-				     :from from
-				     :to (list to)
-				     :subject subject)
-	  (cl-mime:print-mime
-	   smtp
-	   (make-text-html-email
-	    (with-output-to-string (s)
-	      (format s "Download your Vector PDF File!~%~%")
-	      (format s "Dear ~A ~A,~%Thank you for purchasing the following Vector PDF File!~%"
-		      (getf paypal-info :firstname) (getf paypal-info :lastname))
-	      (format s "FILE#: ~A~%" (store-object-id image))
-	      (format s "Filetype: Vector PDF~%")
-	      (format s "Filesize: ~Akb~%" (floor (blob-size image) 1024))
-	      (format s "Price: ~A$~%"(quickhoney-product-price product))
-	      (format s "Download Artwork ~A for one-time private use only at the following URL:~% ~A/#paypal/~A~%~%"
-		      (store-image-name image)
-		      *website-url* token)
-	      (format s "Thank you very much for your purchase,~%Quickhoney~%"))
-	   (with-html-email ()
-	     (:html
-	      (:head (:title "Download your Vector PDF File!"))
-	      (:body
-	       "Dear " (:princ-safe (getf paypal-info :firstname)) " " (:princ-safe (getf paypal-info :lastname)) ", "
-	       (:br)(:br)
-	       "Thank you for purchasing the following Vector PDF File!"
-	       (:br) (:br)
-	       ((:img :src (format nil "~A/image/~A/thumbnail,,160,160" *website-url* (store-object-id image))))
-	       (:br)(:br)
-	       "FILE#: " (:princ-safe (store-object-id image)) (:br)
-	       "Filetype: Vector PDF" (:br)
-	       "Filesize: " (:princ-safe (floor (blob-size image) 1024)) "kb" (:br)
-	       "Price: " (:princ-safe (quickhoney-product-price product)) "$" (:br)(:br)
-	       "Download Artwork " ((:a :href (format nil "~A/#paypal/~A" *website-url* token))
-				    (:princ-safe (store-image-name image)))
-	       " for one-time private use only." (:br) (:br)
-	       "If you have trouble clicking the above link, please follow this link "
-	       (:princ-safe (format nil "~A/#paypal/~A" *website-url* token)) (:br) (:br)
-	       "Thank you very much for your purchase," (:br) "Quickhoney")
-	       )))
-	   t t))))))
+      (cl-smtp:with-smtp-mail (smtp "localhost"
+				    from
+				    (list to))
+	(cl-smtp::send-mail-headers smtp
+				    :from from
+				    :to (list to)
+				    :subject subject)
+	(cl-mime:print-mime
+	 smtp
+	 (make-text-html-email
+	  (with-output-to-string (s)
+	    (format s "Download your Vector PDF File!~%~%")
+	    (format s "Dear ~A ~A,~%Thank you for purchasing the following Vector PDF File!~%"
+		    (getf paypal-info :firstname) (getf paypal-info :lastname))
+	    (format s "FILE#: ~A~%" (store-object-id image))
+	    (format s "Filetype: Vector PDF~%")
+	    (format s "Filesize: ~Akb~%" (floor (blob-size image) 1024))
+	    (format s "Price: ~A$~%"(quickhoney-product-price product))
+	    (format s "Download Artwork ~A for one-time private use only at the following URL:~% ~A/#paypal/~A~%~%"
+		    (store-image-name image)
+		    *website-url* token)
+	    (format s "Thank you very much for your purchase,~%Quickhoney~%"))
+	  (with-html-email ()
+	    (:html
+	     (:head (:title "Download your Vector PDF File!"))
+	     (:body
+	      "Dear " (:princ-safe (getf paypal-info :firstname)) " " (:princ-safe (getf paypal-info :lastname)) ", "
+	      (:br)(:br)
+	      "Thank you for purchasing the following Vector PDF File!"
+	      (:br) (:br)
+	      ((:img :src (format nil "~A/image/~A/thumbnail,,160,160" *website-url* (store-object-id image))))
+	      (:br)(:br)
+	      "FILE#: " (:princ-safe (store-object-id image)) (:br)
+	      "Filetype: Vector PDF" (:br)
+	      "Filesize: " (:princ-safe (floor (blob-size image) 1024)) "kb" (:br)
+	      "Price: " (:princ-safe (quickhoney-product-price product)) "$" (:br)(:br)
+	      "Download Artwork " ((:a :href (format nil "~A/#paypal/~A" *website-url* token))
+				   (:princ-safe (store-image-name image)))
+	      " for one-time private use only." (:br) (:br)
+	      "If you have trouble clicking the above link, please follow this link "
+	      (:princ-safe (format nil "~A/#paypal/~A" *website-url* token)) (:br) (:br)
+	      "Thank you very much for your purchase," (:br) "Quickhoney")
+	     )))
+	 t t)))))
+
+(defmethod paypal-process-successful-transaction ((txn paypal-product-transaction))
+  (send-transaction-email txn))
 
 (defmethod handle ((handler paypal-success-handler))
   (let* ((token (get-parameter "token"))
@@ -177,7 +181,11 @@
 		    (paypal-product-transaction-paypal-info txn) response
 		    (paypal-product-transaction-valid-time txn) (get-universal-time)
 		    (paypal-product-transaction-status txn) :successful))
-	    (paypal-process-successful-transaction txn))
+	    (handler-case 
+		(paypal-process-successful-transaction txn)
+	      (error (e)
+		(bknr.web::do-error-log-request e)
+		)))
 
 	  (with-transaction ()
 	    (setf (paypal-product-transaction-creation-time txn) (get-universal-time)
@@ -225,9 +233,11 @@
 	   (handle-if-modified-since (blob-timestamp product))
 	   (setf (header-out :last-modified) (rfc-1123-date (blob-timestamp product)))
 	   (with-http-response (:content-type "application/pdf")
-	     (setf (header-out :content-length) (blob-size product))
-	     (with-open-file (blob-data (blob-pathname product) :element-type '(unsigned-byte 8))
-	       (copy-stream blob-data (send-headers) :element-type '(unsigned-byte 8))))))
+	     (with-temporary-file (tmp)
+	       (add-transaction-watermark txn tmp)
+	       (with-open-file (blob-data tmp :element-type '(unsigned-byte 8))
+		 (setf (header-out :content-length) (file-length blob-data))
+		 (copy-stream blob-data (send-headers) :element-type '(unsigned-byte 8)))))))
 	(t (redirect (format nil "/#paypal/~A" (store-object-id txn))))))
 	
 (defclass json-paypal-transaction-info-handler (object-handler)

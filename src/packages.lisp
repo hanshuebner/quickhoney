@@ -9,6 +9,7 @@
 	   #:*store-directory*
      #:*xml-catalog-directory*
      #:*thirdparty-directory*
+     #:*root-directory*
 
      #:*paypal-user*
      #:*paypal-password*
