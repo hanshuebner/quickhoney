@@ -62,12 +62,21 @@ function shop_show_form_for_image(current_image) {
     log("shop show form");
     $("shop_upload_form_element").action = "/upload-shop/" + current_image.id;
     if (current_image.shop_file != undefined) {
+	$("pdf_field").style.visibility = "visible";
+	$("pdf_download_link").href = "/pdf-admin/" + current_image.shop_file;
 	$("upload_pdf_field").style.visibility = "hidden";
 	$("upload_pdf_button").style.visibility = "hidden";
 	$("edit_pdf_button").style.visibility = "visible";
 	$("delete_pdf_button").style.visibility = "visible";
+	$("pdf-generate-warning").style.visibility = "hidden";
 	shop_set_price_selector(current_image.shop_price);
     } else {
+	$("pdf_field").style.visibility = "hidden";
+	if ((current_image.width * current_image.height) >= (400 * 400)) {
+	    $("pdf-generate-warning").style.visibility = "visible";
+	} else {
+	    $("pdf-generate-warning").style.visibility = "hidden";
+	}
 	$("upload_pdf_field").style.visibility = "visible";
 	$("upload_pdf_button").style.visibility = "visible";
 	$("edit_pdf_button").style.visibility = "hidden";
@@ -82,6 +91,48 @@ function shop_hide_form() {
     $("delete_pdf_button").style.visibility = "hidden";    
 }
 
+function wait_for_pdf_generation_cb(options, json_data) {
+    log("pdf generation " + JSON.stringify(json_data.image) + json_data.image.shop_price);
+    if (json_data.image.shop_price == undefined) {
+	if (options.count-- <= 0) {
+	    options.callback(options, {error: "PDF generation stalled"});
+	    return true;
+	}
+	return false;
+    } else {
+	options.callback(options, json_data);
+	return true;
+    }
+}
+
+function wait_for_pdf_generation(image_name, callback) {
+    var options = {
+	image_name: image_name,
+	count: 30,
+	callback: callback
+    };
+    poll_json("/json-image-info/" + image_name, partial(wait_for_pdf_generation_cb, options));
+}
+
+function after_pdf_generation_upload(options, json) {
+    hide_cue();
+    log("after pdf generation " + JSON.stringify(json));
+    if (json.error) {
+	$("information").innerHTML = "Error while converting image to PDF!";
+    } else {
+	$("information").innerHTML = "Image successfully converted to PDF!";
+	window.opener.current_image.shop_price = json.image.shop_price;
+	window.opener.current_image.shop_file = json.image.shop_file;
+	window.opener.after_image_edit();
+    }
+    $("ok").style.visibility = "visible";
+}
+
+function wait_for_pdf_generation_upload() {
+    $("ok").style.visibility = "hidden";
+    show_cue();
+    wait_for_pdf_generation(window.opener.current_image.name, after_pdf_generation_upload);
+}
 
 function show_eula() {
     var eula_window = window.open('/static/eula.html', 'eula_window', "width=700,height=400,status=no,toolbar=no,menubar=no,scrollbars=yes");

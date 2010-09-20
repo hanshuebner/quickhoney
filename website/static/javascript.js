@@ -157,7 +157,6 @@ function submit_json(url, form, handler) {
                                 sendContent: queryString(names, values) })
         .addCallbacks(function (req) { handler(MochiKit.Base.evalJSON(req.responseText)); },
                       alert);
-
 }
 
 function do_edit() {
@@ -170,6 +169,20 @@ function do_edit() {
     submit_json('/json-edit-image/' + current_image.id + '?action=edit', 'edit_form_element', image_edited);
 
     return false;
+}
+
+function poll_json_cb(json_url, callback, interval, json_data) {
+    if (!callback(json_data)) {
+	setTimeout(partial(poll_json, json_url, callback), interval);
+    }
+}
+
+// poll a JSON source until callback returns true
+function poll_json(json_url, callback, interval) {
+    if (interval == undefined) {
+	interval = 1000;
+    }
+    submit_json(json_url, null, partial(poll_json_cb, json_url, callback, interval));
 }
 
 function after_image_edit() {
