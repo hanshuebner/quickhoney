@@ -29,7 +29,7 @@
                :unit-test
                :yason
                :cl-paypal
-               #+(or) :cl-pdf)
+               :cl-pdf)
 
   :components ((:file "packages")
                (:file "config" :depends-on ("packages"))
@@ -48,7 +48,7 @@
                (:file "daily" :depends-on ("config"))
 
 
-               #+(or) (:file "turtle" :depends-on ("packages"))
-               #+(or) (:file "pixel-pdf" :depends-on ("turtle"))
+               (:file "turtle" :depends-on ("packages"))
+               (:file "pixel-pdf" :depends-on ("turtle"))
                
                (:file "init" :depends-on ("webserver" "daily"))))

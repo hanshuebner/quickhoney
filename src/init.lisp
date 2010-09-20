@@ -1,6 +1,7 @@
 (in-package :quickhoney)
 
 (defvar *dumped-image* nil)
+(defvar *cron-actor* nil)
 
 (defun dump-executable ()
   #+openmcl
@@ -42,7 +43,7 @@ it if it is missing."
 
   (ensure-directories-exist
    (setf tbnl:*tmp-directory* (merge-pathnames "hunchentoot-tmp/" *store-directory*)))
-  (actor-start (make-instance 'cron-actor))
+  (actor-start (setf *cron-actor* (make-instance 'cron-actor)))
 
   (paypal-init :user *paypal-user* :password *paypal-password* :signature *paypal-signature*)
   ;; XXX for test purposes
@@ -54,6 +55,11 @@ it if it is missing."
       (load "site-config.lisp")))
 
   (start-http-server))
+
+(defun shutdown-qh ()
+  (actor-stop *cron-actor*)
+  (stop-http-server)
+  (close-store))
 
 (defun stop-http-server ()
   "Stop the running webserver, and destroy the thread it was running in."

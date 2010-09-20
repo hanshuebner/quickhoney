@@ -67,13 +67,14 @@
 	(error "Could not find product for image ~A" (store-image-name image)))
       (with-transaction (:set-product-price)
 	(setf (quickhoney-product-price product) price))
+      (setf *last-image-upload-timestamp* (get-universal-time))      
       (let* ((width (store-image-width image))
 	     (height (store-image-height image))
 	     (ratio (/ 1 (max (/ width 300) (/ height 200)))))
 	
 	(html (:html
 	       (:head
-		(:title "Price change successfully")
+		(:title "Price changed successfully")
 		((:script :type "text/javascript" :language "JavaScript")
 		 "window.opener.current_image.shop_price = " (:princ-safe price) ";"
 		 "window.opener.after_image_edit();")
@@ -88,7 +89,10 @@
   (let ((product (quickhoney-image-pdf-product image)))
     (unless product
       (error "Could not find product for image ~A" (store-image-name image)))
-    (delete-object product))
+    (delete-object product)
+    (setf *last-image-upload-timestamp* (get-universal-time)))
+    
+  
 
   (let* ((width (store-image-width image))
 	 (height (store-image-height image))
@@ -106,37 +110,70 @@
 	     (:p ((:img :src (format nil "/image/~D" (store-object-id image))
 			:width (round (* ratio width)) :height (round (* ratio height)))))
 	     (:p ((:a :href "javascript:window.close()") "ok"))))))))
+
+(defmethod generate-pixel-pdf ((image quickhoney-image) price)
+  (with-temporary-file (s)
+    (pixel-pdf::convert-store-image-to-pdf image s)
+    (let ((product (make-blob-from-file s 'quickhoney-pdf-product
+					:price price
+					:type :pdf
+					:image image)))
+      (setf *last-image-upload-timestamp* (get-universal-time))      
+      (format t "Convert image ~A to PDF product ~A~%" image product))))
   
 (defmethod handle-object-form ((handler upload-shop-handler) (action (eql :upload)) image)
   (with-query-params (price-select pdf-generate)
     (let ((pdf-file (request-uploaded-file "pdf-image-file"))
 	  (price (parse-integer price-select)))
-      (when pdf-generate
-	(error "PDF generation not yet supported")
-	;; XXX generate PDF
-	)
+      (cond
+	(pdf-generate
+	 (bt:make-thread #'(lambda () (generate-pixel-pdf image price))
+			 :name (format nil "GENERATE-PDF ~A" (store-image-name image)))
+	 (let* ((width (store-image-width image))
+		(height (store-image-height image))
+		(ratio (/ 1 (max (/ width 300) (/ height 200)))))
+	   (html (:html
+		  (:head
+		   (:title "Generating PDF for image...")
+		   ((:script :src "/static/detectplugins.js,AC_QuickTime.js,MochiKit/MochiKit.js,yui/yahoo-dom-event/yahoo-dom-event.js,yui/animation/animation-min.js,yui/element/element-beta-min.js,yui/container/container_core-min.js,yui/editor/simpleeditor-beta-min.js,helpers.js" :type "text/javascript"))
+		   ((:script :src "/static/javascript.js,pdf_shop.js" :type "text/javascript")))
+		  (:body
+		   ((:p :id "information")
+		    "Generating PDF for image..."
+		       ((:span :id "cue")
+			((:img :src "/static/spinner.gif" :width 16 :height 16)))
+		    )
+		   (:p ((:img :src (format nil "/image/~D" (store-object-id image))
+			      :width (round (* ratio width)) :height (round (* ratio height))))
+		       )
+		   ((:p :id "ok") ((:a :href "javascript:window.close()") "ok"))
+		   ((:p :id "footer") "")
+		   ((:script :type "text/javascript" :language "JavaScript")
+		    "wait_for_pdf_generation_upload();")
+		   )))))
 
-      (when pdf-file
-	(let ((product (make-blob-from-file (upload-pathname pdf-file) 'quickhoney-pdf-product
-					    :price (parse-integer price-select :junk-allowed t)
-					    :type :pdf
-					    :image image)))
-	  
-	  (let* ((width (store-image-width image))
-		 (height (store-image-height image))
-		 (ratio (/ 1 (max (/ width 300) (/ height 200)))))
-	    (html (:html
-		   (:head
-		    (:title "Product uploaded successfully")
-		    ((:script :type "text/javascript" :language "JavaScript")
-		     "window.opener.current_image.shop_price = " (:princ-safe price) ";"
-		     "window.opener.current_image.shop_file = " (:princ-safe (store-object-id product)) ";"
-		     "window.opener.after_image_edit();")
-		    (:body
-		     (:p "Product for image " (:princ-safe (store-image-name image)) " uploaded successfully")
-		     (:p ((:img :src (format nil "/image/~D" (store-object-id image))
-				:width (round (* ratio width)) :height (round (* ratio height)))))
-		     (:p ((:a :href "javascript:window.close()") "ok"))))))))))))
+	(pdf-file
+	 (let ((product (make-blob-from-file (upload-pathname pdf-file) 'quickhoney-pdf-product
+					     :price price
+					     :type :pdf
+					     :image image)))
+	   (setf *last-image-upload-timestamp* (get-universal-time))      
+	   
+	   (let* ((width (store-image-width image))
+		  (height (store-image-height image))
+		  (ratio (/ 1 (max (/ width 300) (/ height 200)))))
+	     (html (:html
+		    (:head
+		     (:title "Product uploaded successfully")
+		     ((:script :type "text/javascript" :language "JavaScript")
+		      "window.opener.current_image.shop_price = " (:princ-safe price) ";"
+		      "window.opener.current_image.shop_file = " (:princ-safe (store-object-id product)) ";"
+		      "window.opener.after_image_edit();")
+		     (:body
+		      (:p "Product for image " (:princ-safe (store-image-name image)) " uploaded successfully")
+		      (:p ((:img :src (format nil "/image/~D" (store-object-id image))
+				 :width (round (* ratio width)) :height (round (* ratio height)))))
+		      (:p ((:a :href "javascript:window.close()") "ok")))))))))))))
 
 ;;; PDF Handlers
 
@@ -152,4 +189,6 @@
     (with-open-file (blob-data (blob-pathname product) :element-type '(unsigned-byte 8))
       (copy-stream blob-data (send-headers) :element-type '(unsigned-byte 8)))))
   
+
+;;; PDF watermarking
 
