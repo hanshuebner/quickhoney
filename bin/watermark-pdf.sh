@@ -9,6 +9,7 @@ NAME=$4
 
 TMPPDF=`mktemp /tmp/watermark.XXXXXX`
 TMPPDF2=`mktemp /tmp/watermark.XXXXXX`
+TMPDATA=`mktemp /tmp/info.XXXXX`
 
 DATE=`date +%F`
 WATERMARK="Created for $NAME on $DATE"
@@ -32,10 +33,11 @@ echo "WATERMARK: $WATERMARK"
 
 sed -e "s/transform=\"\"/transform=\"translate($SIG_X,$SIG_Y)\"/" \
     -e "s/__W__/$INPUT_W/g" -e "s/__H__/$INPUT_H/g" \
-    -e "s/__WATERMARK__/$WATERMARK/"  < "$SIG_SVG" | tee /tmp/sig.svg | svg2pdf - > "$TMPPDF"
-pdftk "$INPUT_PDF" stamp "$TMPPDF" output "$TMPPDF2"
-cp "$TMPPDF2" "$OUTPUT_PDF"
-cp "$TMPPDF" /tmp/sig.pdf
-cp "$TMPPDF2" /tmp/sig2.pdf
-# rm "$TMPPDF" "$TMPPDF2"
+    < "$SIG_SVG" | tee /tmp/sig.svg | svg2pdf - > "$TMPPDF"
+pdftk "$INPUT_PDF" stamp "$TMPPDF"  output "$TMPPDF2"
+deillustrate.pl "$TMPPDF2" > "$TMPPDF"
+echo "InfoKey: BoughtBy\nInfoValue: $WATERMARK\n" > "$TMPDATA"
+cat "$TMPDATA"
+pdftk "$TMPPDF" update_info "$TMPDATA" output "$OUTPUT_PDF"
+rm "$TMPPDF" "$TMPPDF2" "$TMPDATA"
 
