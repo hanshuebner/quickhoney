@@ -34,6 +34,7 @@
        ("/json-news" json-news-handler)
        ("/json-paypal-checkout" json-paypal-checkout-handler)
        ("/json-paypal-txn" json-paypal-transaction-info-handler)
+       ("/json-paypal-admin" json-paypal-admin-handler)
 
        ("/upload-image" upload-image-handler)
        ("/upload-animation" upload-animation-handler)

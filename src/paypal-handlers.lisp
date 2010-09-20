@@ -282,18 +282,27 @@
     (with-slots (product token status creation-time valid-time paypal-result paypal-info) txn
       (json:encode-object-element "token" token)
       (json:encode-object-element "status" status)
+
       (json:with-object-element ("image")
-	(image-to-json (quickhoney-product-image product)))
+	(let ((image (quickhoney-product-image product)))
+	  (json:with-object ()
+	    (json:encode-object-element "name" (store-image-name image))
+	    (json:encode-object-element "id" (store-object-id image))
+	    (json:encode-object-element "width" (store-image-width image))
+	    (json:encode-object-element "height" (store-image-height image)))))
+	  
       (json:encode-object-element "bought_on" (format-date-time (paypal-product-transaction-creation-time txn)
-								:vms-style t :show-time nil))
+								:vms-style t :show-time t))
       (json:encode-object-element "valid_until" (format-date-time (paypal-txn-valid-until txn)
-								  :vms-style t :show-time nil))
+								  :vms-style t :show-time t))
+      (json:encode-object-element "creation_time" (paypal-product-transaction-creation-time txn))
+      (json:encode-object-element "valid_time" (paypal-product-transaction-valid-time txn))
       (json:encode-object-element "valid" (paypal-txn-valid-p txn))
       (json:encode-object-element "expired" (paypal-txn-expired-p txn))
       (json:encode-object-element "paypal-result" paypal-result)
       (json:encode-object-element "paypal-info" paypal-info))))
 
-;; XXX this is like the less efficient function i've ever written
+;; XXX this is like the least efficient function i've ever written
 (defun find-paypal-transactions (&key token id from until count status)
   (cond ((not (null token))
 	 (list (paypal-transaction-for-token token)))
@@ -325,3 +334,10 @@
     (when count
       (setf count (parse-integer count)))
     (find-paypal-transactions :id id :token token :from from :until until :count count :status status)))
+
+(defmethod handle-object ((handler json-paypal-admin-handler) txns)
+  (with-json-response ()
+    (json:with-object-element ("paypalTransactions")
+      (json:with-array ()
+	(dolist (txn txns)
+	  (paypal-txn-to-json txn))))))
