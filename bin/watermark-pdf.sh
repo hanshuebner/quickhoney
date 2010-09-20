@@ -26,11 +26,10 @@ SIG_H=28
 SIG_X=$((INPUT_W - SIG_W))
 SIG_Y=$((INPUT_H - SIG_H))
 
-echo "INPUT_SIZE: $INPUT_SIZE"
-echo "INPUT_W: $INPUT_W"
-echo "INPUT_H: $INPUT_H"
-
-echo "WATERMARK: $WATERMARK"
+#echo "INPUT_SIZE: $INPUT_SIZE"
+#echo "INPUT_W: $INPUT_W"
+#echo "INPUT_H: $INPUT_H"
+#echo "WATERMARK: $WATERMARK"
 
 sed -e "s/transform=\"\"/transform=\"translate($SIG_X,$SIG_Y)\"/" \
     -e "s/__W__/$INPUT_W/g" -e "s/__H__/$INPUT_H/g" \
@@ -41,5 +40,6 @@ deillustrate.pl "$TMPPDF2" > "$TMPPDF"
 echo "InfoKey: BoughtBy\nInfoValue: $WATERMARK\n" > "$TMPDATA"
 cat "$TMPDATA"
 pdftk "$TMPPDF" update_info "$TMPDATA" output "$OUTPUT_PDF"
+
 rm "$TMPSVG" "$TMPPDF" "$TMPPDF2" "$TMPDATA"
 
