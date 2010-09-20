@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>Paypal Administration</title>
+    <link rel="stylesheet" href="/static/js/yui/reset-fonts/reset-fonts.css,js/yui/fonts/fonts-min.css,js/yui/editor/assets/skins/sam/simpleeditor.css,css/quickhoney.css,css/index.css,css/ydsf.css" />
+    <script src="/static/js/jquery-1.4.2.min.js,js/mustache.js,js/functional.min.js" type="text/javascript">
+    </script>
+    <script src="/static/js/paypal.js" type="text/javascript">
+    </script>
+  </head>
+  <body>
+    <div id="body">
+    </div>
+  </body>
+</html>
