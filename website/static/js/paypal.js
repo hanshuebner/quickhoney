@@ -118,46 +118,70 @@ var PaypalObject = function (options) {
 		      });
 	},
 
+	reactivate: function (token, sendEmail) {
+	    var self = this;
+	    var url = "/json-paypal-admin?action=reactivate&token=" + token;
+	    if (sendEmail) {
+		url += "&sendEmail=true";
+	    }
+	    $.getJSON(url, function (data) {
+			  self.doForm();
+		      });
+	},
+
 	onJSONPaypal: function (data) {
 	    var resultList = $("#paypal_results");
 	    var paypalInfo = $("#paypal_info");
 
-	    var totalAmount = 0;
-	    var totalFees = 0;
-	    var txCount = 0;
+	    var stats = {
+		totalAmount: 0,
+		totalFees: 0,
+		txCount: 0
+	    };
 	    
 	    resultList.empty();
 	    
 	    for (var i in data.paypalTransactions) {
 		var tx = data.paypalTransactions[i];
-		var elt = LI(null, DIV({"class": "paypal_tx"},
-				       DIV({"class": "tx_info"},
-					   IMG({"src": "/image/" + tx.image.name + "/thumbnail,,60,60"}),
-					   DIV({"class": "tx_top"},
-					       "Bought for ",
-					       SPAN({"class": "tx_price"},
-						    
-						    tx["paypal-result"].amt, " ",
-						    tx["paypal-result"].currencycode),
-					       " on ",
-					       SPAN({"class": "tx_date"},
-						    tx["paypal-result"].ordertime),
-					       " by ",
-					       SPAN({"class": "tx_email"}, tx["paypal-info"].email),
-					       BR(),
-					       "Valid until ",
-					       SPAN({"class": "tx_date"},
-						    tx.valid_until)
-					      )),
-				       DIV({"class": "tx_more_info"},
-					   SPAN({"class": "tx_token"}, tx.token),
-					   SPAN({"class": "tx_email"}, tx["paypal-info"].email)
-					   )));
-		elt = resultList.append(elt);
+
+		var templateData = {
+		    image_url: "/image/" + tx.image.name + "/thumbnail,,60,60",
+		    price: tx.paypal_result.amt + " " + tx.paypal_result.currencycode,
+		    date: tx.paypal_result.ordertime,
+		    email: tx.paypal_info.email,
+		    valid_until: tx.valid_until,
+		    token: tx.token
+		};
+
+		document.tx = tx;
+
+		stats.txCount++;
+		stats.totalAmount += parseFloat(tx.paypal_result.amt);
+		stats.totalFees += parseFloat(tx.paypal_result.feeamt);
+		
+		var template =
+		    '<li>'+
+		    '<div class="paypal_tx">' +
+		    '<img src="{{image_url}}"/>' +
+		    '<div class="tx_top">' +
+		    ' Bought for <span class="tx_price">{{price}}</span>' +
+		    ' on <span class="tx_date">{{date}}</span> by <span class="tx_email">{{email}}</span><br/>' +
+		    ' Valid until <span class="tx_date">{{valid_until}}</span>' +
+		    ' (<a href="#" onclick=\'Paypal.reactivate("{{token}}")\'>Reactivate</a>) ' +
+		    ' (<a href="#" onclick=\'Paypal.reactivate("{{token}}", true)\'>Reactivate + Email client</a>) ' +
+		    '</div></div></li>';
+		    
+		var elt = resultList.append(Mustache.to_html(template, templateData));
 		elt.find(".tx_mode_info").toggle();
 		fooTx = tx;
 	    }
-	    var res = resultList.evtpaginate({perPage: 5});
+
+	    stats.totalAmount = Number(stats.totalAmount).toFixed(2);
+	    stats.totalFees = Number(stats.totalFees).toFixed(2);
+	    var res = resultList.evtpaginate({perPage: 10});
+
+	    var infoTemplate = "{{txCount}} transactions, total: {{totalAmount}} USD, fees: {{totalFees}} USD";
+	    $("#paypal_info").append(Mustache.to_html(infoTemplate, stats));
 	},
 
 	onEvtPaginateInitialized : function(e, startnum, totalnum) {
@@ -168,7 +192,7 @@ var PaypalObject = function (options) {
 	},
 
 	onEvtPaginateFinished: function (e, num, isFirst, isLast) {
-	    $.log("paginate finished");
+	    $.log("paginate finished " + isFirst + " " + isLast);
 	    $.log(e);
 	    $("#paypal_cur").html(num);
 	},

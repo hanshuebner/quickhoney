@@ -51,6 +51,11 @@
   (< (paypal-txn-valid-until txn)
      (get-universal-time)))
 
+(defmethod paypal-txn-reactivate ((txn paypal-product-transaction))
+  (with-transaction ()
+    (setf (paypal-product-transaction-valid-time txn)
+	  (get-universal-time))))
+
 (defclass json-paypal-checkout-handler (page-handler)
   ())
 
@@ -304,9 +309,9 @@
       (json:encode-object-element "valid_time" (paypal-product-transaction-valid-time txn))
       (json:encode-object-element "valid" (paypal-txn-valid-p txn))
       (json:encode-object-element "expired" (paypal-txn-expired-p txn))
-      (json:with-object-element ("paypal-result")
+      (json:with-object-element ("paypal_result")
 	(assoc-to-json paypal-result))
-      (json:with-object-element ("paypal-info")
+      (json:with-object-element ("paypal_info")
 	(assoc-to-json paypal-info)))))
 
 ;; XXX this is like the least efficient function i've ever written
@@ -325,7 +330,7 @@
 	     (unless (null until)
 	       (setf txs (remove-if-not #'(lambda (x) (< x until)) txs
 					:key #'paypal-product-transaction-creation-time)))
-	     (setf txs (sort txs #'< :key #'paypal-product-transaction-creation-time))
+	     (setf txs (sort txs #'> :key #'paypal-product-transaction-creation-time))
 	     (if count
 		 (subseq txs 0 (min count (length txs)))
 		 txs)))))
@@ -343,6 +348,14 @@
     (find-paypal-transactions :id id :token token :from from :until until :count count :status status)))
 
 (defmethod handle-object ((handler json-paypal-admin-handler) txns)
+  (with-query-params (action)
+    (cond ((string-equal action "reactivate")
+	   (with-query-params (sendemail)
+	     (map nil #'paypal-txn-reactivate txns)
+	     (when sendemail
+	       (map nil #'send-transaction-email txns))))
+	  ((null action) )
+	  (t (error "Unknown action ~A" action))))
   (with-json-response ()
     (json:with-object-element ("paypalTransactions")
       (json:with-array ()
