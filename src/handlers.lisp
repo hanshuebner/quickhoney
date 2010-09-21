@@ -67,9 +67,11 @@
     (json:encode-object-element "client" (or (quickhoney-image-client image) ""))
     (let ((product (quickhoney-image-pdf-product image)))
       (when product
-	(json:encode-object-element "shop_file" (store-object-id product))
-	(json:encode-object-element "shop_price" (quickhoney-product-price product))
-	(json:encode-object-element "shop_size" (blob-size product))
+	(when (or (quickhoney-product-active product) (admin-p (bknr-session-user)))
+	  (json:encode-object-element "shop_file" (store-object-id product))
+	  (json:encode-object-element "shop_price" (quickhoney-product-price product))
+	  (json:encode-object-element "shop_size" (blob-size product))
+	  (json:encode-object-element "shop_active" (quickhoney-product-active product)))
 	))
     (when (typep image 'quickhoney-animation-image)
       (json:encode-object-element "animation_type"

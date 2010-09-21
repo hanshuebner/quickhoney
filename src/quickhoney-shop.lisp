@@ -12,7 +12,12 @@
     :index-type hash-index
     :index-reader products-for-image
     :documentation
-    "Image that this product is related to, or nil for standalone products"))
+    "Image that this product is related to, or nil for standalone products")
+   (active
+    :update
+    :initform nil
+    :documentation
+    "Set this to T to have real clients see the product as well"))
   (:documentation
    "Mixin class for Quickhoney products, which are usually related to a QUICKHONEY-IMAGE"))
 
@@ -60,13 +65,16 @@
 		  (:p ((:a :href "javascript:window.close()") "ok"))))))))))
 
 (defmethod handle-object-form ((handler upload-shop-handler) (action (eql :edit)) image)
-  (with-query-params (price-select)
+  (with-query-params (price-select pdf-activate)
     (let ((product (quickhoney-image-pdf-product image))
 	  (price (parse-integer price-select)))
       (unless product
 	(error "Could not find product for image ~A" (store-image-name image)))
       (with-transaction (:set-product-price)
-	(setf (quickhoney-product-price product) price))
+	(setf (quickhoney-product-price product) price
+	      (quickhoney-product-active product )
+	      (and pdf-activate
+		   (string-equal pdf-activate "on"))))
       (setf *last-image-upload-timestamp* (get-universal-time))      
       (let* ((width (store-image-width image))
 	     (height (store-image-height image))
@@ -77,6 +85,7 @@
 		(:title "Price changed successfully")
 		((:script :type "text/javascript" :language "JavaScript")
 		 "window.opener.current_image.shop_price = " (:princ-safe price) ";"
+		 "window.opener.current_image.shop_active = " (:princ-safe (quickhoney-product-active product)) ";"
 		 "window.opener.after_image_edit();")
 		(:body
 		 (:p "Price for image " (:princ-safe (store-image-name image)) " set to "
@@ -104,6 +113,7 @@
 	    ((:script :type "text/javascript" :language "JavaScript")
 	     "delete window.opener.current_image.shop_price;"
 	     "delete window.opener.current_image.shop_file;"
+	     "delete window.opener.current_image.shop_active;"
 	     "window.opener.after_image_edit();")
 	    (:body
 	     (:p "Product for image " (:princ-safe (store-image-name image)) " deleted")
@@ -122,7 +132,7 @@
       (format t "Convert image ~A to PDF product ~A~%" image product))))
   
 (defmethod handle-object-form ((handler upload-shop-handler) (action (eql :upload)) image)
-  (with-query-params (price-select pdf-generate)
+  (with-query-params (price-select pdf-generate pdf-activate)
     (let ((pdf-file (request-uploaded-file "pdf-image-file"))
 	  (price (parse-integer price-select)))
       (cond
@@ -135,13 +145,13 @@
 	   (html (:html
 		  (:head
 		   (:title "Generating PDF for image...")
-		   ((:script :src "/static/detectplugins.js,AC_QuickTime.js,MochiKit/MochiKit.js,yui/yahoo-dom-event/yahoo-dom-event.js,yui/animation/animation-min.js,yui/element/element-beta-min.js,yui/container/container_core-min.js,yui/editor/simpleeditor-beta-min.js,helpers.js" :type "text/javascript"))
-		   ((:script :src "/static/javascript.js,pdf_shop.js" :type "text/javascript")))
+		   ((:script :src "/static/js/MochiKit/MochiKit.js,js/helpers.js" :type "text/javascript"))
+		   ((:script :src "/static/js/javascript.js,js/pdf_shop.js" :type "text/javascript")))
 		  (:body
 		   ((:p :id "information")
 		    "Generating PDF for image..."
 		       ((:span :id "cue")
-			((:img :src "/static/spinner.gif" :width 16 :height 16)))
+			((:img :src "/static/images/spinner.gif" :width 16 :height 16)))
 		    )
 		   (:p ((:img :src (format nil "/image/~D" (store-object-id image))
 			      :width (round (* ratio width)) :height (round (* ratio height))))
@@ -155,6 +165,8 @@
 	(pdf-file
 	 (let ((product (make-blob-from-file (upload-pathname pdf-file) 'quickhoney-pdf-product
 					     :price price
+					     :active (and pdf-activate
+							  (string-equal pdf-activate "on"))
 					     :type :pdf
 					     :image image)))
 	   (setf *last-image-upload-timestamp* (get-universal-time))      
@@ -167,6 +179,7 @@
 		     (:title "Product uploaded successfully")
 		     ((:script :type "text/javascript" :language "JavaScript")
 		      "window.opener.current_image.shop_price = " (:princ-safe price) ";"
+		      "window.opener.current_image.shop_active = " (:princ-safe (quickhoney-product-active product)) ";"
 		      "window.opener.current_image.shop_file = " (:princ-safe (store-object-id product)) ";"
 		      "window.opener.after_image_edit();")
 		     (:body

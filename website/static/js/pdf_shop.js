@@ -70,6 +70,7 @@ function shop_show_form_for_image(current_image) {
 	$("delete_pdf_button").style.visibility = "visible";
 	$("pdf-generate-warning").style.visibility = "hidden";
 	shop_set_price_selector(current_image.shop_price);
+	$("pdf-activate").checked = current_image.shop_active;
     } else {
 	$("pdf_field").style.visibility = "hidden";
 	if ((current_image.width * current_image.height) >= (400 * 400)) {
@@ -81,6 +82,7 @@ function shop_show_form_for_image(current_image) {
 	$("upload_pdf_button").style.visibility = "visible";
 	$("edit_pdf_button").style.visibility = "hidden";
 	$("delete_pdf_button").style.visibility = "hidden";
+	$("pdf-activate").checked = false;
     }
 }
 
