@@ -209,7 +209,11 @@ function make_shop_overlay(image, json) {
 			  "Filetype: Vector PDF", BR(),
 			  "Filesize: " + format_file_size(image.shop_size), BR(),
 			  "Price: $" + image.shop_price, BR(), BR(),
-
+			  
+			  "Vector pdf's are resolution-independent, they can be printed in any size " +
+			      "without loss of quality, they can also be opened in Photoshop and saved in " +
+			      "any desired resolution. " , BR(), BR(),
+			  
 			  "Download Artwork ", ARTWORK_NAME(image.name), " for one-time private use only.  ",
                              "Please read our ",
                              A({ onclick: "show_eula()", id: 'eula-link'},
@@ -239,7 +243,11 @@ function make_pdf_info_overlay() {
     make_overlay('pdf-info', 'Download Art as Vector PDF',
 		 280,
 		 P({'class': 'pdf-info'},
-		   "Selected Artwork available for download as vector pdf file! Look for the pricetag!"));
+		   "Selected Artwork available for download as vector pdf file! ", BR(), BR(),
+		   "Vector pdf's are resolution-independent, they can be printed in any size " +
+		   "without loss of quality, they can also be opened in Photoshop and saved in " +
+		   "any desired resolution. " , BR(), BR(),
+		   "Look for the pricetag!"));
 }
 
 function show_paypal_page(subpath) {
