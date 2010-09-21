@@ -58,7 +58,7 @@ var BKNRObject = function (options) {
 	    if (self.options.ensureAdmin) {
 		if (!self.isLoggedIn) {
 		    $.log("not logged in " + json(data));
-		    //		    window.location.replace("/admin");
+		    window.location.replace("/admin");
 		    return;
 		}
 	    } 
