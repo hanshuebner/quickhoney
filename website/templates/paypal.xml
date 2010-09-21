@@ -3,14 +3,56 @@
   <head>
     <meta charset="UTF-8"/>
     <title>Paypal Administration</title>
-    <link rel="stylesheet" href="/static/js/yui/reset-fonts/reset-fonts.css,js/yui/fonts/fonts-min.css,js/yui/editor/assets/skins/sam/simpleeditor.css,css/quickhoney.css,css/index.css,css/ydsf.css" />
-    <script src="/static/js/jquery-1.4.2.min.js,js/mustache.js,js/functional.min.js" type="text/javascript">
+    <link rel="stylesheet" href="/static/js/yui/reset-fonts/reset-fonts.css,js/yui/fonts/fonts-min.css,css/paypal.css,css/jquery-ui.css" />
+    <script src="/static/js/MochiKit/MochiKit.js,js/jquery-1.4.2.min.js,js/jquery-ui.min.js,js/functional.min.js" type="text/javascript"> </script>
+    <script src="/static/js/jquery.evtpaginate.js" type="text/javascript">
     </script>
     <script src="/static/js/paypal.js" type="text/javascript">
     </script>
   </head>
   <body>
-    <div id="body">
+    <div id="body" class="loading">
+      <div id="paypal">
+
+	<h1>Paypal transactions</h1>
+	<div id="paypal_navbar">
+	  <div id="paypal_info"> </div>
+	  <a href="#" id="paypal_prev">Prev</a>  <span id="paypal_cur">0</span>
+	  of <span id="paypal_total">0</span> <a href="#" id="paypal_next">Next</a>
+	</div>
+
+	<ul id="paypal_results">
+	</ul>
+      </div>
+
+    <div id="cms">
+      <div id="login_status" class="cms_form">
+        <p>You are logged in as <b id="username"> </b></p>
+        <p><a href="#" onclick="BKNR.logout();" class="cmslink">logout</a></p>
+      </div>
+      <div id="paypalform" class="cms_form">
+      <div class="cms_title">Show Paypal Transactions</div>
+	<div class="dateselection" id="paypalrange">
+	  <div class="datefrom">
+	    <h2>From:</h2>
+	    <div id="datepicker_from"> </div>
+	  </div>
+	  <div class="dateto">
+	    <h2>To:</h2>
+	    <div id="datepicker_to"> </div>
+	  </div>
+	</div>
+	<div id="paypalstatus">
+	  <h2>Status:</h2>
+	  <ul>
+	    <li><input type="checkbox" name="successful"/> Successful</li>
+	    <li><input type="checkbox" name="cancelled"/> Cancelled</li>
+	    <li><input type="checkbox" name="error"/> Error</li>
+	    <li><input type="checkbox" name="ongoing"/> Ongoing</li>
+	  </ul>
+	</div>
+      </div>
+    </div>
     </div>
   </body>
 </html>
