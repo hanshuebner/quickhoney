@@ -167,8 +167,10 @@ var PaypalObject = function (options) {
 		    ' Bought for <span class="tx_price">{{price}}</span>' +
 		    ' on <span class="tx_date">{{date}}</span> by <span class="tx_email">{{email}}</span><br/>' +
 		    ' Valid until <span class="tx_date">{{valid_until}}</span>' +
+		    (tx.status == "successful" ? 
 		    ' (<a href="#" onclick=\'Paypal.reactivate("{{token}}")\'>Reactivate</a>) ' +
-		    ' (<a href="#" onclick=\'Paypal.reactivate("{{token}}", true)\'>Reactivate + Email client</a>) ' +
+		    ' (<a href="#" onclick=\'Paypal.reactivate("{{token}}", true)\'>Reactivate + Email client</a>) ' :
+		    '') +
 		    '</div></div></li>';
 		    
 		var elt = resultList.append(Mustache.to_html(template, templateData));
@@ -204,7 +206,8 @@ var PaypalObject = function (options) {
 		{ onSelect: function (dateText, inst) { self.doForm(); },
 		defaultDate: -14 });
 	    $("#datepicker_to").datepicker(
-		{ onSelect: function (dateText, inst) { self.doForm(); }});
+		{ onSelect: function (dateText, inst) { self.doForm(); },
+		defaultDate: +1 });
 	    $("#paypalstatus :checkbox").change(function (obj) {
 						    $("#paypalstatus :checkbox").map(
 							function () {
