@@ -72,6 +72,9 @@ function login_status(json_result) {
         $("login_status").style.visibility = 'visible';
         news_editor = new YAHOO.widget.SimpleEditor('news_editor', { toolbar: editorToolbarConfig });
         news_editor.render();
+
+	// clear query cache on login
+	db_cache = { };
         show_cms_window();
     }
 }
@@ -122,6 +125,9 @@ function send_logout() {
     show_cms_window();
     loadJSONDoc("/json-logout")
         .addCallbacks(function () {}, alert);
+    // clear query cache on logout
+    db_cache = { };
+    do_query();
 }
 
 /* image editing */
