@@ -277,6 +277,11 @@
 (defclass json-paypal-admin-handler (object-handler admin-only-handler)
   ())
 
+(defun assoc-to-json (assoc)
+  (json:with-object ()
+    (loop for (key value) on assoc by #'cddr
+       do (json:encode-object-element (string-downcase (symbol-name key)) value))))
+
 (defmethod paypal-txn-to-json ((txn paypal-product-transaction))
   (json:with-object ()
     (with-slots (product token status creation-time valid-time paypal-result paypal-info) txn
@@ -299,8 +304,10 @@
       (json:encode-object-element "valid_time" (paypal-product-transaction-valid-time txn))
       (json:encode-object-element "valid" (paypal-txn-valid-p txn))
       (json:encode-object-element "expired" (paypal-txn-expired-p txn))
-      (json:encode-object-element "paypal-result" paypal-result)
-      (json:encode-object-element "paypal-info" paypal-info))))
+      (json:with-object-element ("paypal-result")
+	(assoc-to-json paypal-result))
+      (json:with-object-element ("paypal-info")
+	(assoc-to-json paypal-info)))))
 
 ;; XXX this is like the least efficient function i've ever written
 (defun find-paypal-transactions (&key token id from until count status)
