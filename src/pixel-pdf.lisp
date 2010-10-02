@@ -207,9 +207,14 @@
               (pdf:in-text-mode
                 (pdf:set-font (pdf:get-font "Helvetica") 7.0)
                 (pdf:set-rgb-fill 0.5 0.5 0.5)
+		#|
                 (pdf:translate (+ border x-offset 3 (* scale (width *converter*)))
                                (+ y-offset 125.5))
                 (pdf:rotate -90.0)
+		|#
+                (pdf:translate (+ border x-offset 7 (* scale (width *converter*)))
+                               (+ y-offset 30.5))
+                (pdf:rotate 90.0)
                 (pdf:show-text (format nil "~C Nana Rausch QuickHoney" #\Copyright_Sign))))))
         (pdf:write-document pdf-pathname)))))
 
