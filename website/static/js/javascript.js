@@ -1396,12 +1396,13 @@ function overlay_remove()
  * are added to the overlay window.
  */
 
-function fade_out_page(to) {
+function fade_out_page(to, callback) {
     to = to || 0.3;
     fade('menu', {to: to});
     fade('path-and-version', {to: to});
     fade('image_browser', {to: to});
-    fade('footer', {to: to});
+    fade('footer', {to: to,
+		   afterFinish: callback});
 }
 
 function make_overlay_content(overlay, options) {
@@ -1450,16 +1451,20 @@ function make_overlay_content(overlay, options) {
 
     /* wait for fade, fade speed XXX */
     var showOverlay = function () {
-	if (options.fade) {
-	    fade_out_page(0.3);
+	function show() {
+	    if (options.onShow) {
+		options.onShow();
+	    }
+	    overlay.style.visibility = 'inherit';
 	}
-	if (options.onShow) {
-	    options.onShow();
+	if (options.waitForImages) {
+	    wait_for_images(show);
+	} else {
+	    show();
 	}
-	overlay.style.visibility = 'inherit';
     };
-    if (options.waitForImages) {
-	wait_for_images(showOverlay);
+    if (options.fade) {
+	fade_out_page(0.3, showOverlay);
     } else {
 	showOverlay();
     }
