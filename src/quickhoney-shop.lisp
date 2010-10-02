@@ -184,7 +184,10 @@
 		     (:title "Product uploaded successfully")
 		     ((:script :type "text/javascript" :language "JavaScript")
 		      "window.opener.current_image.shop_price = " (:princ-safe price) ";"
-		      "window.opener.current_image.shop_active = " (:princ-safe (quickhoney-product-active product)) ";"
+		      "window.opener.current_image.shop_active = " (:princ-safe
+								    (if (quickhoney-product-active product)
+									"true"
+									"false")) ";"
 		      "window.opener.current_image.shop_file = " (:princ-safe (store-object-id product)) ";"
 		      "window.opener.after_image_edit();")
 		     (:body
