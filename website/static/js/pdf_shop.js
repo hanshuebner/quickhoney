@@ -165,7 +165,7 @@ var pricetag_animation;
 
 function pulsate_pricetag(id) {
     var pricetag = $('pricetag-small') || $('pricetag-micro-' + id);
-    pricetag_animation = pulsate(pricetag, {'pulses': 100, duration: 100, afterFinish: pulsate_pricetag});
+    pricetag_animation = pulsate(pricetag, {'pulses': 250, duration: 100, afterFinish: pulsate_pricetag});
 }
 
 function pulsate_pricetag_stop(id) {
