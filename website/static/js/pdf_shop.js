@@ -125,6 +125,7 @@ function after_pdf_generation_upload(options, json) {
 	$("information").innerHTML = "Image successfully converted to PDF!";
 	window.opener.current_image.shop_price = json.image.shop_price;
 	window.opener.current_image.shop_file = json.image.shop_file;
+	window.opener.current_image.shop_active = json.image.shop_active;
 	window.opener.after_image_edit();
     }
     $("ok").style.visibility = "visible";
