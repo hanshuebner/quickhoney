@@ -294,8 +294,11 @@
 		<input type="checkbox" id="pdf-activate" name="pdf-activate" /> Activate download<br />
 	      </span>
 	      <span id="upload_pdf_field">
+		<span id="pdf-file-upload">
               PDF shop file: <input type="file" name="pdf-image-file" /><br />
-	      <input type="checkbox" id="pdf-generate-upload" name="pdf-generate" value="1" /> PDF file generieren <span id="pdf-generate-warning">(Achtung: PDF file koennte zu gross werden!)</span><br/>
+		</span>
+		<span id="pdf-generate-upload"><input type="checkbox" name="pdf-generate" value="1" /> PDF file generieren <span id="pdf-generate-warning">(Achtung: PDF file koennte zu gross werden!)</span></span>
+		<br/>
 	      </span>
           </p>
           <p class="cms">
