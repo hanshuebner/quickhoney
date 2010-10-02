@@ -1407,6 +1407,7 @@ function fade_out_page(to) {
 function make_overlay_content(overlay, options) {
     log("options " + JSON.stringify(options));
     var id = options.id;
+    var cssClass = options.cssClass || '';
     var title = options.title;
     var width = options.width;
     var closeID = 'close' + id;
@@ -1423,7 +1424,7 @@ function make_overlay_content(overlay, options) {
 			  width: 13, height: 13}),
                     BR());
     replaceChildNodes(overlay,
-                      DIV({ 'class': 'ydsf' },
+                      DIV({ 'class': 'ydsf ' + cssClass },
                           inner));
     overlay.style.width = width + 'px';
     $(closeID).style.left = (width - 23) + 'px';
