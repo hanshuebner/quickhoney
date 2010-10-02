@@ -501,32 +501,40 @@ input.invisibleSubmit {
 }
 
 .overlay.pixel h1, .overlay.pixel h2, .overlay.pixel .artwork-name {
-	color: #ff00ff;
+    color: #ff00ff;
 }
 
-.pixel-download {
+.pixel-download .inner h1, .vector-download .inner h1 {
     color: white;
+}
+
+.pixel-download .inner a, .vector-download .inner a {
+    color: white;
+}
+
+.pixel-download .inner {
+    color: black;
     background-color: #ff00ff;
 }
 
-.vector-download {
-    color: white;
+.vector-download .inner {
+    color: black;
     background-color: #00ccff;
 }
 
 .overlay.vector h1, .overlay.vector h2, .overlay.vector .artwork-name {
-	color: #00ccff;
+    color: #00ccff;
 }
 
 .overlay.pen h1, .overlay.pen h2, .overlay.pen .artwork-name {
-	color: #ff0000;
+    color: #ff0000;
 }
 
 .overlay h1.confirmation {
-	padding: 20px;
-        text-align: center;
-	color: #000;
-        background-color: #FFFF33;
+    padding: 20px;
+    text-align: center;
+    color: #000;
+    background-color: #FFFF33;
 }
 
 .overlay.home h1, .overlay.home h2 {
