@@ -1411,15 +1411,19 @@ function make_overlay_content(overlay, options) {
     var title = options.title;
     var width = options.width;
     var closeID = 'close' + id;
+    var buttonColor = options.color || pages[current_directory].link_color;
+    var invertColor = options.invertColor || false;
+    var colorString = (!options.invertColor ? "000000," + buttonColor :
+		      "ffffff," + buttonColor + ",000000,ffffff");
 
     overlay.style.visibility = 'hidden';
     overlay.style.top = options.top || '144px';
     overlay.style.left = options.left || '36px';
     overlay.className = current_directory + " overlay";
 
-    var inner = DIV({ 'class': 'inner', style: 'background: white'},
+    var inner = DIV({ 'class': 'inner' },
                     H1(null, title),
-                    IMG({ src: '/image/overlay-close/color,000000,' + pages[current_directory].link_color,
+                    IMG({ src: '/image/overlay-close/color,' + colorString,
                           id: closeID, 'class': 'close',
 			  width: 13, height: 13}),
                     BR());
