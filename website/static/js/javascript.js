@@ -1022,7 +1022,7 @@ function display_thumbnail_page() {
             imageElement.src = '/image/' + encodeURI(image.name) + '/cell,ffffff,' + cell_width + ',' + cell_height + ',8';
 	    var priceTag = null;
 	    if ((image.shop_file != undefined) && (image.shop_price != undefined)) {
-		var border_width = 5;
+		var border_width = 8;
 		var img_ratio = Math.max(image.width / (cell_width - (2 * border_width)),
 					 image.height / (cell_height - (2 * border_width)));
 		var tb_height = Math.min(image.height, Math.round(image.height / img_ratio));
@@ -1033,9 +1033,14 @@ function display_thumbnail_page() {
 		/* XXX micro-pricetags */
 		var right_offset = 5 + x_offset;
 		var top_offset = -cell_height  + 13 + y_offset + 3;
+		var bottom_offset = 7;
+		/*
+		log("img_ratio " + img_ratio);
+		log("border_width " + border_width);
 		log("cell_height " + cell_height + " tb_height " + tb_height + " y_offset " + y_offset);
 		log("cell_width " + cell_width + " tb_width " + tb_width + " y_offset " + x_offset);
 		log("right " + right_offset + " top " + top_offset);
+		 */
 		
 		priceTag = A({ href: window.location.hash},
 			     IMG({'class': 'image_pricetag_micro',
@@ -1043,7 +1048,7 @@ function display_thumbnail_page() {
 				  'id': 'pricetag-micro-' + image.id,
 				  'onclick': "init_shop_overlay(query_result_pages[" +
 				  current_page_index +"][" + row_index + "][" + image_index + "])",
-				  'style': "top: " + top_offset + "px; right: " + right_offset + "px"}));
+				  'style': "bottom: " + bottom_offset + "px; right: " + right_offset + "px"}));
 	    }
 
 	    var imageLink = A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name) },
