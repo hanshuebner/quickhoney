@@ -688,16 +688,16 @@ body.pen .button-section-items {
 img#pricetag-big {
     background-color: transparent;
     position: absolute;
-    top: 63px;
-    left: 197px;
+    top: 36px;
+    left: 225px;
     z-index: 2;
 }
 
 img#pricetag-medium {
     background-color: transparent;
     position: absolute;
-    top: 63px;
-    left: 207px;
+    top: 36px;
+    left: 232px;
     z-index: 2;
 }
 
