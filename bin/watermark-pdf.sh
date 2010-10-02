@@ -23,8 +23,8 @@ INPUT_H=`echo "$INPUT_SIZE" | cut -d\  -f3`
 SIG_W=88
 SIG_H=28
 
-SIG_X=$((INPUT_W - SIG_W))
-SIG_Y=$((INPUT_H - SIG_H))
+SIG_X=$((INPUT_W - SIG_W - 20))
+SIG_Y=$((INPUT_H - SIG_H - 10))
 
 #echo "INPUT_SIZE: $INPUT_SIZE"
 #echo "INPUT_W: $INPUT_W"
@@ -34,12 +34,12 @@ SIG_Y=$((INPUT_H - SIG_H))
 sed -e "s/transform=\"\"/transform=\"translate($SIG_X,$SIG_Y)\"/" \
     -e "s/__W__/$INPUT_W/g" -e "s/__H__/$INPUT_H/g" \
     < "$SIG_SVG" > "$TMPSVG"
-svg2pdf "$TMPSVG" "$TMPPDF"
-pdftk "$INPUT_PDF" stamp "$TMPPDF"  output "$TMPPDF2"
-deillustrate.pl "$TMPPDF2" > "$TMPPDF"
+#svg2pdf "$TMPSVG" "$TMPPDF"
+#pdftk "$INPUT_PDF" stamp "$TMPPDF"  output "$TMPPDF2"
+#deillustrate.pl "$TMPPDF2" > "$TMPPDF"
 echo "InfoKey: BoughtBy\nInfoValue: $WATERMARK\n" > "$TMPDATA"
 cat "$TMPDATA"
-pdftk "$TMPPDF" update_info "$TMPDATA" output "$OUTPUT_PDF"
+pdftk "$INPUT_PDF" update_info "$TMPDATA" output "$OUTPUT_PDF"
 
 rm "$TMPSVG" "$TMPPDF" "$TMPPDF2" "$TMPDATA"
 
