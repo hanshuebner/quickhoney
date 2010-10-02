@@ -59,7 +59,6 @@ function shop_show_pricetags(page, subpath) {
 }
 
 function shop_show_form_for_image(current_image) {
-    log("shop show form");
     $("shop_upload_form_element").action = "/upload-shop/" + current_image.id;
     if (current_image.shop_file != undefined) {
 	$("pdf_field").style.visibility = "visible";
@@ -138,7 +137,8 @@ function wait_for_pdf_generation_upload() {
 }
 
 function show_eula() {
-    var eula_window = window.open('/static/eula.html', 'eula_window', "width=700,height=400,status=no,toolbar=no,menubar=no,scrollbars=yes");
+    var eula_window = window.open('/static/eula.html', 'eula_window',
+				  "width=700,height=400,status=no,toolbar=no,menubar=no,scrollbars=yes");
     return eula_window;
 }
 
@@ -205,19 +205,16 @@ function make_shop_overlay(image, json) {
 			     onShow:     partial(pulsate_pricetag_stop, image.id)
 			 },
                  FORM({ action: '#', onsubmit: 'return false' },
-		      DIV({'align': 'center'},
-			   IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})),
                       SPACER(
+			  IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(),
 			  "FILE#: " + image.id, BR(),
-			  "Filetype: Vector PDF", BR(),
-			  "Filesize: " + format_file_size(image.shop_size), BR(),
-			  "Price: $" + image.shop_price, BR(), BR(),
+			  "File Type: Vector PDF", BR(),
+			  "File Size: " + format_file_size(image.shop_size), BR(),
+			  "Price: " + image.shop_price + "$" , BR(), BR(),
 			  
-			  "Vector pdf's are resolution-independent, they can be printed in any size " +
-			      "without loss of quality, they can also be opened in Photoshop and saved in " +
-			      "any desired resolution. " , BR(), BR(),
+			  "Vector pdfs are resolution-independent, and can be scaled to any size", BR(), BR(),
 			  
-			  "Download Artwork ", ARTWORK_NAME(image.name), " for one-time private use only.  ",
+			  "Download Artwork ", BOLD(image.name), " for one-time private use only.  ",
                              "Please read our ",
                              A({ onclick: "show_eula()", id: 'eula-link'},
 			       "User Agreement"),
@@ -229,7 +226,7 @@ function make_shop_overlay(image, json) {
 				     name: 'agree-to-license'}),
                              " I have read and understood the 'User Agreement' and agree to be bound to the terms set forth in it",
                           BR(), BR(),
-			  DIV({'align': 'center'},
+			  DIV({},
 			      A({'onclick': 'return check_eula_agreed()',
 				 'target': '_parent',
 				'href': paypalLink },
@@ -247,10 +244,8 @@ function make_pdf_info_overlay() {
 		 280,
 		 P({'class': 'pdf-info'},
 		   "Selected Artwork available for download as vector pdf file! ", BR(), BR(),
-		   "Vector pdf's are resolution-independent, they can be printed in any size " +
-		   "without loss of quality, they can also be opened in Photoshop and saved in " +
-		   "any desired resolution. " , BR(), BR(),
-		   "Look for the pricetag!"));
+		   "Vector pdfs are resolution-independent, and can be scaled to any size." , BR(), BR(),
+		   ITALIC("Look for the pricetag!")));
 }
 
 function show_paypal_page(subpath) {
@@ -269,13 +264,12 @@ function make_paypal_overlay(json) {
 					 title: 'Download your Vector PDF File!',
 					 width: 426,
 					 fade: true },
-		     DIV({'align': 'center'},
-			 pdfLink(IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}))),
                      SPACER(
+			 pdfLink(IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})), BR(),
 			 "FILE#: ", pdfLink(image.id), BR(),
-			 "Filetype: Vector PDF", BR(),
-			 "Filesize: " + format_file_size(image.shop_size), BR(),
-			 "Price: $" + image.shop_price, BR(),
+			 "File Type: Vector PDF", BR(),
+			 "File Size: " + format_file_size(image.shop_size), BR(),
+			 "Price: " + image.shop_price + "$", BR(),
 			 "Bought on: " + json.bought_on, BR(),
 			 "Download valid until: " + json.valid_until, BR(),
 			 BR(),
@@ -291,13 +285,12 @@ function make_paypal_overlay(json) {
 			       width: 426,
 			       fade: true
 			       },
-		     DIV({'align': 'center'},
-			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})),
                      SPACER(
+			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(),
 			 "FILE#: " + image.id, BR(),
-			 "Filetype: Vector PDF", BR(),
-			 "Filesize: " + format_file_size(image.shop_size), BR(),
-			 "Price: $" + image.shop_price, BR(),
+			 "File Type: Vector PDF", BR(),
+			 "File Size: " + format_file_size(image.shop_size), BR(),
+			 "Price: " + image.shop_price + "$", BR(),
 			 "Bought: " + json.bought_on, BR(),
 			 "Download valid until: " + json.valid_until, BR(),
 			 BR(),
@@ -314,13 +307,12 @@ function make_paypal_overlay(json) {
 			      title: 'Wrong Paypal Transaction!',
 			      width: 426,
 			      fade:true },
-		     DIV({'align': 'center'},
-			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})),
                      SPACER(
+			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(),
 			 "FILE#: " + image.id, BR(),
-			 "Filetype: Vector PDF", BR(),
-			 "Filesize: " + format_file_size(image.shop_size), BR(),
-			 "Price: $" + image.shop_price, BR(),
+			 "File Type: Vector PDF", BR(),
+			 "File Size: " + format_file_size(image.shop_size), BR(),
+			 "Price: " + image.shop_price + "$", BR(),
 			 BR(),
 			 
 			 "Something went wrong with your Paypal transaction! ",
