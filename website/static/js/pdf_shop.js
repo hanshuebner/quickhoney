@@ -72,12 +72,21 @@ function shop_show_form_for_image(current_image) {
 	$("pdf-activate").checked = current_image.shop_active;
     } else {
 	$("pdf_field").style.visibility = "hidden";
-	if ((current_image.width * current_image.height) >= (400 * 400)) {
-	    $("pdf-generate-warning").style.visibility = "visible";
-	} else {
-	    $("pdf-generate-warning").style.visibility = "hidden";
-	}
 	$("upload_pdf_field").style.visibility = "visible";
+
+	if (current_image.category == "pixel") {
+	    if ((current_image.width * current_image.height) >= (400 * 400)) {
+		$("pdf-generate-warning").style.visibility = "visible";
+	    } else {
+		$("pdf-generate-warning").style.visibility = "hidden";
+	    }
+	    $("pdf-generate-upload").style.visibility = "visible";
+	    $("pdf-file-upload").style.visibility = "hidden";
+	} else {
+	    $("pdf-generate-upload").style.visibility = "hidden";
+	    $("pdf-file-upload").style.visibility = "visible";
+	}
+	
 	$("upload_pdf_button").style.visibility = "visible";
 	$("edit_pdf_button").style.visibility = "hidden";
 	$("delete_pdf_button").style.visibility = "hidden";
