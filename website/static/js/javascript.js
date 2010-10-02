@@ -1030,6 +1030,7 @@ function display_thumbnail_page() {
 		var tb_width = Math.min(image.width, Math.round(image.width / img_ratio));
 		var x_offset = Math.round((cell_width - tb_width) / 2);
 
+		/* XXX micro-pricetags */
 		var right_offset = 5 + x_offset;
 		var top_offset = -cell_height  + 13 + y_offset + 3;
 		log("cell_height " + cell_height + " tb_height " + tb_height + " y_offset " + y_offset);
@@ -1406,7 +1407,8 @@ function make_overlay_content(overlay, options) {
     var closeID = 'close' + id;
 
     overlay.style.visibility = 'hidden';
-    overlay.style.top = '144px';
+    overlay.style.top = options.top || '144px';
+    overlay.style.left = options.left || '36px';
     overlay.className = current_directory + " overlay";
 
     var inner = DIV({ 'class': 'inner', style: 'background: white'},
@@ -1436,6 +1438,7 @@ function make_overlay_content(overlay, options) {
     }
     appendChildNodes(inner, DIV({id: id}, elements));
 
+    /* wait for fade, fade speed XXX */
     var showOverlay = function () {
 	if (options.fade) {
 	    fade_out_page(0.3);
@@ -1711,6 +1714,8 @@ NOTICE = partial(SPAN, { 'class': 'notice' });
 PRICE = partial(SPAN, { 'class': 'price' });
 SPACER = partial(DIV, { 'class': 'spacer' });
 ARTWORK_NAME = partial(SPAN, { 'class': 'artwork-name' });
+BOLD = partial(SPAN, { 'class': 'bold' });
+ITALIC = partial(SPAN, { 'class': 'italic' });
 
 function recolored_image_path(name)
 {
