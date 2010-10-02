@@ -69,6 +69,7 @@
 	    (unless (and img product)
 	      (error "Could not find PDF for image with id ~A" image))
 	    (multiple-value-bind (link res)
+		;; XXX open new thread here and wait for answer
 		(cl-paypal:make-express-checkout-url price (real-remote-addr)
 						     :l_paymentrequest_0_name0 (store-image-name img)
 						     :l_paymentrequest_0_number0 id

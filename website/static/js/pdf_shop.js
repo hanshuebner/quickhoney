@@ -188,6 +188,7 @@ function pulsate_pricetag_stop(id) {
 
 function init_shop_overlay(image) {
     pulsate_pricetag(image.id);
+    // XXX poll json here until paypal is valid, add upper limit
     submit_json('/json-paypal-checkout?price=' + image.shop_price +
 		'&image=' + image.id +
 		'&color=' + pages[current_directory].link_color,
@@ -213,7 +214,7 @@ function make_shop_overlay(image, json) {
 			     width: 426,
 			     cssClass: 'paypal-overlay',
 			     fade: true,
-			     waitForImages: true,
+			     waitForImages: false,
 			     onShow:     partial(pulsate_pricetag_stop, image.id)
 			 },
                  FORM({ action: '#', onsubmit: 'return false' },
