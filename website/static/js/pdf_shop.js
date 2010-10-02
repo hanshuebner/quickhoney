@@ -209,19 +209,18 @@ function make_shop_overlay(image, json) {
 			     id: 'buy-file',
 			     title: 'Buy Art as Vector PDF File',
 			     width: 426,
+			     cssClass: 'paypal-overlay',
 			     fade: true,
 			     waitForImages: true,
 			     onShow:     partial(pulsate_pricetag_stop, image.id)
 			 },
                  FORM({ action: '#', onsubmit: 'return false' },
                       SPACER(
-			  IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(),
+			  IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(), BR(),
 			  "FILE#: " + image.id, BR(),
 			  "File Type: Vector PDF", BR(),
 			  "File Size: " + format_file_size(image.shop_size), BR(),
 			  "Price: " + image.shop_price + "$" , BR(), BR(),
-			  
-			  "Vector pdfs are resolution-independent, and can be scaled to any size", BR(), BR(),
 			  
 			  "Download Artwork ", BOLD(image.name), " for one-time private use only.  ",
                              "Please read our ",
@@ -233,8 +232,11 @@ function make_shop_overlay(image, json) {
 				     type: 'checkbox',
 				     onclick: 'handle_eula_agreed()',
 				     name: 'agree-to-license'}),
-                             " I have read and understood the 'User Agreement' and agree to be bound to the terms set forth in it",
+                             " I have read and understood the 'User Agreement' and agree to be bound to the terms set forth in it.",
                           BR(), BR(),
+			  "Vector pdfs are resolution-independent, and can be scaled to any size.", BR(), BR(),
+			  
+			  
 			  DIV({},
 			      A({'onclick': 'return check_eula_agreed()',
 				 'target': '_parent',
@@ -249,8 +251,12 @@ function make_shop_overlay(image, json) {
 INFOTITLE = partial(SPAN, { 'class': 'notice' });
 
 function make_pdf_info_overlay() {
-    make_overlay('pdf-info', 'Download Art as Vector PDF',
-		 280,
+    make_overlay_content($('overlay'),
+			 { id: 'pdf-info',
+			   title: 'Download Art as Vector PDF',
+			   left: '64px',
+			   'cssClass': 'pdf-info-overlay',
+			   width: 320 },
 		 P({'class': 'pdf-info'},
 		   "Selected Artwork available for download as vector pdf file! ", BR(), BR(),
 		   "Vector pdfs are resolution-independent, and can be scaled to any size." , BR(), BR(),
@@ -271,10 +277,11 @@ function make_paypal_overlay(json) {
 	var pdfLink = partial(A, {'href': "/pdf-client/" + json.token, 'target': '_blank'});
 	make_overlay_content(overlay2, { id: 'buy-file',
 					 title: 'Download your Vector PDF File!',
+					 cssClass: 'pixel-download download-overlay',
 					 width: 426,
 					 fade: true },
                      SPACER(
-			 pdfLink(IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})), BR(),
+			 pdfLink(IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})), BR(), BR(),
 			 "FILE#: ", pdfLink(image.id), BR(),
 			 "File Type: Vector PDF", BR(),
 			 "File Size: " + format_file_size(image.shop_size), BR(),
@@ -291,11 +298,12 @@ function make_paypal_overlay(json) {
 	make_overlay_content(overlay2,
 			     { id: 'buy-file',
 			       title: 'Your Vector PDF File has expired!',
+			       cssClass: 'pixel-download download-overlay',
 			       width: 426,
 			       fade: true
 			       },
                      SPACER(
-			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(),
+			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(), BR(),
 			 "FILE#: " + image.id, BR(),
 			 "File Type: Vector PDF", BR(),
 			 "File Size: " + format_file_size(image.shop_size), BR(),
@@ -314,10 +322,12 @@ function make_paypal_overlay(json) {
 	make_overlay_content(overlay2,
 			     {id: 'buy-file',
 			      title: 'Wrong Paypal Transaction!',
+			      // xxx differentiate on color for pixel / vector
+			      cssClass: 'pixel-download download-overlay',
 			      width: 426,
 			      fade:true },
                      SPACER(
-			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(),
+			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(), BR(),
 			 "FILE#: " + image.id, BR(),
 			 "File Type: Vector PDF", BR(),
 			 "File Size: " + format_file_size(image.shop_size), BR(),
