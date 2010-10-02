@@ -121,23 +121,28 @@
 			:width (round (* ratio width)) :height (round (* ratio height)))))
 	     (:p ((:a :href "javascript:window.close()") "ok"))))))))
 
-(defmethod generate-pixel-pdf ((image quickhoney-image) price)
+(defmethod generate-pixel-pdf ((image quickhoney-image) price &optional active)
   (with-temporary-file (s)
     (pixel-pdf::convert-store-image-to-pdf image s)
     (let ((product (make-blob-from-file s 'quickhoney-pdf-product
 					:price price
+					:active active
 					:type :pdf
 					:image image)))
       (setf *last-image-upload-timestamp* (get-universal-time))      
-      (format t "Convert image ~A to PDF product ~A~%" image product))))
+      (format t "Convert image ~A to PDF product ~A, active ~A~%" image product active)
+
+      )))
   
 (defmethod handle-object-form ((handler upload-shop-handler) (action (eql :upload)) image)
   (with-query-params (price-select pdf-generate pdf-activate)
     (let ((pdf-file (request-uploaded-file "pdf-image-file"))
 	  (price (parse-integer price-select)))
+      (format t "activate: ~A~%" pdf-activate)
       (cond
 	(pdf-generate
-	 (bt:make-thread #'(lambda () (generate-pixel-pdf image price))
+	 (bt:make-thread #'(lambda () (generate-pixel-pdf image price (and pdf-activate
+									   (string-equal pdf-activate "on"))))
 			 :name (format nil "GENERATE-PDF ~A" (store-image-name image)))
 	 (let* ((width (store-image-width image))
 		(height (store-image-height image))
