@@ -68,6 +68,8 @@ function shop_show_form_for_image(current_image) {
 	$("edit_pdf_button").style.visibility = "visible";
 	$("delete_pdf_button").style.visibility = "visible";
 	$("pdf-generate-warning").style.visibility = "hidden";
+	$("pdf-generate-upload").style.visibility = "hidden";
+	$("pdf-file-upload").style.visibility = "hidden";
 	shop_set_price_selector(current_image.shop_price);
 	$("pdf-activate").checked = current_image.shop_active;
     } else {
@@ -275,22 +277,27 @@ function make_paypal_overlay(json) {
     if (json.valid) {
 	var image = json.image;
 	var pdfLink = partial(A, {'href': "/pdf-client/" + json.token, 'target': '_blank'});
+	var cssClass = (json.image.category == "pixel" ? "pixel-download download-overlay" :
+			"vector-download download-overlay");
+	var buttonColor = (json.image.category == "pixel" ? "ff00ff" : "00ccff");
 	make_overlay_content(overlay2, { id: 'buy-file',
 					 title: 'Download your Vector PDF File!',
-					 cssClass: 'pixel-download download-overlay',
+					 cssClass: cssClass,
+					 color: buttonColor,
+					 invertColor: true,
 					 width: 426,
 					 fade: true },
                      SPACER(
 			 pdfLink(IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'})), BR(), BR(),
-			 "FILE#: ", pdfLink(image.id), BR(),
+			 "FILE#: ", image.id, BR(),
 			 "File Type: Vector PDF", BR(),
 			 "File Size: " + format_file_size(image.shop_size), BR(),
 			 "Price: " + image.shop_price + "$", BR(),
-			 "Bought on: " + json.bought_on, BR(),
-			 "Download valid until: " + json.valid_until, BR(),
+			 "Purchased on " + json.bought_on, BR(),
+			 "Download valid until " + json.valid_until, BR(),
 			 BR(),
 			 
-			 "Download Artwork ", pdfLink(ARTWORK_NAME(image.name)), " for one-time private use only.  ",
+			 pdfLink("Download"), " Artwork ", pdfLink(image.name), " for one-time private use only.  ",
 			 BR()
 		     ));
     } else if (json.expired && (json.status == "successful")) {
@@ -298,8 +305,10 @@ function make_paypal_overlay(json) {
 	make_overlay_content(overlay2,
 			     { id: 'buy-file',
 			       title: 'Your Vector PDF File has expired!',
-			       cssClass: 'pixel-download download-overlay',
+			       cssClass: cssClass,
 			       width: 426,
+			       color: buttonColor,
+			       invertColor: true,
 			       fade: true
 			       },
                      SPACER(
@@ -308,8 +317,8 @@ function make_paypal_overlay(json) {
 			 "File Type: Vector PDF", BR(),
 			 "File Size: " + format_file_size(image.shop_size), BR(),
 			 "Price: " + image.shop_price + "$", BR(),
-			 "Bought: " + json.bought_on, BR(),
-			 "Download valid until: " + json.valid_until, BR(),
+			 "Purchased on " + json.bought_on, BR(),
+			 "Download valid until " + json.valid_until, BR(),
 			 BR(),
 			 
 			 "Sadly, your PDF download has expired!",
@@ -322,9 +331,10 @@ function make_paypal_overlay(json) {
 	make_overlay_content(overlay2,
 			     {id: 'buy-file',
 			      title: 'Wrong Paypal Transaction!',
-			      // xxx differentiate on color for pixel / vector
-			      cssClass: 'pixel-download download-overlay',
+			      cssClass: cssClass,
 			      width: 426,
+			      color: buttonColor,
+			      invertColor: true,
 			      fade:true },
                      SPACER(
 			 IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(), BR(),
