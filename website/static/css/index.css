@@ -472,6 +472,8 @@ input.invisibleSubmit {
 	font-size: 110%;
 }
 
+/* Overlays */
+
 .overlay {
 	position: absolute;
 	z-index: 100;
@@ -493,8 +495,23 @@ input.invisibleSubmit {
 	padding-left: 10px;
 }
 
+.pdf-info-overlay h1, .download-overlay h1, .paypal-overlay h1 {
+    font-size: 160%;
+    padding-right: 30px;
+}
+
 .overlay.pixel h1, .overlay.pixel h2, .overlay.pixel .artwork-name {
 	color: #ff00ff;
+}
+
+.pixel-download {
+    color: white;
+    background-color: #ff00ff;
+}
+
+.vector-download {
+    color: white;
+    background-color: #00ccff;
 }
 
 .overlay.vector h1, .overlay.vector h2, .overlay.vector .artwork-name {
@@ -517,7 +534,7 @@ input.invisibleSubmit {
 }
 
 .overlay p.pdf-info {
-    width: 230px;
+    width: 320px;
     padding: 10px;
     padding-top: 0px;
 }
