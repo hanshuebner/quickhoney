@@ -1398,10 +1398,15 @@ function overlay_remove()
 
 function fade_out_page(to, callback) {
     to = to || 0.3;
-    fade('menu', {to: to});
-    fade('path-and-version', {to: to});
-    fade('image_browser', {to: to});
+    var duration = 0.7;
+    fade('menu', {to: to,
+		  duration: duration});
+    fade('path-and-version', {to: to,
+			     duration: duration});
+    fade('image_browser', {to: to,
+			  duration: duration});
     fade('footer', {to: to,
+		    duration: duration,
 		   afterFinish: callback});
 }
 
