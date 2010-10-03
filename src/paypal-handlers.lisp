@@ -25,12 +25,18 @@
   ((product :read
 	    :index-type hash-index
 	    :index-reader paypal-transactions-for-product)
-   (token :read
+   (token :update
 	  :index-type string-unique-index
 	  :index-reader paypal-transaction-for-token
 	  :index-values all-paypal-transactions)
+   (link :update
+	 :documentation "Link to paypal express checkout"
+	 :initform nil)
+   (button-link :update
+	 :documentation "Link to paypal express checkout button"
+	 :initform nil)
    (status :update :initform :ongoing
-	   :documentation "Can be either :ONGOING, :CANCELLED, :SUCCESSFUL, :ERROR")
+	   :documentation "Can be either :REQUESTING, :ONGOING, :CANCELLED, :SUCCESSFUL, :ERROR")
    (watermarked-pdf :update :initform nil
 		    :documentation "Path to watermarked PDF")
    (creation-time :update :initform (get-universal-time))
@@ -59,52 +65,67 @@
 (defclass json-paypal-checkout-handler (page-handler)
   ())
 
+(defun json-paypal-checkout-txn-to-json (txn)
+  (with-slots (link button-link status) txn
+    (json:encode-object-element "id" (store-object-id txn))
+    (json:encode-object-element "status" status)
+    (when link
+      (json:encode-object-element "paypalLink" link))
+    (when button-link
+      (json:encode-object-element "buttonLink" button-link))))
+
 (defmethod handle ((handler json-paypal-checkout-handler))
   (with-json-response ()
-    (with-query-params (price image color)
-      (handler-case 
-	  (let* ((id (parse-integer image))
-		 (img (find-store-object id :class 'quickhoney-image))
+    (with-query-params (image color id)
+      (if id
+	  (let ((txn (find-store-object (parse-integer id) :class 'paypal-product-transaction)))
+	    (json-paypal-checkout-txn-to-json txn))
+	  (let* ((img-id (parse-integer image))
+		 (img (find-store-object img-id :class 'quickhoney-image))
 		 (product (when img (quickhoney-image-pdf-product img))))
 	    (unless (and img product)
 	      (error "Could not find PDF for image with id ~A" image))
-	    (multiple-value-bind (link res)
-		;; XXX open new thread here and wait for answer
-		(cl-paypal:make-express-checkout-url price (real-remote-addr)
-						     :l_paymentrequest_0_name0 (store-image-name img)
-						     :l_paymentrequest_0_number0 id
-						     :l_paymentrequest_0_amt0 price
-						     :l_paymentrequest_0_qt0 1
-						     :paymentrequest_0_itemamt price
-						     :hdrbordercolor color
-						     :allownote 0
-						     :noshipping 1
-						     :hdrimg (format nil "http://quickhoney.ruinwesen.com/image/66899/thumbnail"))
-	      
-	      (let ((token (getf res :token)))
-		;; log paypal action
-		(make-instance 'paypal-action-log
-			       :result res :token token)
+	    (let* ((txn (make-instance 'paypal-product-transaction
+				       :product product
+				       :token nil
+				       :status :requesting))
+		   (ip (real-remote-addr)))
+	      (bt:make-thread #'(lambda () (get-express-checkout-url ip txn product color))
+			      :name (format nil "GET-EXPRESS-CHECKOUT-URL ~A" (store-image-name img)))
+	      (json-paypal-checkout-txn-to-json txn)))))))
 
-		;; create product transaction
-		(make-instance 'paypal-product-transaction
-			       :product product
-			       :token token
-			       :status :ongoing)
-		
-		(json:encode-object-element
-		 "paypalLink"
-		 link)
-		(json:encode-object-element
-		 "buttonLink"
-		 (format nil "https://fpdbs.sandbox.paypal.com/dynamicimageweb?cmd=_dynamic-image&pal=~A"
-			 *paypal-secure-merchant-id*)))))
+(defun get-express-checkout-url (ip txn product color)
+  (handler-case
+      (let* ((price (quickhoney-product-price product))
+	     (img (quickhoney-product-image product))
+	     (id (store-object-id img)))
+	(multiple-value-bind (link res)
+	    (cl-paypal:make-express-checkout-url price ip
+						 :l_paymentrequest_0_name0 (store-image-name img)
+						 :l_paymentrequest_0_number0 id
+						 :l_paymentrequest_0_amt0 price
+						 :l_paymentrequest_0_qt0 1
+						 :paymentrequest_0_itemamt price
+						 :hdrbordercolor color
+						 :allownote 0
+						 :noshipping 1
+						 :hdrimg (format nil "http://quickhoney.ruinwesen.com/image/66899/thumbnail"))
+	    
+	    (let ((token (getf res :token)))
+	      (make-instance 'paypal-action-log
+			     :result res :token token)
 
-	(error (e)
-	  (format t "error while paypal ~A~%" e)
-	  (json:encode-object-element
-	   "error"
-	   (format nil "~A" e)))))))
+	      (with-transaction ()
+		(setf (paypal-product-transaction-token txn) token
+		      (paypal-product-transaction-link txn) link
+		      (paypal-product-transaction-button-link txn) 
+		      (format nil "https://fpdbs.sandbox.paypal.com/dynamicimageweb?cmd=_dynamic-image&pal=~A"
+			      *paypal-secure-merchant-id*)
+		      (paypal-product-transaction-status txn) :ongoing)))))
+    (error (e)
+      (format t "error while paypal ~A~%" e)
+      (with-transaction ()
+	(setf (paypal-product-transaction-status txn) :error)))))
 
 (defclass paypal-success-handler (page-handler)
   ())

@@ -105,7 +105,7 @@ function shop_hide_form() {
 
 function wait_for_pdf_generation_cb(options, json_data) {
     log("pdf generation " + JSON.stringify(json_data.image) + json_data.image.shop_price);
-    if (json_data.image.shop_price == undefined) {
+    if (json_data.image.shop_price === undefined) {
 	if (options.count-- <= 0) {
 	    options.callback(options, {error: "PDF generation stalled"});
 	    return true;
@@ -186,21 +186,65 @@ function pulsate_pricetag_stop(id) {
     appear(pricetag);    
 }
 
+function wait_for_paypal_link_cb(options, json) {
+    if (json.status == "error") {
+	options.callback({error: "Paypal link generation failed"});
+	return true;
+    } else if ((json.status == "ongoing") && (json.paypalLink != undefined) && (json.buttonLink != undefined)) {
+	options.callback(json);
+	return true;
+    } else {
+	if (options.count-- <= 0) {
+	    options.callback({error: "Paypal link generation stalled"});
+	    return true;
+	}
+	return false;
+    }
+}
+
+function wait_for_paypal_link(image, json) {
+    if (json.id != undefined) {
+	var options = {
+	    count: 30,
+	    image: image,
+	    callback: partial(make_shop_overlay, image)
+	};
+	poll_json("/json-paypal-checkout?id=" + json.id, partial(wait_for_paypal_link_cb, options));
+    } else {
+	make_shop_overlay(image, {error: "Could not create paypal transaction"});
+    }
+}
+
 function init_shop_overlay(image) {
     pulsate_pricetag(image.id);
-    // XXX poll json here until paypal is valid, add upper limit
-    submit_json('/json-paypal-checkout?price=' + image.shop_price +
-		'&image=' + image.id +
+    submit_json('/json-paypal-checkout?image=' + image.id +
 		'&color=' + pages[current_directory].link_color,
 		null, // no form
-		partial(make_shop_overlay, image)
-	       );
+		partial(wait_for_paypal_link, image));
 }
 
 function make_shop_overlay(image, json) {
     if (json.error) {
-	// XXX error while doing paypal stuff
-	alert("error while paypal: " + json.error);
+	// error while doing paypal stuff
+	var overlay = make_overlay_content($('overlay'),
+					   {
+					       id: 'buy-file',
+					       title: 'Buy Art as Vector PDF File',
+					       width: 426,
+					       cssClass: 'paypal-overlay',
+					       fade: true,
+					       waitForImages: true,
+					       onShow:     partial(pulsate_pricetag_stop, image.id)
+					   },
+					   FORM({ action: '#', onsubmit: 'return false' },
+						SPACER(
+						    IMG({'src': '/image/' + image.id + '/thumbnail,,160,160'}), BR(), BR(),
+						    "FILE#: " + image.id, BR(),
+						    "File Type: Vector PDF", BR(),
+						    "File Size: " + format_file_size(image.shop_size), BR(),
+						    "Price: " + image.shop_price + "$" , BR(), BR(),
+
+						    "Something went wrong while creating your personal item. Please try to buy the image again. We apologize for the inconvenience.")));
 	return;
     }
 
@@ -214,7 +258,7 @@ function make_shop_overlay(image, json) {
 			     width: 426,
 			     cssClass: 'paypal-overlay',
 			     fade: true,
-			     waitForImages: false,
+			     waitForImages: true,
 			     onShow:     partial(pulsate_pricetag_stop, image.id)
 			 },
                  FORM({ action: '#', onsubmit: 'return false' },
@@ -247,8 +291,6 @@ function make_shop_overlay(image, json) {
 				IMG({'src': buttonLink}))),
 			  BR()
 		      )));
-    overlay.style.visibility = 'hidden';
-    wait_for_images(function () {overlay.style.visibility = 'visible';});
 }
 
 INFOTITLE = partial(SPAN, { 'class': 'notice' });

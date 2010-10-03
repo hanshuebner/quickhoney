@@ -1406,8 +1406,8 @@ function fade_out_page(to, callback) {
     fade('image_browser', {to: to,
 			  duration: duration});
     fade('footer', {to: to,
-		    duration: duration,
-		   afterFinish: callback});
+		    duration: duration});
+    setTimeout(callback, duration * 1000);
 }
 
 function make_overlay_content(overlay, options) {
@@ -1456,23 +1456,31 @@ function make_overlay_content(overlay, options) {
 
     /* wait for fade, fade speed XXX */
     var showOverlay = function () {
+	console.log("show Overlay " + new Date);
 	function show() {
 	    if (options.onShow) {
 		options.onShow();
 	    }
 	    overlay.style.visibility = 'inherit';
 	}
-	if (options.waitForImages) {
-	    wait_for_images(show);
+	show();
+    };
+
+
+    var fadeOut = function () {
+	if (options.fade) {
+	    fade_out_page(0.3, showOverlay);
 	} else {
-	    show();
+	    showOverlay();
 	}
     };
-    if (options.fade) {
-	fade_out_page(0.3, showOverlay);
+    
+    if (options.waitForImages) {
+	wait_for_images(fadeOut);
     } else {
-	showOverlay();
+	fadeOut();
     }
+
     return overlay;
 }
 
