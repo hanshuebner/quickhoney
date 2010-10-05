@@ -1456,7 +1456,6 @@ function make_overlay_content(overlay, options) {
 
     /* wait for fade, fade speed XXX */
     var showOverlay = function () {
-	console.log("show Overlay " + new Date);
 	function show() {
 	    if (options.onShow) {
 		options.onShow();
