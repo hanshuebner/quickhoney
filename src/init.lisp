@@ -61,6 +61,11 @@ it if it is missing."
   (stop-http-server)
   (close-store))
 
+(defvar *acceptor* nil
+  "Stores the HUNCHENTOOT acceptor used to serve the website.")
+(defvar *ht-thread* nil
+  "Stores the thread used to run HUNCHENTOOT.")
+
 (defun stop-http-server ()
   "Stop the running webserver, and destroy the thread it was running in."
   (when *acceptor*

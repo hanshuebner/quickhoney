@@ -620,11 +620,6 @@
 (defclass shutdown-handler (admin-only-handler page-handler)
   ())
 
-(defvar *acceptor* nil)
-(defvar *ht-thread* nil)
-
 (defmethod handle ((handler shutdown-handler))
-  (when *acceptor*
-    (hunchentoot:stop *acceptor*)
-    (setf *acceptor* nil))
+  (stop-http-server)
   "Shutting down HTTP server")
