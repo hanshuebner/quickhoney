@@ -486,18 +486,19 @@ input.invisibleSubmit {
 
 .overlay .close {
 	position: absolute;
-	top: 12px;
+	top: 13px;
 }
 
 .overlay h1 {
 	font-size: 120%;
-	margin-top: 12px;
-	padding-left: 10px;
+	margin-top: 13px;
+	padding-left: 13px;
 }
 
 .pdf-info-overlay h1, .download-overlay h1, .paypal-overlay h1 {
     font-size: 160%;
-    padding-right: 30px;
+    margin-right: 30px;
+    margin-top: 7px;
 }
 
 .overlay.pixel h1, .overlay.pixel h2, .overlay.pixel .artwork-name {
@@ -538,7 +539,7 @@ input.invisibleSubmit {
 }
 
 .overlay.home h1, .overlay.home h2 {
-    color: #845ef9;
+    color: #953cfd;
 }
 
 .overlay p.pdf-info {
@@ -577,7 +578,7 @@ input.invisibleSubmit {
 }
 
 .overlay div.spacer {
-	padding: 12px;
+	padding: 13px;
 }
 
 .overlay td.t-shirt-sample {

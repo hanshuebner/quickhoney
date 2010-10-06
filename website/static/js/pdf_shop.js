@@ -181,7 +181,9 @@ function pulsate_pricetag(id) {
 }
 
 function pulsate_pricetag_stop(id) {
-    pricetag_animation.cancel();
+    if (pricetag_animation !== undefined){
+	pricetag_animation.cancel();
+    }
     var pricetag = $('pricetag-small') || $('pricetag-micro-' + id);
     appear(pricetag);    
 }
@@ -269,11 +271,11 @@ function make_shop_overlay(image, json) {
 			  "File Size: " + format_file_size(image.shop_size), BR(),
 			  "Price: " + image.shop_price + "$" , BR(), BR(),
 			  
-			  "Download Artwork ", BOLD(image.name), " for one-time private use only.  ",
+			  "Download Artwork ", BOLD(image.name), " for private, non-commercial use only.  ",
                              "Please read our ",
                              A({ onclick: "show_eula()", id: 'eula-link'},
 			       "User Agreement"),
-                             " and tick the box below to indicate that you agree to be bound to it.",
+                             " and click the box below to indicate that you are bound to it.",
                              BR(), BR(),
                              INPUT({ id: 'eula-checkbox',
 				     type: 'checkbox',
@@ -288,8 +290,7 @@ function make_shop_overlay(image, json) {
 			      A({'onclick': 'return check_eula_agreed()',
 				 'target': '_parent',
 				'href': paypalLink },
-				IMG({'src': buttonLink}))),
-			  BR()
+				IMG({'src': buttonLink})))
 		      )));
 }
 
@@ -299,6 +300,7 @@ function make_pdf_info_overlay() {
     make_overlay_content($('overlay'),
 			 { id: 'pdf-info',
 			   title: 'Download Art as Vector PDF',
+			   top: '180px',
 			   left: '64px',
 			   'cssClass': 'pdf-info-overlay',
 			   width: 320 },
@@ -340,7 +342,7 @@ function make_paypal_overlay(json) {
 			 "Download valid until " + json.valid_until, BR(),
 			 BR(),
 			 
-			 pdfLink("Download"), " Artwork ", pdfLink(image.name), " for one-time private use only.  ",
+			 pdfLink("Download"), " Artwork ", pdfLink(image.name), " for private, non-commercial use only.",
 			 BR()
 		     ));
     } else if (json.expired && (json.status == "successful")) {

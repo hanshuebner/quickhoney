@@ -1425,7 +1425,7 @@ function make_overlay_content(overlay, options) {
     overlay.style.visibility = 'hidden';
     overlay.style.top = options.top || '144px';
     overlay.style.left = options.left || '36px';
-    overlay.className = current_directory + " overlay";
+    overlay.className = cssClass + ' ' + current_directory + " overlay";
 
     var inner = DIV({ 'class': 'inner' },
                     H1(null, title),
@@ -1434,10 +1434,11 @@ function make_overlay_content(overlay, options) {
 			  width: 13, height: 13}),
                     BR());
     replaceChildNodes(overlay,
-                      DIV({ 'class': 'ydsf ' + cssClass },
+                      DIV({ 'class': 'ydsf' },
                           inner));
     overlay.style.width = width + 'px';
-    $(closeID).style.left = (width - 23) + 'px';
+//    $(closeID).style.left = (width - 23) + 'px';
+    $(closeID).style.right = '13px';
     $(closeID).onclick = function () {
 	overlay.style.visibility = 'hidden';
 	replaceChildNodes(overlay);
