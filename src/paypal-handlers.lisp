@@ -157,7 +157,7 @@
 	    (format s "Download Artwork ~A for one-time private use only at the following URL:~% ~A/#paypal/~A~%~%"
 		    (store-image-name image)
 		    *website-url* token)
-	    (format s "Thank you very much for your purchase,~%Quickhoney~%"))
+	    (format s "Thank you very much for your purchase,~%QuickHoney~%"))
 	  (with-html-email ()
 	    (:html
 	     (:head (:title "Download your Vector PDF File!"))
@@ -174,10 +174,12 @@
 	      "Price: " (:princ-safe (quickhoney-product-price product)) "$" (:br)(:br)
 	      "Download Artwork " ((:a :href (format nil "~A/#paypal/~A" *website-url* token))
 				   (:princ-safe (store-image-name image)))
-	      " for one-time private use only." (:br) (:br)
+	      " for private, non-commercial use only." (:br) (:br)
 	      "If you have trouble clicking the above link, please follow this link "
 	      (:princ-safe (format nil "~A/#paypal/~A" *website-url* token)) (:br) (:br)
-	      "Thank you very much for your purchase," (:br) "Quickhoney")
+	      "Thank you very much for your purchase," (:br) (:br)
+	      ((:img :src (format nil "~A/image/~A" *website-url* "QH_Logo_small"))) (:br)
+	      "QuickHoney")
 	     )))
 	 t t)))))
 
