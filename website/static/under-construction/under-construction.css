@@ -1,0 +1,33 @@
+body {
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    padding-left: 20px;
+    padding-top: 20px;
+    font-size: 80%;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:active { outline: none }
+a:focus { -moz-outline-style: none }
+
+.contact, .contact a {
+    color: #00ccff;
+}
+
+.contact ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+    
+
+.under-construction {
+    height: 400px;
+    width: 400px;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+}
