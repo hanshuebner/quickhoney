@@ -17,16 +17,12 @@
 
 (defparameter *webserver-port* 8082)
 
-
-;; paypal configuration, should be encrypted so that it doesn't lie around in the repository
-
-(defparameter *paypal-user* "larve1_1284454514_biz_api1.bl0rg.net")
-
-(defparameter *paypal-password* "1284454523")
-
-(defparameter *paypal-signature* "AzfqBFUGNgH7udd-MtFLWWxWZWNgAPxKDWtYjO5EMo-JeQzKmQUEYPrW")
-
-(defparameter *paypal-secure-merchant-id* "W7PDYJMZUSC5E")
+;; please define following variables in a separate file paypal-config.lisp
+;; (defparameter *paypal-user* "")
+;; (defparameter *paypal-password* "")
+;; (defparameter *paypal-signature* "")
+;; (defparameter *paypal-secure-merchant-id* "")
+;; (defparameter *paypal-url* "https://api-3t.sandbox.paypal.com/nvp")
 
 ;; 3 days
 (defparameter *product-validity-time* 3)

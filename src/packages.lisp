@@ -15,6 +15,9 @@
      #:*paypal-password*
      #:*paypal-signature*
      #:*paypal-secure-merchant-id*
+     #:*paypal-url*
+     #:*paypal-fpdbs-url*
+     #:*paypal-use-sandbox*
 
      #:*product-validity-time*
      ))

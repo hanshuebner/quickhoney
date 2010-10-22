@@ -74,8 +74,9 @@
        ("import" . "/import-images")
        ("logout" . "/logout"))
      
-		 :authorizer (make-instance 'bknr-authorizer)
-		 :site-logo-url "/image/quickhoney/color,000000,33ff00"
-		 :login-logo-url "/image/quickhoney/color,000000,33ff00/double,3"
-		 :style-sheet-urls '("/static/yui/reset-fonts/reset-fonts.css" "/static/quickhoney.css" "/static/cms.css")
-		 :javascript-urls '("/MochiKit/MochiKit.js" "/static/javascript.js")))
+     :authorizer (make-instance 'bknr-authorizer)
+     :site-logo-url "/image/quickhoney/color,000000,33ff00"
+     :login-logo-url "/image/quickhoney/color,000000,33ff00/double,3"
+     :import-spool-directory (merge-pathnames "spool/" *root-directory*)
+     :style-sheet-urls '("/static/yui/reset-fonts/reset-fonts.css" "/static/quickhoney.css" "/static/cms.css")
+     :javascript-urls '("/MochiKit/MochiKit.js" "/static/javascript.js")))
