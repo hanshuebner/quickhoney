@@ -33,6 +33,7 @@
 
   :components ((:file "packages")
                (:file "config" :depends-on ("packages"))
+	       (:file "paypal-config" :depends-on ("packages"))
                (:file "image" :depends-on ("config"))
 
                (:file "quickhoney-shop" :depends-on ("image"))
@@ -42,7 +43,7 @@
                (:file "twitter" :depends-on ("packages"))
                (:file "handlers" :depends-on ("layout" "config" "image" "news" "quickhoney-shop"))
                (:file "tags" :depends-on ("image"))
-               (:file "paypal-handlers" :depends-on ("config" "handlers"))
+               (:file "paypal-handlers" :depends-on ("config" "handlers" "paypal-config"))
                (:file "webserver" :depends-on ("handlers" "paypal-handlers"))
 
                (:file "daily" :depends-on ("config"))
