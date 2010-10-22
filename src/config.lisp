@@ -15,7 +15,7 @@
 
 (defparameter *xml-catalog-directory* (asdf:system-relative-pathname :quickhoney #p"../xml/"))
 
-(defparameter *webserver-port* 8081)
+(defparameter *webserver-port* 8082)
 
 
 ;; paypal configuration, should be encrypted so that it doesn't lie around in the repository
