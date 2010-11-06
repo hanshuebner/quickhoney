@@ -137,18 +137,22 @@
 (defmethod send-transaction-email ((txn paypal-product-transaction))
   (with-slots (status product token creation-time valid-time paypal-info) txn
     (let ((image (quickhoney-product-image product))
-	  (from "manuel@bl0rg.net")
-;;	  (from "p@quickhoney.com")
+;;	  (from "manuel@bl0rg.net")
+	  (from "p@quickhoney.com")
 	  (to (paypal-txn-client-email txn))
+;;	  (to "hans@huebner.org")
 ;;	  (to "manuel@bl0rg.net")
 	  (subject "Download your Vector PDF File!"))
       (cl-smtp:with-smtp-mail (smtp "localhost"
 				    from
-				    (list to))
-	(cl-smtp::send-mail-headers smtp
-				    :from from
-				    :to (list to)
-				    :subject subject)
+				    (list to)
+				    :port 25)
+	#-nil
+	(progn
+	  (format smtp "To: ~a~A~A" to #\Return #\Newline)
+	  (format smtp "From: ~a~A~A" from #\Return #\Newline)
+	  (format smtp "Subject: ~a~A~A" subject #\Return #\Newline))
+	
 	(cl-mime:print-mime
 	 smtp
 	 (make-text-html-email
@@ -187,7 +191,11 @@
 	      ((:img :src (format nil "~A/image/~A" *website-url* "QH_Logo_small"))) (:br)
 	      "QuickHoney")
 	     )))
-	 t t)))))
+	 t t)
+
+;;	(format smtp "~A~A" #\Return #\Newline)
+
+	))))
 
 (defmethod paypal-process-successful-transaction ((txn paypal-product-transaction))
   (send-transaction-email txn))
@@ -199,6 +207,7 @@
     (unless txn
       (error "Could not find paypal transaction for token ~A" token))
     (multiple-value-bind (result response)
+	;; XXX haengen
 	(cl-paypal:do-express-checkout token)
       (cl-paypal::unregister-transaction token)
       (make-instance 'paypal-action-log
