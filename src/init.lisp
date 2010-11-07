@@ -7,6 +7,10 @@
   #+openmcl
   (ccl:save-application "quickhoney" :prepend-kernel t))
 
+(defun import-shop-images ()
+  (dolist (image (directory (merge-pathnames #p"website/static/shop-images/*.png" *root-directory*)))
+    (format t "image: ~A~%" image)))
+
 (defun startup ()
   (cond
     (*dumped-image*

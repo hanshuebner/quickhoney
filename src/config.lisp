@@ -1,7 +1,7 @@
 (in-package :quickhoney.config)
 
 ;; URL für BASE HREFs
-(defparameter *website-url* "http://quickhoney.ruinwesen.com")
+(defparameter *website-url* "http://quickhoney.com")
 
 ;; this is kind of a dirty hack to get the root of the thirdparty directory
 (defparameter *thirdparty-directory*

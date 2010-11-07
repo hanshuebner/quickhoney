@@ -1,3 +1,3 @@
 #!/bin/sh
 
-	ccl64 --no-init --load create-image.lisp
+	ccl --no-init --load create-image.lisp
