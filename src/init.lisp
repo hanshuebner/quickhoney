@@ -81,7 +81,7 @@ it if it is missing."
   
   (setf *acceptor* (make-instance 'hunchentoot:acceptor
                                   :port *webserver-port*
-                                  :taskmaster (make-instance 'hunchentoot:single-threaded-taskmaster)
+;;                                  :taskmaster (make-instance 'hunchentoot:single-threaded-taskmaster)
                                   :persistent-connections-p nil
                                   :request-dispatcher 'bknr.web:bknr-dispatch))
   

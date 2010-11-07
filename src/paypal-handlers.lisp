@@ -1,12 +1,10 @@
 (in-package :quickhoney)
 
-(defparameter *paypal-sandbox-api-url* "https://api-3t.sandbox.paypal.com/nvp")
-
 (defun paypal-init (&key (user *paypal-user*)
 		    (password *paypal-password*)
 		    (signature *paypal-signature*))
   (cl-paypal:init
-   *paypal-sandbox-api-url*
+   *paypal-url*
    user password signature
    (format nil "~A/paypal-success" quickhoney.config:*website-url*)
    (format nil "~A/paypal-cancel" quickhoney.config:*website-url*)
@@ -62,6 +60,10 @@
     (setf (paypal-product-transaction-valid-time txn)
 	  (get-universal-time))))
 
+(defmethod paypal-txn-client-email ((txn paypal-product-transaction))
+  (getf (paypal-product-transaction-paypal-info txn)
+	:email))
+
 (defclass json-paypal-checkout-handler (page-handler)
   ())
 
@@ -109,6 +111,7 @@
 						 :hdrbordercolor color
 						 :allownote 0
 						 :noshipping 1
+						 :sandbox *paypal-use-sandbox*
 						 :hdrimg (format nil "http://quickhoney.ruinwesen.com/image/66899/thumbnail"))
 	    
 	    (let ((token (getf res :token)))
@@ -119,7 +122,8 @@
 		(setf (paypal-product-transaction-token txn) token
 		      (paypal-product-transaction-link txn) link
 		      (paypal-product-transaction-button-link txn) 
-		      (format nil "https://fpdbs.sandbox.paypal.com/dynamicimageweb?cmd=_dynamic-image&pal=~A"
+		      (format nil "~a/dynamicimageweb?cmd=_dynamic-image&pal=~A"
+			      *paypal-fpdbs-url*
 			      *paypal-secure-merchant-id*)
 		      (paypal-product-transaction-status txn) :ongoing)))))
     (error (e)
@@ -133,16 +137,22 @@
 (defmethod send-transaction-email ((txn paypal-product-transaction))
   (with-slots (status product token creation-time valid-time paypal-info) txn
     (let ((image (quickhoney-product-image product))
-	  (from "manuel@bl0rg.net")
-	  (to "manuel@bl0rg.net")
+	  (from *paypal-email*)
+;;	  (from "p@quickhoney.com")
+	  (to (paypal-txn-client-email txn))
+;;	  (to "hans@huebner.org")
+;;	  (to "manuel@bl0rg.net")
 	  (subject "Download your Vector PDF File!"))
       (cl-smtp:with-smtp-mail (smtp "localhost"
 				    from
-				    (list to))
-	(cl-smtp::send-mail-headers smtp
-				    :from from
-				    :to (list to)
-				    :subject subject)
+				    (list to)
+				    :port 25)
+	#-nil
+	(progn
+	  (format smtp "To: ~a~A~A" to #\Return #\Newline)
+	  (format smtp "From: ~a~A~A" from #\Return #\Newline)
+	  (format smtp "Subject: ~a~A~A" subject #\Return #\Newline))
+	
 	(cl-mime:print-mime
 	 smtp
 	 (make-text-html-email

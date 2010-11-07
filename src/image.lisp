@@ -68,3 +68,13 @@
                                                                :defaults directory))
         (error (e)
           (format t "; error ~A~%" e))))))
+
+(defun export-image (img file)
+  (copy-file (blob-pathname img) file)
+  (format t "(import-image ~S :keywords-from-dir nil :keywords '~S)~%" file (store-image-keywords img)))
+
+(defun export-images (imgs dir)
+  (dolist (img imgs)
+    (export-image img (merge-pathnames (make-pathname :name (store-image-name img)
+						      :type  (string-downcase (symbol-name (blob-type img))))
+				       dir))))
