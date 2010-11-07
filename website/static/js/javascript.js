@@ -1021,7 +1021,7 @@ function display_thumbnail_page() {
                                      height: cell_height});
             imageElement.src = '/image/' + encodeURI(image.name) + '/cell,ffffff,' + cell_width + ',' + cell_height + ',8';
 	    var priceTag = null;
-	    if ((image.shop_file != undefined) && (image.shop_price != undefined)) {
+	    if ((image.shop_file != undefined) && (image.shop_price != undefined) && (image.shop_active)) {
 		var border_width = 8;
 		var img_ratio = Math.max(image.width / (cell_width - (2 * border_width)),
 					 image.height / (cell_height - (2 * border_width)));
