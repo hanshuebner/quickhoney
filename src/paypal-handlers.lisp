@@ -137,7 +137,7 @@
 (defmethod send-transaction-email ((txn paypal-product-transaction))
   (with-slots (status product token creation-time valid-time paypal-info) txn
     (let ((image (quickhoney-product-image product))
-	  (from "manuel@bl0rg.net")
+	  (from *paypal-email*)
 ;;	  (from "p@quickhoney.com")
 	  (to (paypal-txn-client-email txn))
 ;;	  (to "manuel@bl0rg.net")

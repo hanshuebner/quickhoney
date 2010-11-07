@@ -18,6 +18,7 @@
      #:*paypal-url*
      #:*paypal-fpdbs-url*
      #:*paypal-use-sandbox*
+     #:*paypal-email*
 
      #:*product-validity-time*
      ))
