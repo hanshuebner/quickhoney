@@ -140,15 +140,19 @@
 	  (from *paypal-email*)
 ;;	  (from "p@quickhoney.com")
 	  (to (paypal-txn-client-email txn))
+;;	  (to "hans@huebner.org")
 ;;	  (to "manuel@bl0rg.net")
 	  (subject "Download your Vector PDF File!"))
       (cl-smtp:with-smtp-mail (smtp "localhost"
 				    from
-				    (list to))
-	(cl-smtp::send-mail-headers smtp
-				    :from from
-				    :to (list to)
-				    :subject subject)
+				    (list to)
+				    :port 25)
+	#-nil
+	(progn
+	  (format smtp "To: ~a~A~A" to #\Return #\Newline)
+	  (format smtp "From: ~a~A~A" from #\Return #\Newline)
+	  (format smtp "Subject: ~a~A~A" subject #\Return #\Newline))
+	
 	(cl-mime:print-mime
 	 smtp
 	 (make-text-html-email

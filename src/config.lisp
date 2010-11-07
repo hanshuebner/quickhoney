@@ -15,7 +15,7 @@
 
 (defparameter *xml-catalog-directory* (asdf:system-relative-pathname :quickhoney #p"../xml/"))
 
-(defparameter *webserver-port* 8081)
+(defparameter *webserver-port* 8082)
 
 ;; please define following variables in a separate file paypal-config.lisp
 ;; (defparameter *paypal-user* "")
