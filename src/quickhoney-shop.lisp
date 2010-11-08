@@ -11,6 +11,7 @@
     :type (or quickhoney-image null)
     :index-type hash-index
     :index-reader products-for-image
+    :relaxed-object-reference t
     :documentation
     "Image that this product is related to, or nil for standalone products")
    (active
@@ -122,7 +123,7 @@
 	     (:p ((:a :href "javascript:window.close()") "ok"))))))))
 
 (defmethod generate-pixel-pdf ((image quickhoney-image) price &optional active)
-  (with-temporary-file (s)
+  (with-temporary-file (s :defaults #p"/tmp/")
     (pixel-pdf::convert-store-image-to-pdf image s)
     (let ((product (make-blob-from-file s 'quickhoney-pdf-product
 					:price price

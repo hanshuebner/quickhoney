@@ -22,6 +22,7 @@
 (define-persistent-class paypal-product-transaction ()
   ((product :read
 	    :index-type hash-index
+	    :relaxed-object-reference t
 	    :index-reader paypal-transactions-for-product)
    (token :update
 	  :index-type string-unique-index
@@ -42,10 +43,22 @@
    (paypal-result :update :initform nil)
    (paypal-info :update :initform nil)))
 
+(defmethod paypal-txn-deleted-p ((txn paypal-product-transaction))
+  (let ((product (paypal-product-transaction-product txn)))
+    (cond ((or (null product)
+	       (object-destroyed-p product))
+	   t)
+	  (t (let ((image (quickhoney-product-image product)))
+	       (if (or (null image)
+		       (object-destroyed-p image))
+		   t
+		   nil))))))
+
 (defmethod paypal-txn-valid-p ((txn paypal-product-transaction))
   (and (eql (paypal-product-transaction-status txn)
 	    :successful)
-       (not (paypal-txn-expired-p txn))))
+       (not (paypal-txn-expired-p txn))
+       (not (paypal-txn-deleted-p txn))))
 
 (defmethod paypal-txn-valid-until ((txn paypal-product-transaction))
   (+ (paypal-product-transaction-valid-time txn)
@@ -85,16 +98,18 @@
 	  (let* ((img-id (parse-integer image))
 		 (img (find-store-object img-id :class 'quickhoney-image))
 		 (product (when img (quickhoney-image-pdf-product img))))
-	    (unless (and img product)
-	      (error "Could not find PDF for image with id ~A" image))
-	    (let* ((txn (make-instance 'paypal-product-transaction
-				       :product product
-				       :token nil
-				       :status :requesting))
-		   (ip (real-remote-addr)))
-	      (bt:make-thread #'(lambda () (get-express-checkout-url ip txn product color))
-			      :name (format nil "GET-EXPRESS-CHECKOUT-URL ~A" (store-image-name img)))
-	      (json-paypal-checkout-txn-to-json txn)))))))
+	    (if (and img product)
+		(let* ((txn (make-instance 'paypal-product-transaction
+					   :product product
+					   :token nil
+					   :status :requesting))
+		       (ip (real-remote-addr)))
+		  (bt:make-thread #'(lambda () (get-express-checkout-url ip txn product color))
+				  :name (format nil "GET-EXPRESS-CHECKOUT-URL ~A" (store-image-name img)))
+		  (json-paypal-checkout-txn-to-json txn))
+		(progn
+		  (json:encode-object-element "status" "error")
+		  (json:encode-object-element "message" "Could not find PDF for image"))))))))
 
 (defun get-express-checkout-url (ip txn product color)
   (handler-case
@@ -294,7 +309,7 @@
 		 (setf (header-out :content-length) (file-length blob-data))
 		 (copy-stream blob-data (send-headers) :element-type '(unsigned-byte 8)))))))
 	(t (redirect (format nil "/#paypal/~A" (store-object-id txn))))))
-	
+
 (defclass json-paypal-transaction-info-handler (object-handler)
   ()
   (:default-initargs :query-function #'transaction-with-download-id
@@ -311,8 +326,10 @@
       (json:encode-object-element "valid_until" (format-date-time (paypal-txn-valid-until txn)
 								  :us-style t :show-time nil))
       (json:encode-object-element "expired" (paypal-txn-expired-p txn))
-      (json:with-object-element ("image")
-	(image-to-json (quickhoney-product-image product))))))
+      (json:encode-object-element "deleted" (paypal-txn-deleted-p txn))
+      (unless (paypal-txn-deleted-p txn)
+	(json:with-object-element ("image")
+	  (image-to-json (quickhoney-product-image product)))))))
 
 (defclass json-paypal-admin-handler (object-handler admin-only-handler)
   ())
@@ -328,16 +345,14 @@
       (json:encode-object-element "token" token)
       (json:encode-object-element "status" status)
 
+      (when (not (paypal-txn-deleted-p txn))
 	(json:with-object-element ("image")
-	      (json:with-object ()
-		(unless (object-destroyed-p product)
-		  (let ((image (quickhoney-product-image product)))
-		    (json:encode-object-element "name" (store-image-name image))
-		    (json:encode-object-element "id" (store-object-id image))
-		    (json:encode-object-element "width" (store-image-width image))
-		    (json:encode-object-element "height" (store-image-height image))))
-		(when (object-destroyed-p product)
-		  (json:encode-object-element "name" nil))))
+	  (json:with-object ()
+	    (let ((image (quickhoney-product-image product)))
+	      (json:encode-object-element "name" (store-image-name image))
+	      (json:encode-object-element "id" (store-object-id image))
+	      (json:encode-object-element "width" (store-image-width image))
+	      (json:encode-object-element "height" (store-image-height image))))))
 	  
       (json:encode-object-element "bought_on" (format-date-time (paypal-product-transaction-creation-time txn)
 								:us-style t :show-time t))
@@ -346,6 +361,7 @@
       (json:encode-object-element "creation_time" (paypal-product-transaction-creation-time txn))
       (json:encode-object-element "valid_time" (paypal-product-transaction-valid-time txn))
       (json:encode-object-element "valid" (paypal-txn-valid-p txn))
+      (json:encode-object-element "deleted" (paypal-txn-deleted-p txn))
       (json:encode-object-element "expired" (paypal-txn-expired-p txn))
       (json:with-object-element ("paypal_result")
 	(assoc-to-json paypal-result))
