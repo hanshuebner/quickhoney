@@ -366,7 +366,6 @@
 
     <div id="cue"><img alt="" src="/static/images/spinner.gif" width="16" height="16"/></div>
 
-    <!--
     <script type="text/javascript">
       var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
       document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
@@ -377,7 +376,6 @@
           pageTracker._trackPageview();
       }
     </script>
-    -->
     <script language="javascript" type="text/javascript">
       init();
     </script>
