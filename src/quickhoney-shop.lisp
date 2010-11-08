@@ -11,6 +11,7 @@
     :type (or quickhoney-image null)
     :index-type hash-index
     :index-reader products-for-image
+    :relaxed-object-reference t
     :documentation
     "Image that this product is related to, or nil for standalone products")
    (active
