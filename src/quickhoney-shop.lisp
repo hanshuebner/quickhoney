@@ -123,7 +123,8 @@
 	     (:p ((:a :href "javascript:window.close()") "ok"))))))))
 
 (defmethod generate-pixel-pdf ((image quickhoney-image) price &optional active)
-  (with-temporary-file (s)
+  (with-temporary-file (s :defaults #p"/tmp/")
+    (format t "temporary file: ~A~%" s)
     (pixel-pdf::convert-store-image-to-pdf image s)
     (let ((product (make-blob-from-file s 'quickhoney-pdf-product
 					:price price
