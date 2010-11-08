@@ -32,6 +32,8 @@ function shop_set_price_selector(price) {
 }
 
 function shop_show_pricetags(page, subpath) {
+  log ("show price tags " + page + " - " + subpath);
+  
     $("pricetag-a").href = window.location.hash;
     
     if ((subpath != undefined) && (subpath != "")) {
