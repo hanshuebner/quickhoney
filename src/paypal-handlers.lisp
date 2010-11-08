@@ -98,16 +98,18 @@
 	  (let* ((img-id (parse-integer image))
 		 (img (find-store-object img-id :class 'quickhoney-image))
 		 (product (when img (quickhoney-image-pdf-product img))))
-	    (unless (and img product)
-	      (error "Could not find PDF for image with id ~A" image))
-	    (let* ((txn (make-instance 'paypal-product-transaction
-				       :product product
-				       :token nil
-				       :status :requesting))
-		   (ip (real-remote-addr)))
-	      (bt:make-thread #'(lambda () (get-express-checkout-url ip txn product color))
-			      :name (format nil "GET-EXPRESS-CHECKOUT-URL ~A" (store-image-name img)))
-	      (json-paypal-checkout-txn-to-json txn)))))))
+	    (if (and img product)
+		(let* ((txn (make-instance 'paypal-product-transaction
+					   :product product
+					   :token nil
+					   :status :requesting))
+		       (ip (real-remote-addr)))
+		  (bt:make-thread #'(lambda () (get-express-checkout-url ip txn product color))
+				  :name (format nil "GET-EXPRESS-CHECKOUT-URL ~A" (store-image-name img)))
+		  (json-paypal-checkout-txn-to-json txn))
+		(progn
+		  (json:encode-object-element "status" "error")
+		  (json:encode-object-element "message" "Could not find PDF for image"))))))))
 
 (defun get-express-checkout-url (ip txn product color)
   (handler-case
