@@ -1,0 +1,28 @@
+div#eula {
+    width: 600px;
+    margin: 20px;
+}
+
+h1 {
+    font-size: 180%;
+    font-weight: bolder;
+}
+
+h2 {
+    font-size: 140%;
+    font-weight: bold;
+}
+
+h1, h2 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#eula p {
+    margin-left: 30px;
+}

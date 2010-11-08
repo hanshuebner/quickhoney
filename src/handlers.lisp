@@ -65,6 +65,14 @@
     (json:encode-object-element "width" (store-image-width image))
     (json:encode-object-element "height" (store-image-height image))
     (json:encode-object-element "client" (or (quickhoney-image-client image) ""))
+    (let ((product (quickhoney-image-pdf-product image)))
+      (when product
+	(when (or (quickhoney-product-active product) (admin-p (bknr-session-user)))
+	  (json:encode-object-element "shop_file" (store-object-id product))
+	  (json:encode-object-element "shop_price" (quickhoney-product-price product))
+	  (json:encode-object-element "shop_size" (blob-size product))
+	  (json:encode-object-element "shop_active" (quickhoney-product-active product)))
+	))
     (when (typep image 'quickhoney-animation-image)
       (json:encode-object-element "animation_type"
                              (image-content-type (blob-mime-type (quickhoney-animation-image-animation image)))))
@@ -190,6 +198,42 @@
   ()
   (:default-initargs :object-class 'quickhoney-image))
 
+(defmacro with-html-email ((&rest attachments) &rest body)
+  (let ((s (gensym "s")))
+    (if attachments
+	`(make-instance 'cl-mime:multipart-mime
+			:subtype "mixed"
+			:content (list
+				  (make-instance 'cl-mime:mime
+						 :type "text" :subtype "html"
+						 :content
+						 (with-output-to-string (,s)
+						   (html-stream ,s
+								,@body)))
+				  ,@attachments))
+	`(make-instance 'cl-mime:mime
+			:type "text" :subtype "html"
+			:content (with-output-to-string (,s)
+				   (html-stream ,s ,@body))))))
+
+(defun make-text-html-email (text html)
+  (make-instance 'cl-mime:multipart-mime
+		 :subtype "alternative"
+		 :content (list
+			   (make-instance 'cl-mime:mime
+					  :type "text" :subtype "plain"
+					  :content text)
+			   html
+			   )))
+
+(defmethod image-to-mime ((image store-image))
+  (make-instance 'cl-mime:mime
+		 :type "image"
+		 :subtype (string-downcase (symbol-name (blob-type image)))
+		 :encoding :base64
+		 :content (flexi-streams:with-output-to-sequence (s)
+			    (blob-to-stream image s))))
+
 (defmethod handle-object ((handler digg-image-handler) (image quickhoney-image))
   (with-query-params (from to text)
     (cl-smtp:with-smtp-mail (smtp "localhost"
@@ -203,41 +247,27 @@
                                      (mapcar (alexandria:compose #'user-email #'find-user) (list "n" "p")))))
       (cl-mime:print-mime
        smtp
-       (make-instance
-        'cl-mime:multipart-mime
-        :subtype "mixed"
-        :content (list
-                  (make-instance
-                   'cl-mime:mime
-                   :type "text" :subtype "html"
-                   :content (with-output-to-string (s)
-                              (html-stream s
-                                           (:html
-                                            (:head
-                                             (:title "Picture comment"))
-                                            (:body
-                                             (:table
-                                              (:tbody
-                                               (:tr
-                                                ((:td :colspan "2")
-                                                 "Comment on picture "
-                                                 ((:a :href (make-image-link image))
-                                                  (:princ-safe (store-image-name image)))))
-                                               (:tr
-                                                (:td (:b "From"))
-                                                (:td (:princ-safe from))))
-                                               (:tr
-                                                ((:td :valign "top") (:b "Text"))
-                                                (:td (:princ-safe text)))))))))
-                  (make-instance
-                   'cl-mime:mime
-                   :type "image"
-                   :subtype (string-downcase (symbol-name (blob-type image)))
-                   :encoding :base64
-                   :content (flexi-streams:with-output-to-sequence (s)
-                              (blob-to-stream image s)))))
+       
+       (with-html-email ((image-to-mime image))
+	 (:html
+	  (:head
+	   (:title "Picture comment"))
+	  (:body
+	   (:table
+	    (:tbody
+	     (:tr
+	      ((:td :colspan "2")
+	       "Comment on picture "
+	       ((:a :href (make-image-link image))
+		(:princ-safe (store-image-name image)))))
+	     (:tr
+	      (:td (:b "From"))
+	      (:td (:princ-safe from))))
+	    (:tr
+	     ((:td :valign "top") (:b "Text"))
+	     (:td (:princ-safe text)))))))
        t t))))
-
+  
 (defclass json-buttons-handler (prefix-handler quickhoney-image-dependent-handler)
   ())
 
@@ -315,46 +345,49 @@
   (with-query-params (client spider-keywords)
     (let ((uploaded-file (request-uploaded-file "image-file")))
       (handler-case
-	  (progn
-	    (unless uploaded-file
-	      (error "no file uploaded"))
-	    (with-image-from-upload* (uploaded-file)
-	      (let* ((width (cl-gd:image-width))
-		     (height (cl-gd:image-height))
-		     (ratio (/ 1 (max (/ width 300) (/ height 200))))
+          (progn
+            (unless uploaded-file
+              (error "no file uploaded"))
+            (with-image-from-upload* (uploaded-file)
+              (let* ((width (cl-gd:image-width))
+                     (height (cl-gd:image-height))
+                     (ratio (/ 1 (max (/ width 300) (/ height 200))))
                      (image-name (pathname-name (upload-original-filename uploaded-file))))
                 (maybe-convert-to-palette)
-		(let* ((image (make-store-image :name image-name
-						:class-name 'quickhoney-image
-						:keywords (cons :upload (image-keywords-from-request-parameters))
-						:initargs (list :owner (bknr-session-user)
+                (let* ((image (make-store-image :name image-name
+                                                :class-name 'quickhoney-image
+                                                :keywords (cons :upload (image-keywords-from-request-parameters))
+                                                :initargs (list :owner (bknr-session-user)
                                                                 :cat-sub (mapcar #'make-keyword-from-string
                                                                                  (decoded-handler-path handler))
                                                                 :client client
                                                                 :spider-keywords spider-keywords))))
-		  (with-http-response ()
-		    (with-http-body ()
-		      (html (:html
-			     (:head
-			      (:title "Upload successful")
-			      ((:script :type "text/javascript" :language "JavaScript")
-			       "function done() { window.opener.do_query(); window.close(); }"))
-			     (:body
-			      (:p "Image " (:princ-safe (store-image-name image)) " uploaded")
-			      (:p ((:img :src (format nil "/image/~D" (store-object-id image))
-					 :width (round (* ratio width)) :height (round (* ratio height)))))
-			      (:p ((:a :href "javascript:done()") "ok")))))))))))
-	(error (e)
-	  (with-http-response ()
-	    (with-http-body ()
-	      (html (:html
-		     (:head
-		      (:title "Error during upload"))
-		     (:body
-		      (:h2 "Error during upload")
-		      (:p "Error during upload:")
-		      (:p (:princ-safe (apply #'format nil (simple-condition-format-control e) (simple-condition-format-arguments e))))
-		      (:p ((:a :href "javascript:window.close()") "ok"))))))))))))
+
+					 
+                  (with-http-response ()
+                    (with-http-body ()
+                      (html (:html
+                             (:head
+                              (:title "Upload successful")
+                              ((:script :type "text/javascript" :language "JavaScript")
+                               "function done() { window.opener.do_query(); window.close(); }"))
+                             (:body
+                              (:p "Image " (:princ-safe (store-image-name image)) " uploaded")
+                              (:p ((:img :src (format nil "/image/~D" (store-object-id image))
+                                         :width (round (* ratio width)) :height (round (* ratio height)))))
+                              (:p ((:a :href "javascript:done()") "ok")))))))))))
+
+        (error (e)
+          (with-http-response ()
+            (with-http-body ()
+              (html (:html
+                     (:head
+                      (:title "Error during upload"))
+                     (:body
+                      (:h2 "Error during upload")
+                      (:p "Error during upload:")
+                      (:p (:princ-safe (apply #'format nil (simple-condition-format-control e) (simple-condition-format-arguments e))))
+                      (:p ((:a :href "javascript:window.close()") "ok"))))))))))))
 
 (defclass upload-news-handler (admin-only-handler page-handler)
   ())
@@ -478,48 +511,48 @@
   (with-query-params (directory subdirectory)
     (let ((uploaded-file (request-uploaded-file "image-file")))
       (handler-case
-	  (progn
-	    (unless (and directory
-			 (not (equal "" directory)))
-	      (error "no category selected, upload not accepted"))
-	    (unless (and subdirectory
-			 (not (equal "" subdirectory)))
-	      (error "no subcategory selected, upload not accepted"))
-	    (unless uploaded-file
-	      (error "no file uploaded"))
-	    (with-image-from-upload* (uploaded-file)
-	      (unless (and (eql 208 (cl-gd:image-width))
-			   (eql 208 (cl-gd:image-height)))
-		(error "invalid image size, button size must be 208 by 208 pixels"))
-	      (let* ((image (make-store-image :name (pathname-name (upload-original-filename uploaded-file))
+          (progn
+            (unless (and directory
+                         (not (equal "" directory)))
+              (error "no category selected, upload not accepted"))
+            (unless (and subdirectory
+                         (not (equal "" subdirectory)))
+              (error "no subcategory selected, upload not accepted"))
+            (unless uploaded-file
+              (error "no file uploaded"))
+            (with-image-from-upload* (uploaded-file)
+              (unless (and (eql 208 (cl-gd:image-width))
+                           (eql 208 (cl-gd:image-height)))
+                (error "invalid image size, button size must be 208 by 208 pixels"))
+              (let* ((image (make-store-image :name (pathname-name (upload-original-filename uploaded-file))
                                               :type (make-keyword-from-string (pathname-type (upload-original-filename uploaded-file)))
-					      :class-name 'store-image
-					      :keywords (list :button)
+                                              :class-name 'store-image
+                                              :keywords (list :button)
                                               :initargs (list :cat-sub (list (make-keyword-from-string directory)
                                                                              (make-keyword-from-string subdirectory))))))
-		(with-http-response ()
-		  (with-http-body ()
-		    (html (:html
-			   (:head
-			    (:title "Upload successful")
-			    ((:script :type "text/javascript" :language "JavaScript")
-			     "function done() { window.opener.do_query(); window.close(); }"))
-			   (:body
-			    (:p "Image " (:princ-safe (store-image-name image)) " uploaded")
-			    (:p ((:img :src (format nil "/image/~D" (store-object-id image))
-				       :width 208 :height 208)))
-			    (:p ((:a :href "javascript:done()") "ok"))))))))))
-	(error (e)
-	  (with-http-response ()
-	    (with-http-body ()
-	      (html (:html
-		     (:head
-		      (:title "Error during upload"))
-		     (:body
-		      (:h2 "Error during upload")
-		      (:p "Error during upload:")
-		      (:p (:princ-safe (apply #'format nil (simple-condition-format-control e) (simple-condition-format-arguments e))))
-		      (:p ((:a :href "javascript:window.close()") "ok"))))))))))))
+                (with-http-response ()
+                  (with-http-body ()
+                    (html (:html
+                           (:head
+                            (:title "Upload successful")
+                            ((:script :type "text/javascript" :language "JavaScript")
+                             "function done() { window.opener.do_query(); window.close(); }"))
+                           (:body
+                            (:p "Image " (:princ-safe (store-image-name image)) " uploaded")
+                            (:p ((:img :src (format nil "/image/~D" (store-object-id image))
+                                       :width 208 :height 208)))
+                            (:p ((:a :href "javascript:done()") "ok"))))))))))
+        (error (e)
+          (with-http-response ()
+            (with-http-body ()
+              (html (:html
+                     (:head
+                      (:title "Error during upload"))
+                     (:body
+                      (:h2 "Error during upload")
+                      (:p "Error during upload:")
+                      (:p (:princ-safe (apply #'format nil (simple-condition-format-control e) (simple-condition-format-arguments e))))
+                      (:p ((:a :href "javascript:window.close()") "ok"))))))))))))
 
 (defclass json-news-handler (object-handler)
   ()
@@ -587,10 +620,6 @@
 (defclass shutdown-handler (admin-only-handler page-handler)
   ())
 
-(defvar *acceptor* nil)
-
 (defmethod handle ((handler shutdown-handler))
-  (when *acceptor*
-    (hunchentoot:stop *acceptor*)
-    (setf *acceptor* nil))
+  (stop-http-server)
   "Shutting down HTTP server")

@@ -1,0 +1,135 @@
+body {
+	width: 648px;
+}
+
+p {
+	width: 648px;
+}
+
+/* cms styles */
+
+.cms {
+	margin-top: 10px;
+}
+
+div#cms {
+	position: absolute;
+	visibility: hidden;
+	top: 0px;
+	left: 0px;
+	width: 400px;
+}
+
+div.cms_form {
+	position: absolute;
+	visibility: hidden;
+	top: 0px;
+	left: 0px;
+	z-index: 3;
+	background-color: #bfbfbf;
+	color: #000000;
+	border: thin solid #000000;
+	padding: 5px;
+}
+
+div.cms_title {
+	padding: 2px;
+	font-size: 100%;
+	text-align: center;
+	border: thin solid #000000;
+	margin-bottom: 5px;
+	color: #ffffff;
+	background-color: #000000;
+}
+
+div#login_status {
+	margin-top: -100px;
+}
+
+div#login_form {
+	margin-top: -100px;
+	width: 400px;
+}
+
+/* paypal */
+div#paypalform {
+    visibility: hidden;
+}
+
+div#paypalstatus ul li {
+    display: inline;
+    padding-right: 20px;
+}
+
+div#paypalform div {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div#paypalform h2 {
+    font-size: 120%;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.dateselection {
+    width: 648px;
+}
+
+.dateselection .datefrom {
+    width: 320px;
+    float: left;
+}
+
+.dateselection .dateto {
+    width: 320px;
+    float: right;
+}
+
+
+/* paypal result list */
+h1 {
+    font-size: 180%;
+    font-weight: bolder;
+}
+
+#paypal h1 {
+    margin: 10px;
+}
+
+#paypal_navbar {
+    padding: 10px;
+}
+
+#paypal_results {
+}
+
+.paypal_tx {
+    border: 1px solid black;
+    height: 70px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.paypal_tx img {
+    float: left;
+}
+
+.paypal_tx .tx_top {
+    float:right;
+    width: 500px;
+    height: 60px;
+    background-color: #bbb;
+}
+
+.paypal_tx {
+    font-weight: bolder;
+}
+
+.paypal_tx span {
+    font-weight: normal;
+}
+
+.paypal_tx .tx_more_info {
+    visibility: hidden;
+}

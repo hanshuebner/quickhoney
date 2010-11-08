@@ -1,6 +1,10 @@
 // Copyright 2005-2008 Hans Huebner, hans.huebner@gmail.com
 // All rights reserved.
 
+/* safari global variable - used to trigger some compatibility hacks */
+
+var safari = false;
+
 /* configuration */
 
 var max_news_items = 50;        /* maximum number of news items to display */
@@ -47,32 +51,15 @@ var editorToolbarConfig = {
     ]
 };
 
-/* safari global variable - used to trigger some compatibility hacks */
-
-var safari = false;
-
 /* logged_in - will be set when the user has CMS access */
 
 var logged_in;
 var application_initialized = false;
+var news_editor;
 
 /* current colors */
 
-/* ie 5 / mac compatibility routine */
-
-function push(array, item) {
-    array[array.length] = item;
-}
-
-/* the usual shortcut */
-
-function $(id) {
-    return document.getElementById(id);
-}
-
 /* login status */
-
-var news_editor;
 
 function login_status(json_result) {
 
@@ -81,20 +68,22 @@ function login_status(json_result) {
     logged_in = json_result.admin;
 
     if (logged_in) {
-	replaceChildNodes("username", json_result.login);
-	$("login_status").style.visibility = 'visible';
+        replaceChildNodes("username", json_result.login);
+        $("login_status").style.visibility = 'visible';
         news_editor = new YAHOO.widget.SimpleEditor('news_editor', { toolbar: editorToolbarConfig });
         news_editor.render();
-	show_cms_window();
+
+	// clear query cache on login
+	db_cache = { };
+        show_cms_window();
     }
 }
 
 /* CMS functionality */
 
 function show_cms_window(name) {
-
     log('show_cms_window ' + name);
-
+    
     $("cms").style.top = "106px";
     $("cms").style.left = "730px";
     $("cms").style.width = "400px";
@@ -102,35 +91,43 @@ function show_cms_window(name) {
     var elements = $("cms").childNodes;
 
     if (logged_in) {
-
+        
 	for (var i = 0; i < elements.length; i++) {
 	    if (elements[i].id) {
 		elements[i].style.visibility = (elements[i].id == name) ? "visible" : "hidden";
 	    }
 	}
-
+        
 	$("login_status").style.visibility = 'visible';
-
-    } else {
-	for (var i = 0; i < elements.length; i++) {
-	    if (elements[i].id) {
-		elements[i].style.visibility = "hidden";
-	    }
+	
+	if (name == "edit_form") {
+	    shop_show_form_for_image(current_image);
+	} else {
+	    shop_hide_form();
 	}
+    } else {
+	      for (var i = 0; i < elements.length; i++) {
+	          if (elements[i].id) {
+		            elements[i].style.visibility = "hidden";
+	          }
+	      }
     }
+
+    log('show_cms_window ' + name + ' done');
 }
 
 function send_login() {
-
     return false;
 }
 
 function send_logout() {
-
     logged_in = false;
     show_cms_window();
     loadJSONDoc("/json-logout")
         .addCallbacks(function () {}, alert);
+    // clear query cache on logout
+    db_cache = { };
+    do_query();
 }
 
 /* image editing */
@@ -156,14 +153,16 @@ function submit_json(url, form, handler) {
             }, all_inputs(form));
     }
 
+    log("values " + queryString(names, values));
+    log("url " + url);
+
     MochiKit.Async.doXHR(url, { mimeType: 'text/plain',
                                 headers: [['Accept', 'application/json']],
                                 method: 'POST',
                                 headers: {"Content-Type":"application/x-www-form-urlencoded"},
                                 sendContent: queryString(names, values) })
-        .addCallbacks(function (req) { handler(MochiKit.Base.evalJSON(req.responseText)) },
+        .addCallbacks(function (req) { handler(MochiKit.Base.evalJSON(req.responseText)); },
                       alert);
-
 }
 
 function do_edit() {
@@ -178,11 +177,23 @@ function do_edit() {
     return false;
 }
 
-function image_edited(json_data) {
-    if (json_data.result == 'error') {
-        alert(json_data.message);
+function poll_json_cb(json_url, callback, interval, json_data) {
+    if (!callback(json_data)) {
+	setTimeout(partial(poll_json, json_url, callback), interval);
     }
+}
+
+// poll a JSON source until callback returns true
+function poll_json(json_url, callback, interval) {
+    if (interval == undefined) {
+	interval = 1000;
+    }
+    submit_json(json_url, null, partial(poll_json_cb, json_url, callback, interval));
+}
+
+function after_image_edit() {
     show_cms_window("image_edited_form");
+    display_current_image();
     setTimeout("show_cms_window('edit_form')", 2000);
 }
 
@@ -190,8 +201,7 @@ function image_edited(json_data) {
     if (json_data.result == 'error') {
         alert(json_data.message);
     }
-    show_cms_window("image_edited_form");
-    setTimeout("show_cms_window('edit_form')", 2000);
+    after_image_edit();
 }
 
 function news_edited(json_data) {
@@ -243,31 +253,17 @@ function set_clients(json_data) {
     client_names = json_data.clients;
     var rendered_clients = [];
     for (var i = 0; i < client_names.length; i++) {
-	var client_name = client_names[i];
-	if (client_name.search(/,/)) {
-	    rendered_clients[i] = client_name.replace(/^(.*)(\s\S+,\s*.*)$/, "<b>$1</b>$2");
-	} else {
-	    rendered_clients[i] = "<b>" + client_name + "</b>";
-	}
+	      var client_name = client_names[i];
+	      if (client_name.search(/,/)) {
+	          rendered_clients[i] = client_name.replace(/^(.*)(\s\S+,\s*.*)$/, "<b>$1</b>$2");
+	      } else {
+	          rendered_clients[i] = "<b>" + client_name + "</b>";
+	      }
     }
     $("client_names").innerHTML = rendered_clients.join("; ");
     $("upload_client_select").innerHTML = make_clients_selector('upload_client');
     $("upload_animation_client_select").innerHTML = make_clients_selector('upload_client');
     $("edit_client_select").innerHTML = make_clients_selector('edit_client');
-}
-
-/* shop */
-
-var cart = {
-    products: [],
-    add: function (product) {
-        this.products.push(product);
-        $('checkout').style.visibility = 'visible';
-    }
-};
-
-function shop () {
-    directory('shop', 'shop');
 }
 
 /* news */
@@ -303,7 +299,10 @@ function getScrollXY() {
 }
 
 function permalink(path) {
-    return A({ href: '/' + path, onclick: function () { document.location.href = '#' + path; return false; } }, 'permalink');
+    return A(
+        { href: '/' + path,
+          onclick: function () { document.location.href = '#' + path; return false; } },
+        'permalink');
 }
 
 function make_upload_item(item)
@@ -311,7 +310,7 @@ function make_upload_item(item)
     var color = pages[item.category] ? pages[item.category].link_color : '000000';
     var path = item.category + '/' + item.subcategory + '/' + encodeURI(item.name);
     return DIV({ 'class': 'newsentry autonews news_' + item.category },
-               A({ href: '/#' + path, onclick: function () { jump_to(path) } },
+               A({ href: '/#' + path, onclick: function () { jump_to(path); } },
                  IMG({ src: "/image/" + encodeURI(item.name) + '/cutout-button,,' + color + ',98,98,0,' + item.category,
                              width: 98, height: 98 })),
                DIV(null,
@@ -334,7 +333,7 @@ function make_news_item(item)
                     .addCallbacks(reload_news, alert);
             }
             return false;
-        }
+        };
     }
     var text_div = DIV({ 'class': 'item-text' });
     text_div.innerHTML = item.text;
@@ -362,7 +361,7 @@ function load_news(single_entry, data)
                               }, data.items));
         $('archive-navigation').style.visibility = 'inherit';
 
-        wait_for_images(function () { hide_cue(); $('newsentries').style.visibility = 'inherit' });
+        wait_for_images(function () { hide_cue(); $('newsentries').style.visibility = 'inherit'; });
 
         current_news_item = null;
         if (logged_in) {
@@ -558,7 +557,6 @@ function process_query_result(key, json_result) {
 }
 
 function query_imagedb(directory, subdirectory, force) {
-
     log('query_imagedb - keywords: ', directory, " ", subdirectory);
 
     var key = directory + ((subdirectory == "browseall") ? "" : ("/" + subdirectory)) + ((subdirectory == "smallworld") ? "?layout=smallworld" : "");
@@ -574,7 +572,7 @@ function query_imagedb(directory, subdirectory, force) {
 
     } else {
         show_cue();
-	loadJSONDoc("/json-image-query/" + key)
+	      loadJSONDoc("/json-image-query/" + key)
             .addCallbacks(partial(process_query_result, key), alert);
     }
 }
@@ -601,15 +599,17 @@ var pages = {
                      partial(directory, 'pen')),
     news: new Page('30be01',
                    news),
+    paypal: new Page('ff00ff', show_paypal_page),
+    /* no shopping cart for now
     shop: new Page('0054ff',
                    shop),
     cart: new Page('0054ff',
                    show_shopping_cart),
+     */
     contact: new Page('ffa200')
 };
 
 function display_cms_window() {
-
     if (logged_in) {
 	if (current_directory == "home") {
             show_cms_window();
@@ -636,7 +636,6 @@ function display_cms_window() {
 }
 
 function show_page(pagename, subpath) {
-
     document.title = "QuickHoney " + pagename + (subpath ? "/" + subpath : '');
 
     if (!pages[pagename]) {
@@ -645,6 +644,8 @@ function show_page(pagename, subpath) {
     }
 
     var page = pages[pagename];
+
+    shop_show_pricetags(pagename, subpath);
 
     log('show_page ' + pagename + ' subpath ' + subpath + ' current_directory ' + current_directory);
 
@@ -777,7 +778,7 @@ function show_directory_buttons(category) {
     }
     replaceChildNodes('directory', buttons);
 
-    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'button'), seq(0, 6))) });
+    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'button'), seq(0, 6))); });
 }
 
 function show_home_buttons() {
@@ -798,7 +799,7 @@ function show_home_buttons() {
 
     replaceChildNodes('home', buttons);
 
-    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'home_'), home_buttons)) });
+    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'home_'), home_buttons)); });
 }
 
 function stop_revealing_buttons() {
@@ -817,14 +818,6 @@ function reveal_buttons_nicely(images, n) {
     }
 }
 
-function seq(start, end) {
-    var retval = [];
-    for (var i = start; i < end; i++) {
-        retval.push(i);
-    }
-    return retval;
-}
-
 function load_button_images(callback) {
 
     loadJSONDoc('/json-buttons'
@@ -838,7 +831,7 @@ function load_button_images(callback) {
             }, alert);
 }
 
-function directory(directory_name, subpath) {
+function directory(directory_name, subpath, image_name) {
 
     log('directory: ' + directory_name + ' subpath: ' + subpath + ' current_directory: ' + current_directory);
 
@@ -856,6 +849,9 @@ function directory(directory_name, subpath) {
         } else {
             document.show_picture = components[1];
         }
+	if (image_name != undefined) {
+	    document.show_picture = image_name;	    
+	}
         subdirectory(components[0]);
     } else {
         show_directory_buttons(directory_name);
@@ -986,22 +982,6 @@ function make_pages_navbar() {
     }
 }
 
-function wait_for_images(callback) {
-    var waiting = 0;
-    map(function (image) {
-            if (!image.complete) {
-                waiting++;
-            }
-        }, getElementsByTagAndClassName('img', null));
-
-    if (waiting == 0 || window.opera) {
-        hide_cue();
-        callback();
-    } else {
-        callLater(.2, partial(wait_for_images, callback));
-    }
-}
-
 function reveal_thumbnails() {
     var waiting = 0;
     map(function (image) {
@@ -1040,8 +1020,43 @@ function display_thumbnail_page() {
                                      width: cell_width,
                                      height: cell_height});
             imageElement.src = '/image/' + encodeURI(image.name) + '/cell,ffffff,' + cell_width + ',' + cell_height + ',8';
-	    thumbnail_nodes.push(A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name) },
-                                   imageElement));
+	    var priceTag = null;
+	    if ((image.shop_file != undefined) && (image.shop_price != undefined) && (image.shop_active)) {
+		var border_width = 8;
+		var img_ratio = Math.max(image.width / (cell_width - (2 * border_width)),
+					 image.height / (cell_height - (2 * border_width)));
+		var tb_height = Math.min(image.height, Math.round(image.height / img_ratio));
+		var y_offset = Math.round((cell_height - tb_height) / 2);
+		var tb_width = Math.min(image.width, Math.round(image.width / img_ratio));
+		var x_offset = Math.round((cell_width - tb_width) / 2);
+
+		/* XXX micro-pricetags */
+		var right_offset = 5 + x_offset;
+		var top_offset = -cell_height  + 13 + y_offset + 3;
+		var bottom_offset = 7;
+		/*
+		log("img_ratio " + img_ratio);
+		log("border_width " + border_width);
+		log("cell_height " + cell_height + " tb_height " + tb_height + " y_offset " + y_offset);
+		log("cell_width " + cell_width + " tb_width " + tb_width + " y_offset " + x_offset);
+		log("right " + right_offset + " top " + top_offset);
+		 */
+		
+		priceTag = A({ href: window.location.hash},
+			     IMG({'class': 'image_pricetag_micro',
+				  'src': "/image/pricetag-micro",
+				  'id': 'pricetag-micro-' + image.id,
+				  'onclick': "init_shop_overlay(query_result_pages[" +
+				  current_page_index +"][" + row_index + "][" + image_index + "])",
+				  'style': "bottom: " + bottom_offset + "px; right: " + right_offset + "px"}));
+	    }
+
+	    var imageLink = A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name) },
+
+                              imageElement
+			     );
+	    var imageSpan = SPAN({'style': "position:relative"}, imageLink, priceTag);
+	    thumbnail_nodes.push(imageSpan);
         }
         thumbnail_nodes.push(BR());
     }
@@ -1089,6 +1104,10 @@ function display_image(index) {
 
     log('display_image index ' + index);
 
+    display_current_image();
+}
+
+function display_current_image() {
     overlay_remove();
     display_path();
     make_images_navbar();
@@ -1172,15 +1191,29 @@ function display_image(index) {
                         height: display_height,
                         style: 'visibility: hidden',
                         src: '/image/' + encodeURI(current_image.name) + imageproc_ops });
-        replaceChildNodes('image_detail',
-                          DIV({ style: 'margin-top: ' + top_padding + 'px; margin-left: ' + left_padding + 'px' },
-                              may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img));
-        wait_for_images(function () { img.style.visibility = 'inherit' });
+
+	var priceTag = null;
+	if ((current_image.shop_file != undefined) && (current_image.shop_price != undefined)) {
+	    priceTag = A({href: window.location.hash
+			 },
+			 IMG({'class': 'image_pricetag',
+			      'src': "/image/pricetag-small-" + current_image.shop_price,
+			      'id': "pricetag-small",
+			      'style': "right: " + (648 - display_width) / 2 + "px;",
+			      'onclick': "init_shop_overlay(current_image)"}));
+	}
+	
+	var divNode = DIV({ style: 'position: relative; margin-top: ' + top_padding + 'px; margin-left: ' + left_padding + 'px' },
+                              may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img,
+			 priceTag);
+        replaceChildNodes('image_detail', divNode);
+        wait_for_images(function () { img.style.visibility = 'inherit'; });
     }
 
     if (logged_in) {
 	$("edit_client").value = current_image.client;
         $("edit_keywords").value = current_image.spider_keywords || "";
+
         map(function(keyword) {
                 $('edit_' + keyword).checked = current_image.keywords[keyword] ? true : false;
             }, ['explicit']);
@@ -1265,27 +1298,29 @@ function safari_compatibility_hack() {
     // for safari, we change the style sheet so that images are not hidden during load
     log('changing stylesheet for safari');
     for (var i = 0; i < document.styleSheets.length; i++) {
-	var rules = document.styleSheets[i][document.all ? 'rules' : 'cssRules'];
-	for (var j = 0; j < rules.length; j++) {
-	    var rule = rules[j];
-	    var ruleText = rule.selectorText.toLowerCase();
-	    if (ruleText.indexOf('img.inherited_image') != -1) {
-		rule.style['visibility'] = 'visible';
-	    }
-	}
+	      var rules = document.styleSheets[i][document.all ? 'rules' : 'cssRules'];
+	      for (var j = 0; j < rules.length; j++) {
+	          var rule = rules[j];
+	          var ruleText = rule.selectorText.toLowerCase();
+	          if (ruleText.indexOf('img.inherited_image') != -1) {
+		            rule.style['visibility'] = 'visible';
+	          }
+	      }
     }
 }
 
-function init_applicaton() {
-    log('init_applicaton');
+function init_application() {
+    log('init_application');
     if (navigator.userAgent.indexOf("Safari") != -1) {
-	safari = true;
-	safari_compatibility_hack();
+	      safari = true;
+	      safari_compatibility_hack();
     }
 
     loadJSONDoc("/json-login").addCallbacks(login_status, alert);
     loadJSONDoc("/json-clients").addCallbacks(set_clients, alert);
     loadJSONDoc('/json-news-archive/quickhoney').addCallbacks(initialize_news_archive, alert);
+
+    init_shop();
 
     var path = 'home';
     if (document.location.pathname != '/') {
@@ -1295,17 +1330,15 @@ function init_applicaton() {
     }
     document.location.href = "/#" + path;
 
-    log('init_applicaton done');
-
     poll_path();
 
     application_initialized = true;
-    log('init_applicaton done');
+    log('init_application done');
 }
 
 function button_images_loaded() {
     log('button_images_loaded');
-    wait_for_images(init_applicaton);
+    wait_for_images(init_application);
 }
 
 function init() {
@@ -1328,7 +1361,7 @@ function jump_to(path) {
 function poll_path() {
     var url_path = (document.location.href + "#").split("#")[1];
     if (url_path && (url_path != document.current_path)) {
-        if (pageTracker) {
+        if ((typeof pageTracker != "undefined") && pageTracker) {
             try {
                 pageTracker._trackPageview(document.location.href.replace("#", "/").replace(/^[^\/]+:\/\/[^\/]+/, ""));
             }
@@ -1363,29 +1396,102 @@ function overlay_remove()
  * are added to the overlay window.
  */
 
-function make_overlay(id, title, width)
-{
-    log('make_overlay ' + id);
-    var overlay = $('overlay');
-    overlay.style.top = '144px';
-    overlay.className = current_directory;
-    var inner = DIV({ 'class': 'inner', style: 'background: white'},
+function fade_out_page(to, callback) {
+    to = to || 0.3;
+    var duration = 0.7;
+    fade('menu', {to: to,
+		  duration: duration});
+    fade('path-and-version', {to: to,
+			     duration: duration});
+    fade('image_browser', {to: to,
+			  duration: duration});
+    fade('footer', {to: to,
+		    duration: duration});
+    setTimeout(callback, duration * 1000);
+}
+
+function make_overlay_content(overlay, options) {
+    log("options " + JSON.stringify(options));
+    var id = options.id;
+    var cssClass = options.cssClass || '';
+    var title = options.title;
+    var width = options.width;
+    var closeID = 'close' + id;
+    var buttonColor = options.color || pages[current_directory].link_color;
+    var invertColor = options.invertColor || false;
+    var colorString = (!options.invertColor ? "000000," + buttonColor :
+		      "ffffff," + buttonColor + ",000000,ffffff");
+
+    overlay.style.visibility = 'hidden';
+    overlay.style.top = options.top || '144px';
+    overlay.style.left = options.left || '36px';
+    overlay.className = cssClass + ' ' + current_directory + " overlay";
+
+    var inner = DIV({ 'class': 'inner' },
                     H1(null, title),
-                    IMG({ src: '/image/overlay-close/color,000000,' + pages[current_directory].link_color,
-                          id: 'close', width: 13, height: 13}),
+                    IMG({ src: '/image/overlay-close/color,' + colorString,
+                          id: closeID, 'class': 'close',
+			  width: 13, height: 13}),
                     BR());
     replaceChildNodes(overlay,
                       DIV({ 'class': 'ydsf' },
                           inner));
     overlay.style.width = width + 'px';
-    $('close').style.left = (width - 23) + 'px';
-    $('close').onclick = overlay_remove;
+//    $(closeID).style.left = (width - 23) + 'px';
+    $(closeID).style.right = '13px';
+    $(closeID).onclick = function () {
+	overlay.style.visibility = 'hidden';
+	replaceChildNodes(overlay);
+	if (options.fade) {
+	    fade_out_page(1.0);
+	}
+	if (options.callback != undefined) {
+	    options.callback();
+	}
+    };
     var elements = [];
-    for (var i = 3; i < arguments.length; i++) {
+    for (var i = 2; i < arguments.length; i++) {
         elements.push(arguments[i]);
     }
     appendChildNodes(inner, DIV({id: id}, elements));
-    overlay.style.visibility = 'inherit';
+
+    /* wait for fade, fade speed XXX */
+    var showOverlay = function () {
+	function show() {
+	    if (options.onShow) {
+		options.onShow();
+	    }
+	    overlay.style.visibility = 'inherit';
+	}
+	show();
+    };
+
+
+    var fadeOut = function () {
+	if (options.fade) {
+	    fade_out_page(0.3, showOverlay);
+	} else {
+	    showOverlay();
+	}
+    };
+    
+    if (options.waitForImages) {
+	wait_for_images(fadeOut);
+    } else {
+	fadeOut();
+    }
+
+    return overlay;
+}
+
+function make_overlay(id, title, width) {
+    log('make_overlay ' + id);
+    var overlay = $('overlay');
+    var args = [];
+    for (var i = 3; i < arguments.length; i++) {
+	args[i-3] = arguments[i];	
+    }
+    partial(make_overlay_content, overlay, { id: id, title: title, width: width}).apply(this, args);
 }
 
 function make_post_mail_form() {
@@ -1621,7 +1727,7 @@ function make_shout_form() {
                                              title: site.name });
                              img.onclick = partial(submit_bookmark, site);
                              return img;
-                         }, filter(function (site) { return site.action }, social_bookmark_sites))));
+                         }, filter(function (site) { return site.action; }, social_bookmark_sites))));
 }
 
 function make_ipod_image() {
@@ -1636,148 +1742,8 @@ NOTICE = partial(SPAN, { 'class': 'notice' });
 PRICE = partial(SPAN, { 'class': 'price' });
 SPACER = partial(DIV, { 'class': 'spacer' });
 ARTWORK_NAME = partial(SPAN, { 'class': 'artwork-name' });
-
-function remove_overlay()
-{
-    $('overlay').style.visibility = 'hidden';
-    replaceChildNodes('overlay');
-}
-
-function buy_file()
-{
-    cart.add([ 'file', current_image.name ]);
-    return "File added to shopping cart";
-}
-
-function buy_print()
-{
-    cart.add([ 'print', current_image.name ]);
-    return "Print added to shopping cart";
-}
-
-function buy_t_shirt()
-{
-    cart.add([ 't-shirt', current_image.name ]);
-    return "T-Shirt added to shopping cart";
-}
-
-function buy_product_button (buy_function) {
-    var button = BUTTON({ id: 'buy_product_button' }, IMG({ src: '/image/add-to-cart', width: 102, height: 40 }));
-    button.onclick = function () {
-        var confirmation = buy_function();
-        var top = (elementPosition('buy_product_button').y - 21) + 'px';
-        replaceChildNodes('overlay', H1({ 'class': 'confirmation' }, confirmation));
-        $('overlay').style.top = top;
-        callLater(2, remove_overlay);
-        return false;
-    }
-    return button;
-}
-
-var make_buy_forms = {
-    'buy-file' : function () {
-        make_overlay('buy-file', 'Buy Art as Vector PDF File', 426,
-                     FORM({ action: '#', onsubmit: 'return false' },
-                          SPACER("Download Artwork ", ARTWORK_NAME(current_image.name), " for one-time private use only.  ",
-                                 "Please read our ",
-                                 A({ href: '/static/user-agreement.html', target: 'user-agreement' }, "User Agreement"),
-                                 " and tick the box below to indicate that you agree to be bound to it.",
-                                 BR(), BR(),
-                                 INPUT({ type: 'checkbox', name: 'agree-to-license'}),
-                                 " I have read and understood the 'User Agreement' and agree to be bound to the terms set forth in it",
-                                 BR(), BR(),
-                                 PRICE('45 €'), NOTICE(' (inside EU, incl. tax)*'), BR(),
-                                 PRICE('37.82 €'), NOTICE(' (outside EU, tax free)*'), BR(),
-                                 BR(),
-                                 buy_product_button(buy_file),
-                                 BR(), BR(),
-                                 NOTICE("Please note:  Our shop is operating from Germany, that's why there is a sales tax within Europe and none outside"))));
-    },
-    'buy-print' : function () {
-        make_overlay('buy-print', 'Buy Art Floating Gallery Plexiglas', 426,
-                     FORM({ action: '#', onsubmit: 'return false' },
-                          SPACER("Fineart print mounted behind plexiglas on aluminium board with a 3/4'' wood brace. ",
-                                 NOTICE('Please allow 4-6 days for production in addition to the shipping time')),
-                          IMG({ src: '/image/print-sample', width: 426, height: 428 }),
-                          SPACER(ARTWORK_NAME(current_image.name),
-                                 TABLE(null,
-                                       TBODY(null,
-                                             TR(null,
-                                                TD(null, INPUT({ type: "radio", name: "size", value: "small"})),
-                                                TD(null,
-                                                   "Small 20cm x 30cm (7.8'' x 11.8'')", BR(),
-                                                   PRICE('150 €'), NOTICE(' (inside EU, incl. tax)*'), BR(),
-                                                   PRICE('128.32 €'), NOTICE(' (outside EU, tax free)*'), BR())),
-                                             TR(null,
-                                                TD(null, INPUT({ type: "radio", name: "size", value: "large"})),
-                                                TD(null,
-                                                   "Small 33cm x 50cm (13'' x 19.7'')", BR(),
-                                                   PRICE('190 €'), NOTICE('(inside EU, incl. tax)*'), BR(),
-                                                   PRICE('159.66 €'), NOTICE('(outside EU, tax free)*'), BR())))),
-                                 BR(),
-                                 buy_product_button(buy_print),
-                                 BR(), BR(),
-                                 NOTICE("Please note:  We are shipping from Germany, that's why there is a sales tax within Europe and none outside"))));
-    },
-    'buy-t-shirt' : function () {
-        make_overlay('buy-t-shirt', 'Buy Art on T-Shirt', 426,
-                     FORM({ action: '#', onsubmit: 'return false' },
-                          SPACER("Artwork ", ARTWORK_NAME(current_image.name), " in colored flocked foil ",
-                                 "hot pressed on an American Apparel T-Shirt. ",
-                                 NOTICE('These Tees are custom made, so please allow 4-6 days for production in addition to the shipping time')),
-                          SPACER(TABLE(null,
-                                       TBODY(null,
-                                             TR(null,
-                                                TD({ 'class': 't-shirt-sample', valign: 'top' },
-                                                   IMG({ id: 't-shirt-sample',
-                                                         src: ('/image/'
-                                                               + encodeURI(current_image.name)
-                                                               + '/cell,ffffff,100,100,10')})),
-                                                TD(null,
-                                                   "Color:", BR(),
-                                                   "Tee - white", BR(),
-                                                   "Art - as in original", BR(),
-                                                   BR(),
-                                                   "Price:", BR(),
-                                                   PRICE('35.00 €'), NOTICE(' (inside EU, incl. tax)*'), BR(),
-                                                   PRICE('29.41 €'), NOTICE(' (outside EU, tax free)*'), BR(),
-                                                   BR(),
-                                                   "Size:", BR(),
-                                                   SELECT({ name: 'size' },
-                                                          OPTION({ value: "" }, "Choose Size"),
-                                                          OPTION({ value: "XS" }, "XS"),
-                                                          OPTION({ value: "S" }, "S"),
-                                                          OPTION({ value: "M" }, "M"),
-                                                          OPTION({ value: "L" }, "L"),
-                                                          OPTION({ value: "XL" }, "XL")),
-                                                   BR(),
-                                                   BR(),
-                                                   "Quantity:", BR(),
-                                                   INPUT({ name: 'quantity', size: 1, maxlength: 1 }),
-                                                   BR(),
-                                                   BR(),
-                                                   buy_product_button(buy_t_shirt))))),
-                                 BR(), BR(),
-                                 NOTICE("Please note:  We are shipping from Germany, that's why there is a sales tax within Europe and none outside"))))
-    }
-};
-
-function make_buy_form(keyword)
-{
-    log('make_buy_form: ' + keyword);
-    try {
-        make_buy_forms[keyword]();
-    }
-    catch (e) {
-        log("error caught while creating buy form: " + e);
-    }
-}
-
-function show_shopping_cart ()
-{
-    $('menu').className = 'shop';
-    document.body.className = 'shop';
-}
+BOLD = partial(SPAN, { 'class': 'bold' });
+ITALIC = partial(SPAN, { 'class': 'italic' });
 
 function recolored_image_path(name)
 {
@@ -1841,12 +1807,12 @@ function make_image_action_buttons()
         animator.stop();
         animator.attributes = { width: { to: 132 }, left: { to: 553 } };
         animator.animate();
-    }
+    };
     $('image_action_buttons').onmouseout = function () {
         animator.stop();
         animator.attributes = { width: { to: 61 }, left: { to: 623 } };
         animator.animate();
-    }
+    };
 
     wait_for_images(function () { $('image_action_buttons').style.visibility = 'inherit'; });
 }

@@ -13,14 +13,14 @@
 		   :test #'equal))
 	(directory (merge-pathnames #p"**/*.asd" directory-path))))
 
-(setup-registry #P"../../../")
+(setup-registry #P"../../")
 
 (push :cl-gd-gif *features*)
 
 (asdf:oos 'asdf:load-op :quickhoney)
-(asdf:oos 'asdf:load-op :swank)
 
-(swank::create-server :port 4085)
+(asdf:oos 'asdf:load-op :swank)
+(swank::create-server :port 4086 :dont-close t)
 
 ;; disable ldb
 #+sbcl

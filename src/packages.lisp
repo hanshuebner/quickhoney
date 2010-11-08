@@ -6,7 +6,22 @@
   (:export #:*website-url*
 	   #:*website-directory*
 	   #:*webserver-port*
-	   #:*store-directory*))
+	   #:*store-directory*
+     #:*xml-catalog-directory*
+     #:*thirdparty-directory*
+     #:*root-directory*
+
+     #:*paypal-user*
+     #:*paypal-password*
+     #:*paypal-signature*
+     #:*paypal-secure-merchant-id*
+     #:*paypal-url*
+     #:*paypal-fpdbs-url*
+     #:*paypal-use-sandbox*
+     #:*paypal-email*
+
+     #:*product-validity-time*
+     ))
 
 (defpackage :quickhoney.imageproc
   (:use :cl

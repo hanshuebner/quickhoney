@@ -14,6 +14,15 @@ a:focus { -moz-outline-style: none }
         padding-top: 116px;
 }
 
+.italic {
+    font-style: italic;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+
 body.loading #loading {
         display: block;
 	visibility: inherit;
@@ -118,6 +127,11 @@ a.debugger {
 .contact a { color: #ffa200; }
 #menu.contact a#m_contact img.selected { visibility: inherit; }
 #menu.contact a#m_contact img.unselected { visibility: hidden }
+
+#menu.paypal a img { background-color: #ff00ff; }
+.paypal a { color: #ff00ff; }
+#menu.paypal a#m_pixel img.selected { visibility: inherit; }
+#menu.paypal a#m_pixel img.unselected { visibility: hidden }
 
 #m_home { top: 30px; left: 36px; }
 /*
@@ -458,7 +472,9 @@ input.invisibleSubmit {
 	font-size: 110%;
 }
 
-#overlay {
+/* Overlays */
+
+.overlay {
 	position: absolute;
 	z-index: 100;
 	left: 36px;
@@ -468,76 +484,111 @@ input.invisibleSubmit {
 	padding: 0px;
 }
 
-#overlay #close {
+.overlay .close {
 	position: absolute;
-	top: 12px;
+	top: 13px;
 }
 
-#overlay h1 {
+.overlay h1 {
 	font-size: 120%;
-	margin-top: 12px;
-	padding-left: 10px;
+	margin-top: 13px;
+	padding-left: 13px;
 }
 
-#overlay.pixel h1, #overlay.pixel h2, #overlay.pixel .artwork-name {
-	color: #ff00ff;
+.pdf-info-overlay h1, .download-overlay h1, .paypal-overlay h1 {
+    font-size: 160%;
+    margin-right: 30px;
+    margin-top: 7px;
 }
 
-#overlay.vector h1, #overlay.vector h2, #overlay.vector .artwork-name {
-	color: #00ccff;
+.overlay.pixel h1, .overlay.pixel h2, .overlay.pixel .artwork-name {
+    color: #ff00ff;
 }
 
-#overlay.pen h1, #overlay.pen h2, #overlay.pen .artwork-name {
-	color: #ff0000;
+.pixel-download .inner h1, .vector-download .inner h1 {
+    color: white;
 }
 
-#overlay h1.confirmation {
-	padding: 20px;
-        text-align: center;
-	color: #000;
-        background-color: #FFFF33;
+.pixel-download .inner a, .vector-download .inner a {
+    color: white;
 }
 
-#overlay #hey {
+.pixel-download .inner {
+    color: black;
+    background-color: #ff00ff;
+}
+
+.vector-download .inner {
+    color: black;
+    background-color: #00ccff;
+}
+
+.overlay.vector h1, .overlay.vector h2, .overlay.vector .artwork-name {
+    color: #00ccff;
+}
+
+.overlay.pen h1, .overlay.pen h2, .overlay.pen .artwork-name {
+    color: #ff0000;
+}
+
+.overlay h1.confirmation {
+    padding: 20px;
+    text-align: center;
+    color: #000;
+    background-color: #FFFF33;
+}
+
+.overlay.home h1, .overlay.home h2 {
+    color: #953cfd;
+}
+
+.overlay p.pdf-info {
+    width: 320px;
+    padding: 10px;
+    padding-top: 0px;
+}
+
+
+.overlay #hey {
 	padding: 10px 15px 10px 10px;
 }
 
-#overlay #hey #hey_from, #overlay #hey #hey_to, #overlay #hey textarea {
+.overlay #hey #hey_from, .overlay #hey #hey_to, .overlay #hey textarea {
 	width: 100%;
 }
 
-#overlay #hey #hey_send {
+.overlay #hey #hey_send {
 	margin-top: 5px;
 }
 
-#overlay #shoot div {
+.overlay #shoot div {
 	margin: 0px 5px 1em 5px;
 }
 
-#overlay #shoot img {
+.overlay #shoot img {
 	margin: 8px;
 }
 
-#overlay span.notice {
+.overlay span.notice {
 	color: #999999;
 }
 
-#overlay span.price {
+.overlay span.price {
 	color: #33cc00;
 }
 
-#overlay div.spacer {
-	padding: 12px;
+.overlay div.spacer {
+	padding: 13px;
 }
 
-#overlay td.t-shirt-sample {
+.overlay td.t-shirt-sample {
 	width: 196px;
 	height: 132px;
 	background-image: url(/image/t-shirt-sample-background);
 	background-repeat: no-repeat;
 }
 
-#overlay img#t-shirt-sample {
+.overlay img#t-shirt-sample {
 	padding-left: 44px;
 	padding-top: 16px;
 }
@@ -666,4 +717,37 @@ body.pen .button-section-items {
 #loading #footer {
 	padding-top: 30px;
 	font-size: 70%;
+}
+
+/* styles for the pricetags */
+img#pricetag-big {
+    background-color: transparent;
+    position: absolute;
+    top: 36px;
+    left: 225px;
+    z-index: 2;
+}
+
+img#pricetag-medium {
+    background-color: transparent;
+    position: absolute;
+    top: 36px;
+    left: 232px;
+    z-index: 2;
+}
+
+img.image_pricetag_micro {
+    width: 11px;
+    height: 31px;
+    position: absolute;
+    right: 15px;
+    z-index: 2;
+}
+
+img.image_pricetag {
+    width: 17px;
+    height: 41px;
+    position: absolute;
+    bottom: -41px;
+    z-index: 2;
 }

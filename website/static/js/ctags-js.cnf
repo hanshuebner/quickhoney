@@ -1,0 +1,7 @@
+--langmap=JavaScript:.js
+--regex-JavaScript=/([A-Za-z0-9._$]+)[ \t]*[:=][ \t]*\{/\1/,object/
+--regex-JavaScript=/([A-Za-z0-9._$()]+)[ \t]*[:=][ \t]*function[ \t]*\(/\1/,function/
+--regex-JavaScript=/function[ \t]+([A-Za-z0-9._$]+)[ \t]*\(([^)])\)/\1/,function/
+--regex-JavaScript=/([A-Za-z0-9._$]+)[ \t]*[:=][ \t]*\[/\1/,array/
+--regex-JavaScript=/([^= ]+)[ \t]*=[ \t]*[^"]'[^']*/\1/,string/
+--regex-JavaScript=/([^= ]+)[ \t]*=[ \t]*[^']"[^"]*/\1/,string/
