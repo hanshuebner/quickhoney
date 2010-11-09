@@ -45,14 +45,11 @@
 
 (defmethod paypal-txn-deleted-p ((txn paypal-product-transaction))
   (let ((product (paypal-product-transaction-product txn)))
-    (cond ((or (null product)
-	       (object-destroyed-p product))
-	   t)
-	  (t (let ((image (quickhoney-product-image product)))
-	       (if (or (null image)
-		       (object-destroyed-p image))
-		   t
-		   nil))))))
+    (or (null product)
+	(object-destroyed-p product)
+	(let ((image (quickhoney-product-image product)))
+	  (or (null image)
+	      (object-destroyed-p image))))))
 
 (defmethod paypal-txn-valid-p ((txn paypal-product-transaction))
   (and (eql (paypal-product-transaction-status txn)
