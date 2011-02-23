@@ -32,6 +32,8 @@ function shop_set_price_selector(price) {
 }
 
 function shop_show_pricetags(page, subpath) {
+  log ("show price tags " + page + " - " + subpath);
+  
     $("pricetag-a").href = window.location.hash;
     
     if ((subpath != undefined) && (subpath != "")) {
@@ -318,6 +320,7 @@ function show_paypal_page(subpath) {
 
 function make_paypal_overlay(json) {
     log("make-overlay");
+  console.log(json);
     var overlay2 = $("overlay-pdf");
     if (json.valid) {
 	var image = json.image;
@@ -371,8 +374,21 @@ function make_paypal_overlay(json) {
 		     ));
     } else if (json.status == "cancelled") {
 	/* do nothing */
+    } else if (!json.image) {
+	make_overlay_content(overlay2,
+			     {id: 'buy-file',
+			      title: 'Image unavailable',
+			      cssClass: cssClass,
+			      width: 426,
+			      color: buttonColor,
+			      invertColor: true,
+			      fade:true },
+                     SPACER(
+		       "The image you are trying to access is unavailable.",
+		       BR()
+		     ));
     } else {
-	var image = json.image;
+      var image = json.image;
 	make_overlay_content(overlay2,
 			     {id: 'buy-file',
 			      title: 'Wrong Paypal Transaction!',
@@ -401,6 +417,8 @@ function show_paypal_txn(json) {
     log("txn  " + JSON.stringify(json));
     if (json.image != undefined) {
 	directory(json.image.category, json.image.subcategory, json.image.name);
+    } else {
+      show_page("home");
     }
     make_paypal_overlay(json);
 }
