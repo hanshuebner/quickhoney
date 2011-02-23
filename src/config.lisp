@@ -13,7 +13,7 @@
 
 (defparameter *website-directory* (probe-file (merge-pathnames #p"website/" *root-directory*)))
 
-(defparameter *xml-catalog-directory* (asdf:system-relative-pathname :quickhoney #p"../xml/"))
+(defparameter *xml-catalog-directory* (asdf:system-relative-pathname :quickhoney #p"../libs/bknr-web/src/web/dtd/catalog.xml"))
 
 (defparameter *webserver-port* 8082)
 

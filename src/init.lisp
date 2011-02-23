@@ -83,11 +83,9 @@ it if it is missing."
 
   (publish-quickhoney)
   
-  (setf *acceptor* (make-instance 'hunchentoot:acceptor
+  (setf *acceptor* (make-instance 'bknr.web:bknr-acceptor
                                   :port *webserver-port*
-;;                                  :taskmaster (make-instance 'hunchentoot:single-threaded-taskmaster)
-                                  :persistent-connections-p nil
-                                  :request-dispatcher 'bknr.web:bknr-dispatch))
+                                  :persistent-connections-p nil))
   
   ;; XXX store thread to stop later on
   (setf *ht-thread*

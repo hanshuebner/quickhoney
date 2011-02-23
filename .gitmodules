@@ -1,0 +1,6 @@
+[submodule "libs/cl-paypal"]
+	path = libs/cl-paypal
+	url = git@github.com:hanshuebner/cl-paypal.git
+[submodule "libs/bknr-web"]
+	path = libs/bknr-web
+	url = git@github.com:hanshuebner/bknr-web.git
