@@ -28,12 +28,9 @@
                   ((:a :href next) ">>")))))))
 
 (defmacro with-navigation ((&key previous up next) &body body)
-  `(prog1
-       (html ((:div :id "html-content-foo")
-              (navigation :previous ,previous :up ,up :next ,next)
-              ,@body))
-     (html ((:script :type "text/javascript")
-            "document.getElementById('html-content-foo').style.visibility = 'hidden'"))))
+  `(progn
+     (navigation :previous ,previous :up ,up :next ,next)
+     ,@body))
 
 (defun all-images-sorted-by-date (category &optional subcategory)
   (setf category (make-keyword-from-string category)
