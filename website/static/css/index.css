@@ -307,29 +307,39 @@ a.home_button:first-child img {
 /* directory */
 
 a.button {
-	visibility: inherit;
-	border-width: 0px;
+    visibility: inherit;
+    border-width: 0px;
 }
 
 a.button img {
-        margin-left: 12px;
-	width: 208px;
-	height: 208px;
+    width: 208px;
 }
 
 a.button:first-child img {
-        margin-left: 0px;
+    margin-left: 0px;
 }
 
-#directory div {
-	padding-bottom: 12px;
+#directory {
+    position: relative;
 }
+
+#directory a {
+    position: absolute;
+}
+
+a#button0, a#button3, a#button6 { left: 0px; }
+a#button1, a#button4, a#button7 { left: 220px; }
+a#button2, a#button5, a#button8 { left: 440px; }
+a#button0, a#button1, a#button2 { top: 0px; }
+a#button3, a#button4, a#button5 { top: 220px; }
+a#button6, a#button7, a#button8 { top: 440px; }
 
 /* footer */
 
 div#footer {
 	width: 648px;
-        margin-top: 36px;
+        margin-top: 8px;
+        margin-bottom: 16px;
 	text-align: center;
         visibility: hidden;
 }

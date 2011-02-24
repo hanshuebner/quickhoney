@@ -15,8 +15,8 @@ var home_buttons = ['pixel', 'vector', 'pen', 'news']; /* 'shop' replaced by 'pe
 
 var subcategories = {
     pixel: ['birdview', 'headon', 'spot', 'icons', 'animation', 'smallworld'],
-    vector: ['portraits', 'celebrities', 'blackwhite', 'icons', 'editorial', 'nudes'],
-    pen: ['portraits', 'nudes', 'stuff']
+    vector: ['icons', 'portraits', 'celebrities', 'blackwhite', 'editorial', 'microspots', 'nudes'],
+    pen: ['honeypen', 'portraits', 'nudes', 'stuff']
 };
 
 /* rich text editor toolbar configuration */
@@ -549,11 +549,7 @@ function process_query_result(key, json_result) {
     }
 
     log('got ', query_result.length.toString(), ' images');
-    if (query_result.length) {
-        display_query_result();
-    } else {
-        document.location.href = '/#home';
-    }
+    display_query_result();
 }
 
 function query_imagedb(directory, subdirectory, force) {
@@ -764,21 +760,51 @@ function show_directory_buttons(category) {
     show_cue();
 
     var i = 0;
-    function make_subcategory_button(subcategory) {
-        return A({ href: '#' + category + '/' + subcategory, 'class': 'button'},
-                 IMG({ id: 'button' + i++,
-                       'class': 'button-image',
-                       src: random_button_image(category, subcategory, 208, 208, category),
+    function make_subcategory_button(subcategory, index, height) {
+        return A({ href: '#' + category + '/' + subcategory,
+                   'class': 'button',
+                   id: 'button' + (index || i)
+                 },
+                 IMG({ 'class': 'button-image',
+                       id: 'hidden-button' + i++,
+                       src: random_button_image(category, subcategory, 208, height || 208, category),
                        style: 'visibility: hidden' }));
     }
 
-    var buttons = [ DIV(null, map(make_subcategory_button, subcategories[category].slice(0, 3))) ];
-    if (subcategories[category].length > 3) {
-        buttons.push(DIV(null, map(make_subcategory_button, subcategories[category].slice(3, 6))));
+    var buttons;
+
+    var subs = subcategories[category];
+    if (category == 'vector') {
+        buttons = [ DIV(null,
+                        make_subcategory_button(subs[0], 0, 428),
+                        make_subcategory_button(subs[1], 1, 428),
+                        make_subcategory_button(subs[2], 2)),
+                    DIV(null,
+                        make_subcategory_button(subs[3], 5)),
+                    DIV(null,
+                        make_subcategory_button(subs[4], 8),
+                        make_subcategory_button(subs[5], 7),
+                        make_subcategory_button(subs[6], 6)) ];
+        rows = 3;
+    } else if (category == 'pen') {
+        buttons = [ DIV(null,
+                        make_subcategory_button(subs[0], 0, 428),
+                        make_subcategory_button(subs[1], 1, 428),
+                        make_subcategory_button(subs[2], 2)),
+                    DIV(null,
+                        make_subcategory_button(subs[3], 5)) ];
+        rows = 2;
+    } else {
+        buttons = [ DIV(null, map(make_subcategory_button, subs.slice(0, 3))) ];
+        if (subs.length > 3) {
+            buttons.push(DIV(null, map(make_subcategory_button, subs.slice(3, 6))));
+        }
+        rows = Math.ceil(subs.length / 3);
     }
+    setStyle($('directory'), { height: rows * 224 + 'px' });
     replaceChildNodes('directory', buttons);
 
-    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'button'), seq(0, 6))); });
+    wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'hidden-button'), seq(0, subs.length))); });
 }
 
 function show_home_buttons() {
@@ -977,7 +1003,7 @@ function make_pages_navbar() {
 	replaceChildNodes("result_page_count", "pages ", result_links);
 
     } else {
-	replaceChildNodes("page_navbar");
+	replaceChildNodes("page_navbar", "no images in this category");
 	replaceChildNodes("result_page_count");
     }
 }
