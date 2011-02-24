@@ -287,13 +287,15 @@
                                 (all-categories)))
         #'> :key #'blob-timestamp))
 
-(defun newest-images (category subcategory)
-  (let ((images (if (eq :home category)
-                    (remove-if (lambda (image)
-                                 (or (eq :nudes (quickhoney-image-subcategory image))
-                                     (find :explicit (store-image-keywords image))))
-                               (images-in-all-subcategories-sorted-by-time subcategory))
-                    (images-in-category-sorted-by-time (list category subcategory)))))
+(defun newest-images (category subcategory &key include-explicit)
+  (let ((images (remove-if (if include-explicit
+                               (constantly nil)
+                               #'quickhoney-image-explicit)
+                           (if (eq :home category)
+                               ;; we don't ever want to see any nudes on the home page
+                               (remove :nudes (images-in-all-subcategories-sorted-by-time subcategory)
+                                       :key #'quickhoney-image-subcategory)
+                               (images-in-category-sorted-by-time (list category subcategory))))))
     (when images
       (cons :images (loop with since = (- (get-universal-time) (* 60 60 24 14))
                           for i from 0
@@ -323,7 +325,7 @@
                           (subcategory (make-keyword-from-string subcategory)))
                       (destructuring-bind (&optional type &rest images)
                           (or (preproduced-buttons category subcategory)
-                              (newest-images category subcategory)
+                              (newest-images category subcategory :include-explicit nil)
                               (warn "No images for ~A ~A found" category subcategory))
                         (json:encode-array-element type)
                         (dolist (image (or images
