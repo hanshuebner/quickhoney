@@ -70,6 +70,7 @@
            #:quickhoney-image
            #:quickhoney-image-client
            #:quickhoney-image-spider-keywords
+           #:quickhoney-image-description
            #:startup
            #:quickhoney-image-category
            #:quickhoney-image-subcategory

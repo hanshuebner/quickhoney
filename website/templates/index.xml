@@ -193,6 +193,8 @@
             <span id="upload_client_select">
             </span>
             <br />
+            Dscription:<br />
+            <textarea id="upload_description" name="description" rows="5" cols="60"> </textarea><br />
             Keywords:<br />
             <input type="text" id="upload_keywords" name="spider-keywords" value="" size="60" /><br />
             <input type="checkbox" id="explicit" name="explicit" value="1" /> Explicit<br/>
@@ -266,6 +268,8 @@
             <br />
             Keywords:<br />
             <input type="text" id="edit_keywords" name="spider-keywords" value="" size="60" /><br />
+            Description:<br />
+            <textarea id="edit_description" name="description" rows="5" cols="60"> </textarea><br />
             <input type="checkbox" id="edit_explicit" name="explicit" value="1" /> Explicit<br/>
             <!-- shop disabled for now
             <input type="checkbox" id="edit_buy-file" name="buy-file" value="1"/> Sell as file<br/>

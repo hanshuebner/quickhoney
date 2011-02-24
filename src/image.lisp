@@ -15,6 +15,8 @@
             "Category this image belongs to, as a list of one or two keywords")
    (spider-keywords :update
                     :initform nil)
+   (description :update
+                :initform nil)
    (products :update
              :initform nil)))
 

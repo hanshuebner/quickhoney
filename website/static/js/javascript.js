@@ -168,6 +168,7 @@ function submit_json(url, form, handler) {
 function do_edit() {
     current_image.client = $("edit_client").value;
     current_image.spider_keywords = $("edit_keywords").value;
+    current_image.description = $("edit_description").value;
     current_image.keywords.explicit = $("edit_explicit").checked ? true : false;
 
     show_cms_window('saving_edits_form'); // hide edit window until server replies
@@ -954,7 +955,7 @@ function make_pages_navbar() {
     var result_links = [];
     var current_page = position_to_page_number(query_position);
 
-    if (query_result_pages.length > 1) {
+    if (query_result_pages.length > 0) {
 	if (current_page > 1) {
 	    push(result_links,
                  internal_link(current_directory + '/' + current_subdirectory + '/' + (current_page - 1),
@@ -1165,7 +1166,11 @@ function display_current_image() {
 
     var link = current_directory + '/' + current_subdirectory + '/' + encodeURI(query_result[query_position].name);
 
-    replaceChildNodes("metadata", "Image name: ", current_image.name, " ", permalink(link), BR());
+    replaceChildNodes("metadata");
+    if (current_image.description) {
+        appendChildNodes("metadata", current_image.description, BR(), BR());
+    }
+    appendChildNodes("metadata", "Image name: ", current_image.name, " ", permalink(link), BR());
     if (current_image.client != "") {
 	appendChildNodes("metadata", "Client: ", current_image.client, BR());
     }
@@ -1239,6 +1244,7 @@ function display_current_image() {
     if (logged_in) {
 	$("edit_client").value = current_image.client;
         $("edit_keywords").value = current_image.spider_keywords || "";
+        $("edit_description").value = current_image.description || "";
 
         map(function(keyword) {
                 $('edit_' + keyword).checked = current_image.keywords[keyword] ? true : false;

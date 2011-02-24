@@ -78,6 +78,8 @@
                              (image-content-type (blob-mime-type (quickhoney-animation-image-animation image)))))
     (when (quickhoney-image-spider-keywords image)
       (json:encode-object-element "spider_keywords" (quickhoney-image-spider-keywords image)))
+    (when (quickhoney-image-description image)
+      (json:encode-object-element "description" (quickhoney-image-description image)))
     (json:with-object-element ("keywords")
       (json:with-object ()
         (dolist (keyword (intersection *editable-keywords* (store-image-keywords image)))
@@ -165,10 +167,12 @@
         (push keyword retval)))))
   
 (defmethod handle-object-form ((handler json-edit-image-handler) (action (eql :edit)) image)
-  (with-query-params (client spider-keywords)
+  (with-query-params (client spider-keywords description)
+    (setf description (when description (string-trim '(#\return #\linefeed #\space) description)))
     (with-transaction (:edit-image)
       (setf (quickhoney-image-client image) client
             (quickhoney-image-spider-keywords image) spider-keywords
+            (quickhoney-image-description image) description
             (store-image-keywords image) (append (set-difference (store-image-keywords image) *editable-keywords*)
                                                  (image-keywords-from-request-parameters)))))
   (setf *last-image-upload-timestamp* (get-universal-time))
@@ -342,7 +346,8 @@
     t))
 
 (defmethod handle ((handler upload-image-handler))
-  (with-query-params (client spider-keywords)
+  (with-query-params (client spider-keywords description)
+    (setf description (when description (string-trim '(#\return #\linefeed #\space) description)))
     (let ((uploaded-file (request-uploaded-file "image-file")))
       (handler-case
           (progn
@@ -361,7 +366,8 @@
                                                                 :cat-sub (mapcar #'make-keyword-from-string
                                                                                  (decoded-handler-path handler))
                                                                 :client client
-                                                                :spider-keywords spider-keywords))))
+                                                                :spider-keywords spider-keywords
+                                                                :description description))))
 
 					 
                   (with-http-response ()
