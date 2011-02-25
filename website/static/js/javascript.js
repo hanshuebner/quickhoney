@@ -762,6 +762,7 @@ function show_directory_buttons(category) {
 
     var i = 0;
     function make_subcategory_button(subcategory, index, height) {
+        // The index defines the reveal order
         return A({ href: '#' + category + '/' + subcategory,
                    'class': 'button',
                    id: 'button' + (index || i)
@@ -1348,9 +1349,17 @@ function init_application() {
 	      safari_compatibility_hack();
     }
 
-    loadJSONDoc("/json-login").addCallbacks(login_status, alert);
-    loadJSONDoc("/json-clients").addCallbacks(set_clients, alert);
-    loadJSONDoc('/json-news-archive/quickhoney').addCallbacks(initialize_news_archive, alert);
+    function log_error(url, error) {
+        log('fetching ' + url + ' failed: ' + error);
+    }
+
+    function load_json(url, handler) {
+        loadJSONDoc(url).addCallbacks(handler, partial(log_error, url));
+    }
+
+    load_json("/json-login", login_status);
+    load_json("/json-clients", set_clients);
+    load_json('/json-news-archive/quickhoney', initialize_news_archive);
 
     init_shop();
 
