@@ -20,7 +20,7 @@
 (asdf:oos 'asdf:load-op :quickhoney)
 
 (asdf:oos 'asdf:load-op :swank)
-(swank::create-server :port 4086 :dont-close t)
+(swank::create-server :port 4087 :dont-close t)
 
 ;; disable ldb
 #+sbcl
