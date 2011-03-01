@@ -2,6 +2,22 @@
 
 (require 'asdf)
 
+(ql:quickload '(:bknr.datastore
+                :cl-fad
+                :cl-mime
+                :cl-pdf
+                :cl-ppcre
+                :cxml
+                :drakma
+                :md5
+                :parenscript
+                :rfc2388
+                :stem
+                :unit-test
+                :xhtmlgen
+                :yason
+		:trivial-backtrace))
+
 (defun setup-registry (directory-path)
   (format t "; adding components under ~A to asdf registry~%" directory-path)
   (mapc (lambda (asd-pathname)
