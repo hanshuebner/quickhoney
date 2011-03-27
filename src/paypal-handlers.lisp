@@ -300,7 +300,7 @@
 	   (handle-if-modified-since (blob-timestamp product))
 	   (setf (header-out :last-modified) (rfc-1123-date (blob-timestamp product)))
 	   (with-http-response (:content-type "application/pdf")
-	     (with-temporary-file (tmp)
+	     (with-temporary-file (tmp :defaults #p"/tmp/")
 	       (add-transaction-watermark txn tmp)
 	       (with-open-file (blob-data tmp :element-type '(unsigned-byte 8))
 		 (setf (header-out :content-length) (file-length blob-data))
