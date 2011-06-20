@@ -2,6 +2,16 @@
 
 (require 'asdf)
 
+#-quicklisp
+(let ((quicklisp-init #P"/usr/home/hans/quicklisp/setup.lisp"))
+  (when (probe-file quicklisp-init)
+    (load quicklisp-init)))
+
+(push #P"~/lisp-libs/hunchentoot/" asdf:*central-registry*)
+(push #P"~/lisp-libs/cl-smtp/" asdf:*central-registry*)
+(push #P"~/lisp-libs/cl-gd/" asdf:*central-registry*)
+(push #P"~/lisp-libs/cffi/" asdf:*central-registry*)
+
 (ql:quickload '(:bknr.datastore
                 :cl-fad
                 :cl-mime
