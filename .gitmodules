@@ -4,9 +4,6 @@
 [submodule "libs/bknr-web"]
 	path = libs/bknr-web
 	url = git@github.com:hanshuebner/bknr-web.git
-[submodule "libs/cl-smtp"]
-	path = libs/cl-smtp
-	url = git@github.com:hanshuebner/cl-smtp.git
 [submodule "libs/bknr-datastore"]
 	path = libs/bknr-datastore
 	url = git@github.com:hanshuebner/bknr-datastore.git
