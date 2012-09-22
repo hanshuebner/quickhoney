@@ -360,9 +360,9 @@
                      (height (cl-gd:image-height))
                      (ratio (/ 1 (max (/ width 300) (/ height 200))))
                      (image-name (pathname-name (upload-original-filename uploaded-file))))
-                (maybe-convert-to-palette)
                 (let* ((image (make-store-image :name image-name
                                                 :class-name 'quickhoney-image
+                                                :original-pathname (upload-pathname uploaded-file)
                                                 :keywords (cons :upload (image-keywords-from-request-parameters))
                                                 :initargs (list :owner (bknr-session-user)
                                                                 :cat-sub (mapcar #'make-keyword-from-string
@@ -370,8 +370,6 @@
                                                                 :client client
                                                                 :spider-keywords spider-keywords
                                                                 :description description))))
-
-					 
                   (with-http-response ()
                     (with-http-body ()
                       (html (:html
