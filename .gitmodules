@@ -7,3 +7,6 @@
 [submodule "libs/bknr-datastore"]
 	path = libs/bknr-datastore
 	url = git@github.com:hanshuebner/bknr-datastore.git
+[submodule "libs/cl-smtp-hh"]
+	path = libs/cl-smtp-hh
+	url = git@github.com:hanshuebner/cl-smtp-hh
