@@ -350,19 +350,20 @@
 (defmethod handle ((handler upload-image-handler))
   (with-query-params (client spider-keywords description)
     (setf description (when description (string-trim '(#\return #\linefeed #\space) description)))
-    (let ((uploaded-file (request-uploaded-file "image-file")))
+    (let ((upload (request-uploaded-file "image-file")))
       (handler-case
           (progn
-            (unless uploaded-file
+            (unless upload
               (error "no file uploaded"))
-            (with-image-from-upload* (uploaded-file)
+            (with-image-from-upload* (upload)
               (let* ((width (cl-gd:image-width))
                      (height (cl-gd:image-height))
                      (ratio (/ 1 (max (/ width 300) (/ height 200))))
-                     (image-name (pathname-name (upload-original-filename uploaded-file))))
+                     (image-name (pathname-name (upload-original-filename upload))))
                 (let* ((image (make-store-image :name image-name
                                                 :class-name 'quickhoney-image
-                                                :original-pathname (upload-pathname uploaded-file)
+                                                :type (make-keyword-from-string (pathname-type (upload-original-filename upload)))
+                                                :original-pathname (upload-pathname upload)
                                                 :keywords (cons :upload (image-keywords-from-request-parameters))
                                                 :initargs (list :owner (bknr-session-user)
                                                                 :cat-sub (mapcar #'make-keyword-from-string
