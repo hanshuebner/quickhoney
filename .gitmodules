@@ -10,3 +10,9 @@
 [submodule "libs/cl-smtp-hh"]
 	path = libs/cl-smtp-hh
 	url = git@github.com:hanshuebner/cl-smtp-hh
+[submodule "libs/cl-oauth"]
+	path = libs/cl-oauth
+	url = git@github.com:hanshuebner/cl-oauth
+[submodule "libs/cl-gd"]
+	path = libs/cl-gd
+	url = git@github.com:edicl/cl-gd

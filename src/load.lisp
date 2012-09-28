@@ -7,10 +7,20 @@
   (when (probe-file quicklisp-init)
     (load quicklisp-init)))
 
-(push #P"~/lisp-libs/hunchentoot/" asdf:*central-registry*)
-(push #P"~/lisp-libs/cl-smtp/" asdf:*central-registry*)
-(push #P"~/lisp-libs/cl-gd/" asdf:*central-registry*)
-(push #P"~/lisp-libs/cffi/" asdf:*central-registry*)
+(push :cl-gd-gif *features*)
+
+(defun setup-registry (directory-path)
+  (format t "; adding components under ~A to asdf registry~%" directory-path)
+  (mapc (lambda (asd-pathname)
+          (pushnew (make-pathname :name nil
+                                  :type nil
+                                  :version nil 
+                                  :defaults asd-pathname)
+                   asdf:*central-registry*
+                   :test #'equal))
+        (directory (merge-pathnames #p"**/*.asd" directory-path))))
+
+(setup-registry #P"../")
 
 (ql:quickload '(:bknr.datastore
                 :cl-fad
@@ -26,22 +36,9 @@
                 :unit-test
                 :xhtmlgen
                 :yason
-		:trivial-backtrace))
-
-(defun setup-registry (directory-path)
-  (format t "; adding components under ~A to asdf registry~%" directory-path)
-  (mapc (lambda (asd-pathname)
-	  (pushnew (make-pathname :name nil
-				  :type nil
-				  :version nil 
-				  :defaults asd-pathname)
-		   asdf:*central-registry*
-		   :test #'equal))
-	(directory (merge-pathnames #p"**/*.asd" directory-path))))
-
-(setup-registry #P"../")
-
-(push :cl-gd-gif *features*)
+                :trivial-backtrace
+                :cl-oauth
+                :temporary-file))
 
 (asdf:oos 'asdf:load-op :quickhoney)
 
