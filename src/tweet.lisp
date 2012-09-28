@@ -1,6 +1,10 @@
 (defpackage :tweet
   (:use :cl)
-  (:export #:post-image))
+  (:export #:post-image
+           #:twitter-name
+           #:twitter-account-with-name
+           #:all-twitter-accounts
+           #:twitter-account))
 
 (in-package :tweet)
 

@@ -312,6 +312,21 @@
 	    <input type="submit" name="action" value="delete" id="delete_pdf_button" />
           </p>
 	</form>
+
+        <br />
+
+        <form id="tweet_form_element" action="/tweet-image" method="post" onsubmit="return do_tweet(this)"
+              target="tweet_result">
+          <div class="cms_title">Tweet this image</div>
+          <p class="cms">
+            Accounts:<br/>
+            <quickhoney:twitter-account-checkboxes/>
+            <br/>
+            Text:<br/>
+            <input name="tweet" size="80"/> <br/>
+            <input type="submit" name="tweet" value="tweet"/>
+          </p>
+        </form>
       </div>
       
       <div id="edit_news" class="cms_form">

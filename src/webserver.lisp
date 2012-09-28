@@ -22,6 +22,7 @@
      `(("/random-image" random-image-handler)
        ("/animation" animation-handler)
        ("/digg-image" digg-image-handler)
+       ("/tweet-image" tweet-image-handler)
 
        ("/json-image-query" json-image-query-handler)
        ("/json-image-info" json-image-info-handler)

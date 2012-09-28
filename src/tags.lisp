@@ -135,3 +135,8 @@
       (t
        (html (:h1 "Please login"))))))
 
+(define-bknr-tag twitter-account-checkboxes ()
+  (dolist (account (tweet:all-twitter-accounts))
+    (html (:label ((:input :type "checkbox" :name "account-name" :value (tweet:twitter-name account)))
+                  " " (:princ (tweet:twitter-name account)))
+          (:br))))

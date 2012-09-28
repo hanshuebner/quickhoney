@@ -1307,6 +1307,17 @@ function do_upload(target) {
     return true;
 }
 
+function do_tweet(form) {
+
+    form.action = "/tweet-image/" + window.location.hash.replace(/.*\//, '');
+    log('action: ', form.action);
+
+    var tweet_window = window.open('', form.target, "width=500,height=300,status=no,toolbar=no,menubar=no,resizable=no,scrollbars=no");
+    tweet_window.focus();
+
+    return true;
+}
+
 /* open the button upload window */
 
 function do_button_upload(target) {

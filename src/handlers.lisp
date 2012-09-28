@@ -630,3 +630,29 @@
 (defmethod handle ((handler shutdown-handler))
   (stop-http-server)
   "Shutting down HTTP server")
+
+(defclass tweet-image-handler (admin-only-handler object-handler)
+  ()
+  (:default-initargs
+   :query-function #'store-image-with-name
+   :object-class 'quickhoney-image))
+
+(defmethod handle-object ((handler tweet-image-handler) (image quickhoney-image))
+  (with-http-response ()
+    (with-http-body ()
+      (with-query-params (tweet)
+        (dolist (account-name (query-param-list "account-name"))
+          (html "tweeting as " (:princ (princ-to-string account-name)) (:br))
+          (handler-case
+              (progn
+                (tweet:post-image image
+                                  (format nil "~A ~A/~(~A/~A~)/~A"
+                                          tweet
+                                          *website-url*
+                                          (quickhoney-image-category image)
+                                          (quickhoney-image-subcategory image)
+                                          (store-image-name image))
+                                  account-name)
+                (html "tweet sent"))
+            (error (e)
+              (html "error tweeting: " (:princ-safe e)))))))))
