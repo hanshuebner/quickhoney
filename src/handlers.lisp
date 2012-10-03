@@ -344,7 +344,9 @@
     (cl-gd:true-color-to-palette :image image)
     t))
 
-(defmethod handle ((handler upload-image-handler))
+(defun handle-image-upload (cat-sub)
+  ;; Implemented as a plain function so that it can be re-used for GIF
+  ;; animations.
   (with-query-params (client spider-keywords description)
     (setf description (when description (string-trim '(#\return #\linefeed #\space) description)))
     (let ((upload (request-uploaded-file "image-file")))
@@ -363,8 +365,7 @@
                                                 :original-pathname (upload-pathname upload)
                                                 :keywords (cons :upload (image-keywords-from-request-parameters))
                                                 :initargs (list :owner (bknr-session-user)
-                                                                :cat-sub (mapcar #'make-keyword-from-string
-                                                                                 (decoded-handler-path handler))
+                                                                :cat-sub cat-sub
                                                                 :client client
                                                                 :spider-keywords spider-keywords
                                                                 :description description))))
@@ -392,6 +393,9 @@
                       (:p "Error during upload:")
                       (:p (:princ-safe (apply #'format nil (simple-condition-format-control e) (simple-condition-format-arguments e))))
                       (:p ((:a :href "javascript:window.close()") "ok"))))))))))))
+
+(defmethod handle ((handler upload-image-handler))
+  (handle-image-upload (mapcar #'make-keyword-from-string (decoded-handler-path handler))))
 
 (defclass upload-news-handler (admin-only-handler page-handler)
   ())
@@ -461,52 +465,54 @@
   ())
 
 (defmethod handle ((handler upload-animation-handler))
-  (with-query-params (client)
-    (let* ((uploaded-files (request-uploaded-files))
-	   (uploaded-image (find "image-file" uploaded-files :test #'equal :key #'upload-name))
-	   (uploaded-animation (find "animation-file" uploaded-files :test #'equal :key #'upload-name)))
-      (handler-case
-	  (progn
-	    (unless (and uploaded-image uploaded-animation)
-	      (error "files not uploaded"))
-	    (unless (find (upload-content-type uploaded-animation)
-                          '("application/x-shockwave-flash" "video/quicktime" "application/x-director")
-                          :test #'equal)
-	      (error "Invalid content type ~A - Please upload a Flash, Shockwave or Quicktime file"
-                     (upload-content-type uploaded-animation)))
-	    (with-image-from-upload* (uploaded-image)
-	      (let* ((animation-blob (make-blob-from-file (upload-pathname uploaded-animation) 'blob
-							  :type (upload-content-type uploaded-animation)))
-		     (image (make-store-image :name (pathname-name (upload-original-filename uploaded-image))
-                                              :type (make-keyword-from-string (pathname-type
-                                                                               (upload-original-filename uploaded-image)))
-					      :class-name 'quickhoney-animation-image
-					      :keywords (list :upload)
-					      :initargs (list :cat-sub (list :pixel :animation)
-                                                              :client client
-                                                              :animation animation-blob))))
-		(with-http-response ()
-		  (with-http-body ()
-		    (html (:html
-			   (:head
-			    (:title "Upload successful")
-			    ((:script :type "text/javascript" :language "JavaScript")
-			     "function done() { window.opener.do_query(); window.close(); }"))
-			   (:body
-			    (:p "Animation uploaded")
-			    (:p ((:img :src (format nil "/image/~D" (store-object-id image)))))
-			    (:p ((:a :href "javascript:done()") "ok"))))))))))
-	(error (e)
-	  (with-http-response ()
-	    (with-http-body ()
-	      (html (:html
-		     (:head
-		      (:title "Error during upload"))
-		     (:body
-		      (:h2 "Error during upload")
-		      (:p "Error during upload:")
-		      (:p (:princ-safe (apply #'format nil (simple-condition-format-control e) (simple-condition-format-arguments e))))
-		      (:p ((:a :href "javascript:window.close()") "ok"))))))))))))
+  (let* ((uploaded-files (request-uploaded-files))
+         (uploaded-image (find "image-file" uploaded-files :test #'equal :key #'upload-name))
+         (uploaded-animation (find "animation-file" uploaded-files :test #'equal :key #'upload-name)))
+    (if uploaded-animation
+        (with-query-params (client)
+          (handler-case
+              (progn
+                (unless (and uploaded-image uploaded-animation)
+                  (error "files not uploaded"))
+                (unless (find (upload-content-type uploaded-animation)
+                              '("application/x-shockwave-flash" "video/quicktime" "application/x-director")
+                              :test #'equal)
+                  (error "Invalid content type ~A - Please upload a Flash, Shockwave or Quicktime file"
+                         (upload-content-type uploaded-animation)))
+                (with-image-from-upload* (uploaded-image)
+                  (let* ((animation-blob (make-blob-from-file (upload-pathname uploaded-animation) 'blob
+                                                              :type (upload-content-type uploaded-animation)))
+                         (image (make-store-image :name (pathname-name (upload-original-filename uploaded-image))
+                                                  :type (make-keyword-from-string (pathname-type
+                                                                                   (upload-original-filename uploaded-image)))
+                                                  :class-name 'quickhoney-animation-image
+                                                  :keywords (list :upload)
+                                                  :initargs (list :cat-sub (list :pixel :animation)
+                                                                  :client client
+                                                                  :animation animation-blob))))
+                    (with-http-response ()
+                      (with-http-body ()
+                        (html (:html
+                               (:head
+                                (:title "Upload successful")
+                                ((:script :type "text/javascript" :language "JavaScript")
+                                 "function done() { window.opener.do_query(); window.close(); }"))
+                               (:body
+                                (:p "Animation uploaded")
+                                (:p ((:img :src (format nil "/image/~D" (store-object-id image)))))
+                                (:p ((:a :href "javascript:done()") "ok"))))))))))
+            (error (e)
+              (with-http-response ()
+                (with-http-body ()
+                  (html (:html
+                         (:head
+                          (:title "Error during upload"))
+                         (:body
+                          (:h2 "Error during upload")
+                          (:p "Error during upload:")
+                          (:p (:princ-safe (apply #'format nil (simple-condition-format-control e) (simple-condition-format-arguments e))))
+                          (:p ((:a :href "javascript:window.close()") "ok"))))))))))
+        (handle-image-upload '(:pixel :animation)))))
 
 (defclass upload-button-handler (admin-only-handler page-handler)
   ())
