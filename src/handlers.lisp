@@ -36,10 +36,7 @@
   ())
 
 (defmethod handle-object ((handler animation-handler) animation)
-  (let ((content-type (blob-type (quickhoney-animation-image-animation animation))))
-    (with-http-response (:content-type content-type)
-      (blob-to-stream (quickhoney-animation-image-animation animation)
-                      (send-headers)))))
+  (handle-static-file (blob-pathname (quickhoney-animation-image-animation animation)) (blob-type (quickhoney-animation-image-animation animation))))
 
 (defclass json-image-info-handler (object-handler quickhoney-image-dependent-handler)
   ()
