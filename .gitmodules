@@ -16,3 +16,6 @@
 [submodule "libs/cl-gd"]
 	path = libs/cl-gd
 	url = git@github.com:edicl/cl-gd
+[submodule "libs/hunchentoot"]
+	path = libs/hunchentoot
+	url = git@github.com:edicl/hunchentoot

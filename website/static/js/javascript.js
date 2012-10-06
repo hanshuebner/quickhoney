@@ -1186,14 +1186,10 @@ function display_current_image() {
 	replaceChildNodes("full_click");
     }
 
+    var content;
     if (current_directory == 'pixel' && current_subdirectory == 'animation') {
-        var content;
-        var animation_type = current_image.animation_type;
-        if (animation_type == "application/x-director" && !detectDirector()) {
-            content = "<p>To display this content, the <a href='http://www.adobe.com/shockwave/download/' target='_new'>Adobe Shockwave plugin</a> is required.</p>";
-        } else if (animation_type == "application/x-shockwave-flash" && !detectFlash()) {
-            content = "<p>To display this content, the <a href='http://www.adobe.com/products/flashplayer/' target='_new'>Adobe Flash Player</a> is required.</p>";
-        } else if (animation_type == "video/quicktime") {
+        switch (current_image.animation_type) {
+        case "video/quicktime":
             if (!detectQuickTime()) {
                 content = "<p>To display this content, the <a href='http://www.apple.com/quicktime/download/' target='_new'>Apple Quicktime plugin</a> is required.</p>";
             } else {
@@ -1201,19 +1197,39 @@ function display_current_image() {
                     + _QTGenerate("QT_GenerateOBJECTText_XHTML", true, ['/animation/' + current_image.id, '648', '486', '',
                                                                         'scale', 'aspect',
                                                                         'showlogo', 'false',
-                                                                        'bgcolor', 'WHITE']);
+                                                                        'loop', 'true',
+                                                                        'bgcolor', 'white']);
             }
-        } else {
-            content
-                = '<object width="648" height="648" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
-                + ' <param name="movie" value="/animation/' + current_image.id + '" />'
-                + ' <embed src="/animation/' + current_image.id + '" width="648" height="648">'
-                + ' </embed>'
-                + '</object>';
+            break;
+        case "application/x-director":
+            if (!detectDirector()) {
+                content = "<p>To display this content, the <a href='http://www.adobe.com/shockwave/download/' target='_new'>Adobe Shockwave plugin</a> is required.</p>";
+            } else {
+                content
+                    = '<object width="648" height="648" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
+                    + ' <param name="movie" value="/animation/' + current_image.id + '" />'
+                    + ' <embed src="/animation/' + current_image.id + '" width="648" height="648">'
+                    + ' </embed>'
+                    + '</object>';
+            }
+            break;
+        case "application/x-shockwave-flash":
+            if (!detectFlash()) {
+                content = "<p>To display this content, the <a href='http://www.adobe.com/products/flashplayer/' target='_new'>Adobe Flash Player</a> is required.</p>";
+            } else {
+                content
+                    = '<object width="648" height="648" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
+                    + ' <param name="movie" value="/animation/' + current_image.id + '" />'
+                    + ' <embed src="/animation/' + current_image.id + '" width="648" height="648">'
+                    + ' </embed>'
+                    + '</object>';
+            }
+            break;
         }
+    }
 
+    if (content) {
         $("image_detail").innerHTML = content;
-
     } else {
         show_cue();
 

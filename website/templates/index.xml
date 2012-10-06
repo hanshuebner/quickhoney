@@ -240,7 +240,7 @@
               enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">
           <div class="cms_title">Upload new animation</div>
           <p class="cms">
-            Image:<br />
+            Thumbnail image (for Flash and QuickTime) or GIF animation:<br />
             <input type="file" name="image-file" /><br />
             Animation (Flash file or QuickTime movie):<br />
             <input type="file" name="animation-file" /><br />
