@@ -4,7 +4,8 @@
            #:twitter-name
            #:twitter-account-with-name
            #:all-twitter-accounts
-           #:twitter-account))
+           #:twitter-account
+           #:make-twitter-account))
 
 (in-package :tweet)
 
@@ -24,12 +25,20 @@
                         :reader access-token-secret))
   (:metaclass bknr.datastore:persistent-class))
 
+(defmethod print-object ((twitter-account twitter-account) stream)
+  (bknr.datastore:print-store-object (twitter-account stream)
+    (format stream "NAME: ~S" (twitter-name twitter-account))))
+
 (defun make-twitter-account (twitter-name
                              consumer-token-key
                              consumer-token-secret
                              access-token-key
-                             access-token-secret)
+                             access-token-secret
+                             &key overwritep)
   (bknr.datastore:with-transaction ()
+    (when (and overwritep
+               (twitter-account-with-name twitter-name))
+      (bknr.datastore:delete-object (twitter-account-with-name twitter-name)))
     (make-instance 'twitter-account
                    :twitter-name twitter-name
                    :consumer-token-key consumer-token-key

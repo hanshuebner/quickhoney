@@ -39,3 +39,24 @@ a img { border-width: 0px; }
 	font-size: 80%;
 }
 
+td, th {
+    padding: 0.2em;
+}
+
+.navi, #session-info {
+    background-color: #ddeecc;
+    padding: 0.5em;
+}
+
+#session-info {
+    margin-top: 1em;
+}
+
+ul.twitter-account-list li {
+    margin-left: 1em;
+}
+
+ul.twitter-account-list span {
+    display: inline-block;
+    min-width: 10em;
+}

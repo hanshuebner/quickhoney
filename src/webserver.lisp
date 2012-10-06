@@ -23,6 +23,8 @@
        ("/animation" animation-handler)
        ("/digg-image" digg-image-handler)
        ("/tweet-image" tweet-image-handler)
+       ("/twitter-oauth-callback" twitter-oauth:callback-handler)
+       ("/register-twitter-account" twitter-oauth:register-twitter-account-handler)
 
        ("/json-image-query" json-image-query-handler)
        ("/json-image-info" json-image-info-handler)
@@ -72,6 +74,7 @@
 
 		 :admin-navigation
      '(("user" . "/user/")
+       ("twitter" . "/register-twitter-account")
        ("images" . "/edit-images")
        ("import" . "/import-images")
        ("logout" . "/logout"))
@@ -80,5 +83,5 @@
      :site-logo-url "/image/quickhoney/color,000000,33ff00"
      :login-logo-url "/image/quickhoney/color,000000,33ff00/double,3"
      :import-spool-directory (merge-pathnames "spool/" *root-directory*)
-     :style-sheet-urls '("/static/yui/reset-fonts/reset-fonts.css" "/static/quickhoney.css" "/static/cms.css")
-     :javascript-urls '("/MochiKit/MochiKit.js" "/static/javascript.js")))
+     :style-sheet-urls '("/static/js/yui/reset-fonts/reset-fonts.css" "/static/css/quickhoney.css" "/static/css/cms.css")
+     :javascript-urls '("/static/js/MochiKit/MochiKit.js")))
