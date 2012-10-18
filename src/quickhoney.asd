@@ -46,7 +46,7 @@
                (:file "tags" :depends-on ("image"))
                (:file "paypal-handlers" :depends-on ("config" "handlers" "paypal-config"))
                (:file "twitter-oauth")
-               (:file "webserver" :depends-on ("handlers" "paypal-handlers"))
+               (:file "webserver" :depends-on ("handlers" "paypal-handlers" "twitter-oauth"))
 
                (:file "daily" :depends-on ("config"))
 
