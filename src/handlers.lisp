@@ -428,7 +428,6 @@
                                 t))
                    (name (normalize-news-title title))
                    (args (list :name name
-                               :type (if (cl-gd:true-color-p uploaded-image) :jpg :png)
                                :class-name 'quickhoney-news-item
                                :keywords (list :upload)
                                :initargs (list :cat-sub (list :news)
@@ -436,8 +435,15 @@
                                                :text text
                                                :owner (bknr-session-user))))
                    (item (if processed
-                             (apply #'make-store-image :image uploaded-image args)
-                             (apply #'import-image (upload-pathname uploaded-file) args))))
+                             (apply #'make-store-image
+                                    :image uploaded-image
+                                    :type (if (cl-gd:true-color-p uploaded-image) :jpg :png)
+                                    args)
+                             (apply #'make-store-image
+                                    :image uploaded-image
+                                    :original-pathname (upload-pathname uploaded-file)
+                                    :type (make-keyword-from-string (pathname-type (upload-original-filename uploaded-file)))
+                                    args))))
               (declare (ignore item))   ; for now
               (with-http-response ()
                 (with-http-body ()
