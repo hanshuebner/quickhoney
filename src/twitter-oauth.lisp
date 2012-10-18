@@ -8,10 +8,7 @@
 
 (in-package :twitter-oauth)
 
-#+(or)
 (defparameter *callback-uri* "http://quickhoney.com/twitter-oauth-callback")
-#-(or)
-(defparameter *callback-uri* "http://localhost:8083/twitter-oauth-callback")
 (defparameter *get-request-token-endpoint* "https://api.twitter.com/oauth/request_token")
 (defparameter *auth-request-token-endpoint* "https://api.twitter.com/oauth/authorize")
 (defparameter *get-access-token-endpoint* "https://api.twitter.com/oauth/access_token")
