@@ -26,7 +26,7 @@
   (:metaclass bknr.datastore:persistent-class))
 
 (defmethod print-object ((twitter-account twitter-account) stream)
-  (bknr.datastore:print-store-object (twitter-account stream)
+  (bknr.datastore:print-store-object (twitter-account stream :type t)
     (format stream "NAME: ~S" (twitter-name twitter-account))))
 
 (defun make-twitter-account (twitter-name

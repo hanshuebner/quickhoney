@@ -350,7 +350,20 @@
             </tbody>
           </table>
           <p class="cms">
-            <input type="submit" name="action" id="edit_news_action" value="create" />
+            <input type="submit" name="action" id="edit_news_action" value="save" />
+          </p>
+        </form>
+        <br />
+        <form id="tweet_news_form_element" action="/tweet-image" method="post" onsubmit="return do_tweet(this)"
+              target="tweet_result">
+          <div class="cms_title">Tweet this image</div>
+          <p class="cms">
+            Accounts:<br/>
+            <quickhoney:twitter-account-checkboxes/>
+            <br/>
+            Text:<br/>
+            <input name="tweet" size="80"/> <br/>
+            <input type="submit" name="tweet" value="tweet"/>
           </p>
         </form>
       </div>

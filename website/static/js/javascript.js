@@ -315,7 +315,9 @@ function make_upload_item(item)
                  IMG({ src: "/image/" + encodeURI(item.name) + '/cutout-button,,' + color + ',98,98,0,' + item.category,
                              width: 98, height: 98 })),
                DIV(null,
-                   H1(null, item.name),
+                   H1(null,
+                      A({ href: '/#' + path, onclick: function () { jump_to(path); } },
+                        item.name)),
                    item.date, ' by ', item.owner, ' | ',
                    permalink(path),
                    BR(),
@@ -337,11 +339,14 @@ function make_news_item(item)
         };
     }
     var text_div = DIV({ 'class': 'item-text' });
+    var path = 'news/' + encodeURI(item.name);
     text_div.innerHTML = item.text;
     return DIV({ 'class': 'newsentry' },
-               IMG({ src: "/image/" + encodeURI(item.name) }),
+               A({ href: '/#' + path, onclick: function () { jump_to(path); } },
+                 IMG({ src: "/image/" + encodeURI(item.name) })),
                DIV(null,
-                   H1(null, item.title),
+                   A({ href: '/#' + path, onclick: function () { jump_to(path); } },
+                     H1(null, item.title)),
                    item.date, ' by ', item.owner, ' | ',
                    permalink('news/' + item.name),
                    BR(),
@@ -417,6 +422,7 @@ function news(subpath) {
 
         $('edit_news_form').reset();
         replaceChildNodes('edit_news_title', 'Edit News Item');
+        $('tweet_news_form_element').style.visibility = 'inherit';
 
     } else {
 
@@ -437,6 +443,7 @@ function news(subpath) {
 
         $('edit_news_form').reset();
         replaceChildNodes('edit_news_title', 'Create News Item');
+        $('tweet_news_form_element').style.visibility = 'hidden';
     }
 }
 
