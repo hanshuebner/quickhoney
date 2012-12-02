@@ -655,7 +655,7 @@
           (handler-case
               (progn
                 (tweet:post-image image
-                                  (format nil "~A ~A/~(~A/~A~)/~A"
+                                  (format nil "~A ~A/~(~A~@[/~A~]~)/~A"
                                           tweet
                                           *website-url*
                                           (quickhoney-image-category image)
