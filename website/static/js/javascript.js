@@ -339,7 +339,7 @@ function make_news_item(item)
     var text_div = DIV({ 'class': 'item-text' });
     text_div.innerHTML = item.text;
     return DIV({ 'class': 'newsentry' },
-               IMG({ src: "/image/" + encodeURI(item.name) + '/news-article-cutout' }),
+               IMG({ src: "/image/" + encodeURI(item.name) }),
                DIV(null,
                    H1(null, item.title),
                    item.date, ' by ', item.owner, ' | ',
