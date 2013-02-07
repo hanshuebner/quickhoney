@@ -19,3 +19,6 @@
 [submodule "libs/hunchentoot"]
 	path = libs/hunchentoot
 	url = git@github.com:edicl/hunchentoot
+[submodule "libs/chunga"]
+	path = libs/chunga
+	url = git@github.com:edicl/chunga
