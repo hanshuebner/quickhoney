@@ -46,7 +46,7 @@
                    :access-token-key access-token-key
                    :access-token-secret access-token-secret)))
 
-(defparameter *twitter-url* "https://upload.twitter.com/1/statuses/update_with_media.json")
+(defparameter *twitter-url* "https://upload.twitter.com/1.1/statuses/update_with_media.json")
 
 (defun store-image-to-temporary-file (store-image)
   (bknr.images:with-store-image* (store-image)
