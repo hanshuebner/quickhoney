@@ -38,7 +38,8 @@
                 :yason
                 :trivial-backtrace
                 :cl-oauth
-                :temporary-file))
+                :temporary-file
+                :skippy))
 
 (asdf:oos 'asdf:load-op :quickhoney)
 
