@@ -99,12 +99,12 @@ the product was deleted."
   "Encode the transaction object as JSON to pass back to the
   javascript."
   (with-slots (link button-link status) txn
-    (json:encode-object-element "id" (store-object-id txn))
-    (json:encode-object-element "status" status)
+    (yason:encode-object-element "id" (store-object-id txn))
+    (yason:encode-object-element "status" status)
     (when link
-      (json:encode-object-element "paypalLink" link))
+      (yason:encode-object-element "paypalLink" link))
     (when button-link
-      (json:encode-object-element "buttonLink" button-link))))
+      (yason:encode-object-element "buttonLink" button-link))))
 
 (defmethod handle ((handler json-paypal-checkout-handler))
   "Create a checkout link by querying the paypal API. As this is
@@ -128,8 +128,8 @@ the product was deleted."
                                   :name (format nil "GET-EXPRESS-CHECKOUT-URL ~A" (store-image-name img)))
                   (json-paypal-checkout-txn-to-json txn))
                 (progn
-                  (json:encode-object-element "status" "error")
-                  (json:encode-object-element "message" "Could not find PDF for image"))))))))
+                  (yason:encode-object-element "status" "error")
+                  (yason:encode-object-element "message" "Could not find PDF for image"))))))))
 
 (defun get-express-checkout-url (ip txn product color)
   "Do the actual API request to paypal to get an express checkout url,
@@ -358,17 +358,17 @@ the product was deleted."
 (defmethod handle-object ((handler json-paypal-transaction-info-handler) txn)
   (with-json-response ()
     (with-slots (product token status creation-time) txn
-      (json:encode-object-element "token" token)
-      (json:encode-object-element "status" status)
-      (json:encode-object-element "valid" (paypal-txn-valid-p txn))
-      (json:encode-object-element "bought_on" (format-date-time (paypal-product-transaction-creation-time txn)
+      (yason:encode-object-element "token" token)
+      (yason:encode-object-element "status" status)
+      (yason:encode-object-element "valid" (paypal-txn-valid-p txn))
+      (yason:encode-object-element "bought_on" (format-date-time (paypal-product-transaction-creation-time txn)
                                                                 :us-style t :show-time nil))
-      (json:encode-object-element "valid_until" (format-date-time (paypal-txn-valid-until txn)
+      (yason:encode-object-element "valid_until" (format-date-time (paypal-txn-valid-until txn)
                                                                   :us-style t :show-time nil))
-      (json:encode-object-element "expired" (paypal-txn-expired-p txn))
-      (json:encode-object-element "deleted" (paypal-txn-deleted-p txn))
+      (yason:encode-object-element "expired" (paypal-txn-expired-p txn))
+      (yason:encode-object-element "deleted" (paypal-txn-deleted-p txn))
       (unless (paypal-txn-deleted-p txn)
-        (json:with-object-element ("image")
+        (yason:with-object-element ("image")
           (image-to-json (quickhoney-product-image product)))))))
 
 (defclass json-paypal-admin-handler (object-handler admin-only-handler)
@@ -377,37 +377,37 @@ the product was deleted."
   giving back more information (used for the admin frontend)."))
 
 (defun assoc-to-json (assoc)
-  (json:with-object ()
+  (yason:with-object ()
     (loop for (key value) on assoc by #'cddr
-       do (json:encode-object-element (string-downcase (symbol-name key)) value))))
+       do (yason:encode-object-element (string-downcase (symbol-name key)) value))))
 
 (defmethod paypal-txn-to-json ((txn paypal-product-transaction))
-  (json:with-object ()
+  (yason:with-object ()
     (with-slots (product token status creation-time valid-time paypal-result paypal-info) txn
-      (json:encode-object-element "token" token)
-      (json:encode-object-element "status" status)
+      (yason:encode-object-element "token" token)
+      (yason:encode-object-element "status" status)
 
       (when (not (paypal-txn-deleted-p txn))
-        (json:with-object-element ("image")
-          (json:with-object ()
+        (yason:with-object-element ("image")
+          (yason:with-object ()
             (let ((image (quickhoney-product-image product)))
-              (json:encode-object-element "name" (store-image-name image))
-              (json:encode-object-element "id" (store-object-id image))
-              (json:encode-object-element "width" (store-image-width image))
-              (json:encode-object-element "height" (store-image-height image))))))
+              (yason:encode-object-element "name" (store-image-name image))
+              (yason:encode-object-element "id" (store-object-id image))
+              (yason:encode-object-element "width" (store-image-width image))
+              (yason:encode-object-element "height" (store-image-height image))))))
           
-      (json:encode-object-element "bought_on" (format-date-time (paypal-product-transaction-creation-time txn)
+      (yason:encode-object-element "bought_on" (format-date-time (paypal-product-transaction-creation-time txn)
                                                                 :us-style t :show-time t))
-      (json:encode-object-element "valid_until" (format-date-time (paypal-txn-valid-until txn)
+      (yason:encode-object-element "valid_until" (format-date-time (paypal-txn-valid-until txn)
                                                                   :us-style t :show-time t))
-      (json:encode-object-element "creation_time" (paypal-product-transaction-creation-time txn))
-      (json:encode-object-element "valid_time" (paypal-product-transaction-valid-time txn))
-      (json:encode-object-element "valid" (paypal-txn-valid-p txn))
-      (json:encode-object-element "deleted" (paypal-txn-deleted-p txn))
-      (json:encode-object-element "expired" (paypal-txn-expired-p txn))
-      (json:with-object-element ("paypal_result")
+      (yason:encode-object-element "creation_time" (paypal-product-transaction-creation-time txn))
+      (yason:encode-object-element "valid_time" (paypal-product-transaction-valid-time txn))
+      (yason:encode-object-element "valid" (paypal-txn-valid-p txn))
+      (yason:encode-object-element "deleted" (paypal-txn-deleted-p txn))
+      (yason:encode-object-element "expired" (paypal-txn-expired-p txn))
+      (yason:with-object-element ("paypal_result")
         (assoc-to-json paypal-result))
-      (json:with-object-element ("paypal_info")
+      (yason:with-object-element ("paypal_info")
         (assoc-to-json paypal-info)))))
 
 ;; XXX this is like the least efficient function i've ever written
@@ -458,7 +458,7 @@ paypal transaction."
           ((null action) )
           (t (error "Unknown action ~A" action))))
   (with-json-response ()
-    (json:with-object-element ("paypalTransactions")
-      (json:with-array ()
+    (yason:with-object-element ("paypalTransactions")
+      (yason:with-array ()
         (dolist (txn txns)
           (paypal-txn-to-json txn))))))
