@@ -508,14 +508,8 @@ function display_query_result() {
             document.location.href = '#' + current_directory + '/' + current_subdirectory;
         }
     } else {
-        if (document.show_page) {
-            goto_results_page(document.show_page);
-            document.show_page = null;
-        }
 	display_thumbnail_page();
     }
-
-    display_path();
 }
 
 function show_cue() {
@@ -551,7 +545,7 @@ function process_query_result(key, json_result) {
 	}
     }
 
-    log('got ', query_result.length.toString(), ' images');
+    log('got', query_result.length, 'images');
     display_query_result();
 }
 
@@ -640,7 +634,6 @@ function show_page(pagename, subpath) {
     log('show_page ' + pagename + ' subpath ' + subpath + ' current_directory ' + current_directory);
 
     $('loading').style.display = 'none';
-    $('path-and-version').style.visibility = 'visible';
 
     /* workaround for IE, which does not display the overlapping menu items expectedly */
     map(function (keyword) {
@@ -664,9 +657,6 @@ function show_page(pagename, subpath) {
     current_subdirectory = null;
     current_image = null;
 
-    // Update path display
-    display_path();
-
     if (page.action) {
         page.action(subpath);
     }
@@ -682,7 +672,7 @@ function internal_link(path, text) {
     return A({ href: '#' + encodeURI(path) }, text);
 }
 
-/* path display */
+/* path display (not currently used) */
 
 function display_path() {
     var path = [];
@@ -865,14 +855,11 @@ function directory(directory_name, subpath, image_name) {
 
     if (subpath) {
         var components = subpath.split("/");
-        if ((components.length > 1) && components[1].match(/^\d+$/)) {
-            document.show_page = components[1];
-        } else {
-            document.show_picture = components[1];
-        }
 	if (image_name != undefined) {
 	    document.show_picture = image_name;	    
-	}
+	} else {
+            document.show_picture = components[1];
+        }
         subdirectory(components[0]);
     } else {
         show_directory_buttons(directory_name);
@@ -1004,7 +991,6 @@ function display_image(index) {
 
 function display_current_image() {
     overlay_remove();
-    display_path();
     make_image_action_buttons();
 
     var ratio = 1 / Math.max(current_image.width / 648, current_image.height / 648);
@@ -1321,8 +1307,6 @@ function fade_out_page(to, callback) {
     var duration = 0.7;
     fade('menu', {to: to,
 		  duration: duration});
-    fade('path-and-version', {to: to,
-			     duration: duration});
     fade('image_browser', {to: to,
 			  duration: duration});
     fade('footer', {to: to,

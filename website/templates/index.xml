@@ -51,11 +51,6 @@
       </a>
     </div>
 
-    <div id="path-and-version">
-      <div id="path" class="text"> </div>
-      <div id="version" class="text"><quickhoney:version-and-last-change /></div>
-    </div>
-
     <div id="loading" class="page">
       <quickhoney:simple-image-browser>
         <img alt="" src="/image/startscreen" id="logo" border="0" width="438" height="67" />
@@ -80,7 +75,6 @@
       </div>
       
       <div id="results" class="subform">
-        
         <div id="thumbnails">
         </div>
       </div>
