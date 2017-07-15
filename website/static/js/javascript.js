@@ -907,10 +907,11 @@ function display_thumbnail_page() {
     overlay_remove();
 
     var page = query_result_pages[0];
+    var row_index = 0;
 
-    var rows = [];
+    replaceChildNodes("thumbnails");
 
-    for (var row_index = 0; row_index < page.length; row_index++) {
+    function next_row() {
         var row_nodes = [];
 	var row = page[row_index];
 	var cell_width = row[0];
@@ -927,15 +928,14 @@ function display_thumbnail_page() {
 	    row_nodes.push(imageSpan);
         }
         row_nodes.push(BR());
-        rows.push(row_nodes);
+        appendChildNodes("thumbnails", row_nodes);
+        row_index++;
     }
-
-    replaceChildNodes("thumbnails");
 
     show_cue();
     function display_next_row() {
-        appendChildNodes("thumbnails", rows.shift());
-        if (rows.length) {
+        next_row();
+        if (row_index < page.length) {
             wait_for_images(display_next_row);
         } else {
             log('done with thumbnails');
@@ -1066,7 +1066,10 @@ function display_current_image() {
 	var divNode = DIV({ style: 'position: relative; margin-top: ' + top_padding + 'px; margin-left: ' + left_padding + 'px' },
                           may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img);
         replaceChildNodes('image_detail', divNode);
-        wait_for_images(function () { img.style.visibility = 'inherit'; });
+        wait_for_images(function () {
+            hide_cue();
+            img.style.visibility = 'inherit';
+        });
     }
 
     if (logged_in) {
