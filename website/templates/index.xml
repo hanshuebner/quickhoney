@@ -27,29 +27,31 @@
     <a id="checkout" href="#cart" onclick="show_page('cart');"><img src="/image/checkout" alt="" width="112" height="24"/></a>
  
     <div id="menu">
-      <a onclick="show_home_buttons()" href="#home" id="m_home">
-        <img alt="" class="menu" src="/image/quickhoney" />
-      </a>
-      <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
-        <img alt="" class="unselected" src="/image/pixel-unselected" />
-        <img alt="" class="selected" src="/image/pixel-selected" />
-      </a>
-      <a onclick="show_directory_buttons('vector')" href="#vector" id="m_vector">
-        <img alt="" class="unselected" src="/image/vector-unselected" />
-        <img alt="" class="selected" src="/image/vector-selected" />
-      </a>
-      <a onclick="show_directory_buttons('pen')" href="#pen" id="m_pen">
-        <img alt="" class="unselected" src="/image/pen-unselected" />
-        <img alt="" class="selected" src="/image/pen-selected" />
-      </a>
-      <a href="#news" id="m_news">
-        <img alt="" class="unselected" src="/image/news-unselected" />
-        <img alt="" class="selected" src="/image/news-selected" />
-      </a>
-      <a href="#contact" id="m_contact">
-        <img alt="" class="unselected" src="/image/contact-unselected" />
-        <img alt="" class="selected" src="/image/contact-selected" />
-      </a>
+      <div id="menu-backdrop">
+        <a onclick="show_home_buttons()" href="#home" id="m_home">
+          <img alt="" class="menu" src="/image/quickhoney" />
+        </a>
+        <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
+          <img alt="" class="unselected" src="/image/pixel-unselected" />
+          <img alt="" class="selected" src="/image/pixel-selected" />
+        </a>
+        <a onclick="show_directory_buttons('vector')" href="#vector" id="m_vector">
+          <img alt="" class="unselected" src="/image/vector-unselected" />
+          <img alt="" class="selected" src="/image/vector-selected" />
+        </a>
+        <a onclick="show_directory_buttons('pen')" href="#pen" id="m_pen">
+          <img alt="" class="unselected" src="/image/pen-unselected" />
+          <img alt="" class="selected" src="/image/pen-selected" />
+        </a>
+        <a href="#news" id="m_news">
+          <img alt="" class="unselected" src="/image/news-unselected" />
+          <img alt="" class="selected" src="/image/news-selected" />
+        </a>
+        <a href="#contact" id="m_contact">
+          <img alt="" class="unselected" src="/image/contact-unselected" />
+          <img alt="" class="selected" src="/image/contact-selected" />
+        </a>
+      </div>
     </div>
 
     <div id="loading" class="page">
