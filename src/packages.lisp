@@ -10,17 +10,6 @@
      #:*xml-catalog-directory*
      #:*thirdparty-directory*
      #:*root-directory*
-
-     #:*paypal-user*
-     #:*paypal-password*
-     #:*paypal-signature*
-     #:*paypal-secure-merchant-id*
-     #:*paypal-url*
-     #:*paypal-fpdbs-url*
-     #:*paypal-use-sandbox*
-     #:*paypal-email*
-
-     #:*product-validity-time*
      ))
 
 (defpackage :quickhoney.imageproc
@@ -88,18 +77,6 @@
 	:quickhoney.config)
   (:shadowing-import-from :cl-interpol #:quote-meta-chars)
   (:export #:client-selectbox))
-
-(defpackage :paypal
-  (:use :cl)
-  (:export #:request
-           #:make-express-checkout-url
-           #:paypal-error
-           #:request-error
-           #:http-request-error
-           #:response-error))
-
-(defpackage :paypal-test
-  (:use :cl))
 
 (defpackage :twitter
   (:use :cl :bknr.datastore)

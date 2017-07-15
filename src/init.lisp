@@ -49,10 +49,6 @@ it if it is missing."
    (setf tbnl:*tmp-directory* (merge-pathnames "hunchentoot-tmp/" *store-directory*)))
   (actor-start (setf *cron-actor* (make-instance 'cron-actor)))
 
-  (paypal-init :user *paypal-user* :password *paypal-password* :signature *paypal-signature*)
-  ;; XXX for test purposes
-  (setf cl-paypal:*paypal-max-transaction-per-ip* 100)
-  
   (when (probe-file "site-config.lisp")
     (format t "; loading site configuration file~%")
     (let ((*package* (find-package :quickhoney.config)))

@@ -10,7 +10,7 @@
 <meta name="google-site-verification" content="cjcPiugrx-HQafIK8tVOnLE1nmbJXMQzsWGLmKqyU_I" />
     <link rel="stylesheet" href="/static/js/yui/reset-fonts/reset-fonts.css,js/yui/fonts/fonts-min.css,js/yui/editor/assets/skins/sam/simpleeditor.css,css/quickhoney.css,css/index.css,css/ydsf.css" />
     <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss/quickhoney" />
-    <script src="/static/js/detectplugins.js,js/AC_QuickTime.js,js/MochiKit/MochiKit.js,js/yui/yahoo-dom-event/yahoo-dom-event.js,js/yui/animation/animation-min.js,js/yui/element/element-beta-min.js,js/yui/container/container_core-min.js,js/yui/editor/simpleeditor-beta-min.js,js/helpers.js,js/pdf_shop.js,js/javascript.js" type="text/javascript"> </script>
+    <script src="/static/js/detectplugins.js,js/AC_QuickTime.js,js/MochiKit/MochiKit.js,js/yui/yahoo-dom-event/yahoo-dom-event.js,js/yui/animation/animation-min.js,js/yui/element/element-beta-min.js,js/yui/container/container_core-min.js,js/yui/editor/simpleeditor-beta-min.js,js/helpers.js,js/javascript.js" type="text/javascript"> </script>
     <title>QuickHoney</title>
   </head>
 
@@ -45,22 +45,11 @@
         <img alt="" class="unselected" src="/image/news-unselected" />
         <img alt="" class="selected" src="/image/news-selected" />
       </a>
-      <!--
-      <a onclick="show_directory_buttons('shop')" href="#shop" id="m_shop">
-        <img alt="" class="unselected" src="/image/shop-unselected" />
-        <img alt="" class="selected" src="/image/shop-selected" />
-      </a>
-      -->
       <a href="#contact" id="m_contact">
         <img alt="" class="unselected" src="/image/contact-unselected" />
         <img alt="" class="selected" src="/image/contact-selected" />
       </a>
     </div>
-
-    <a id="pricetag-a" href="#">
-      <img id="pricetag-big" onclick="make_pdf_info_overlay()" src="/image/pricetag-big" style="visibility: hidden"/>
-      <img id="pricetag-medium" onclick="make_pdf_info_overlay()" src="/image/pricetag-medium" style="visibility: hidden"/>
-    </a>
 
     <div id="path-and-version">
       <div id="path" class="text"> </div>
@@ -91,10 +80,6 @@
       </div>
       
       <div id="results" class="subform">
-        <div class="navbar">
-          <div id="page_navbar" class="left"> </div>
-          <div id="result_page_count" class="right"> </div>
-        </div>
         
         <div id="thumbnails">
         </div>
@@ -138,9 +123,6 @@
       </table>
     </div>
 
-    <div id="cart" class="page">
-    </div>
-    
     <div id="contact" class="page">
       <div style="height: 300px">
         <img id="contactimage" alt="" src="/image/pixelcontact"/>
@@ -197,11 +179,6 @@
             Keywords:<br />
             <input type="text" id="upload_keywords" name="spider-keywords" value="" size="60" /><br />
             <input type="checkbox" id="explicit" name="explicit" value="1" /> Explicit<br/>
-            <!-- shop disabled for now
-            <input type="checkbox" name="buy-file" value="1"/> Sell as file<br/>
-            <input type="checkbox" name="buy-print" value="1"/> Sell as print<br/>
-            <input type="checkbox" name="buy-t-shirt" value="1"/> Sell as t-shirt<br/>
-            -->
           </p>
           <p class="cms">
             <input type="submit" name="upload" value="upload" />
@@ -270,11 +247,6 @@
             Description:<br />
             <textarea id="edit_description" name="description" rows="5" cols="60"> </textarea><br />
             <input type="checkbox" id="edit_explicit" name="explicit" value="1" /> Explicit<br/>
-            <!-- shop disabled for now
-            <input type="checkbox" id="edit_buy-file" name="buy-file" value="1"/> Sell as file<br/>
-            <input type="checkbox" id="edit_buy-print" name="buy-print" value="1"/> Sell as print<br/>
-            <input type="checkbox" id="edit_buy-t-shirt" name="buy-t-shirt" value="1"/> Sell as t-shirt<br/>
-            -->
           </p>
           <p class="cms">
             <button type="submit" onclick="do_edit();">edit</button>
@@ -283,36 +255,6 @@
         </form>
 
 	<br />
-
-	<form id="shop_upload_form_element" action="/upload-shop" method="post"
-	      enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">
-	  <div class="cms_title">Upload shop PDF file</div>
-          <p class="cms cms_shop">
-            Price:<br />
-            <span id="upload_price_select">
-              </span><br />
-	      <span id="pdf_field">
-		<a id="pdf_download_link" href="#" target="_blank">PDF shop file</a><br/>
-	      </span>
-	      <span id="upload_activate">
-		<input type="checkbox" id="pdf-activate" name="pdf-activate" /> Activate download<br />
-	      </span>
-	      <span id="upload_pdf_field">
-		<span id="pdf-file-upload">
-              PDF shop file: <input type="file" name="pdf-image-file" /><br />
-		</span>
-		<span id="pdf-generate-upload"><input type="checkbox" name="pdf-generate" value="1" /> PDF file generieren <span id="pdf-generate-warning">(Achtung: PDF file koennte zu gross werden!)</span></span>
-		<br/>
-	      </span>
-          </p>
-          <p class="cms">
-            <input type="submit" name="action" value="upload" id="upload_pdf_button" />
-            <input type="submit" name="action" value="edit" id="edit_pdf_button" />
-	    <input type="submit" name="action" value="delete" id="delete_pdf_button" />
-          </p>
-	</form>
-
-        <br />
 
         <form id="tweet_form_element" action="/tweet-image" method="post" onsubmit="return do_tweet(this)"
               target="tweet_result">

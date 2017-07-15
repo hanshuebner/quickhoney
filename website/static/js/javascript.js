@@ -11,7 +11,7 @@ var max_news_items = 50;        /* maximum number of news items to display */
 
 /* directory definitions */
 
-var home_buttons = ['pixel', 'vector', 'pen', 'news']; /* 'shop' replaced by 'pen' */
+var home_buttons = ['pixel', 'vector', 'pen', 'news'];
 
 var subcategories = {
     pixel: ['birdview', 'headon', 'spot', 'icons', 'animation', 'smallworld'],
@@ -100,11 +100,6 @@ function show_cms_window(name) {
         
 	$("login_status").style.visibility = 'visible';
 	
-	if (name == "edit_form") {
-	    shop_show_form_for_image(current_image);
-	} else {
-	    shop_hide_form();
-	}
     } else {
 	      for (var i = 0; i < elements.length; i++) {
 	          if (elements[i].id) {
@@ -603,13 +598,6 @@ var pages = {
                      partial(directory, 'pen')),
     news: new Page('30be01',
                    news),
-    paypal: new Page('ff00ff', show_paypal_page),
-    /* no shopping cart for now
-    shop: new Page('0054ff',
-                   shop),
-    cart: new Page('0054ff',
-                   show_shopping_cart),
-     */
     contact: new Page('ffa200')
 };
 
@@ -649,8 +637,6 @@ function show_page(pagename, subpath) {
 
     var page = pages[pagename];
 
-    shop_show_pricetags(pagename, subpath);
-
     log('show_page ' + pagename + ' subpath ' + subpath + ' current_directory ' + current_directory);
 
     $('loading').style.display = 'none';
@@ -659,7 +645,7 @@ function show_page(pagename, subpath) {
     /* workaround for IE, which does not display the overlapping menu items expectedly */
     map(function (keyword) {
             $('m_' + keyword).style.zIndex = (keyword == pagename) ? 101 : 100;
-        }, ['pixel', 'vector', 'pen', 'news', 'contact']); /* , 'shop' disabled */
+        }, ['pixel', 'vector', 'pen', 'news', 'contact']);
 
     // Activate the menu by coloring the menu choices correctly
     $('menu').className = pagename;
@@ -856,7 +842,7 @@ function reveal_buttons_nicely(images, n) {
 function load_button_images(callback) {
 
     loadJSONDoc('/json-buttons'
-                + '/home/pixel,vector,news,pen' /* had shop */
+                + '/home/pixel,vector,news,pen'
                 + '/pixel/' + subcategories['pixel'].join(',')
                 + '/vector/' + subcategories['vector'].join(',')
                 + '/pen/' + subcategories['pen'].join(','))
@@ -947,76 +933,6 @@ function position_to_page_number(position) {
     return 1;
 }
 
-function pages_navbar_start_index() {
-    return Math.max(0, query_position - 2);
-}
-
-function pages_navbar_end_index() {
-    if (pages_navbar_start_index() > 0) {
-	return Math.min(query_result.length - 1, query_position + 2);
-    } else {
-	return Math.min(query_result.length, 4);
-    }
-}
-
-function make_pages_navbar() {
-    var result_links = [];
-    var current_page = position_to_page_number(query_position);
-
-    if (query_result_pages.length > 0) {
-	if (current_page > 1) {
-	    push(result_links,
-                 internal_link(current_directory + '/' + current_subdirectory + '/' + (current_page - 1),
-                               "<<"));
-	} else {
-	    push(result_links, "<<");
-	}
-        push(result_links, " ");
-	var last_page = position_to_page_number(query_result.length - 1);
-	if (current_page < last_page) {
-	    push(result_links,
-                 internal_link(current_directory + '/' + current_subdirectory + '/' + (current_page + 1).toString(),
-                               ">>"));
-	} else {
-	    push(result_links, ">>");
-	}
-	replaceChildNodes("page_navbar", result_links);
-
-	result_links = [];
-
-	var page_count = query_result_pages.length;
-	for (var page_number = 1; page_number < (page_count + 1); page_number++) {
-            if (page_number > 1) {
-                push(result_links, " | ");
-            }
-	    if (page_count > 5) {
-		if ((page_number > 2)
-		    && ((current_page - 1) > page_number)) {
-		    push(result_links, "... | ");
-		    page_number = current_page - 1;
-		} else if ((page_number < (page_count - 2))
-			   && ((current_page + 1) < page_number)) {
-		    push(result_links, "... | ");
-		    page_number = page_count - 2;
-		}
-	    }
-	    if (page_number == current_page) {
-		push(result_links, page_number.toString());
-	    } else {
-		push(result_links,
-                     internal_link(current_directory + '/' + current_subdirectory + '/' + page_number.toString(),
-                                   page_number));
-	    }
-	}
-
-	replaceChildNodes("result_page_count", "pages ", result_links);
-
-    } else {
-	replaceChildNodes("page_navbar", "no images in this category");
-	replaceChildNodes("result_page_count");
-    }
-}
-
 function reveal_thumbnails() {
     var waiting = 0;
     map(function (image) {
@@ -1039,7 +955,6 @@ function display_thumbnail_page() {
     var current_page_index = position_to_page_number(query_position) - 1;
 
     $('image_browser').className = 'results page';
-    make_pages_navbar();
     overlay_remove();
 
     var page = query_result_pages[current_page_index];
@@ -1055,42 +970,11 @@ function display_thumbnail_page() {
                                      width: cell_width,
                                      height: cell_height});
             imageElement.src = '/image/' + encodeURI(image.name) + '/cell,ffffff,' + cell_width + ',' + cell_height + ',8';
-	    var priceTag = null;
-	    if ((image.shop_file != undefined) && (image.shop_price != undefined) && (image.shop_active)) {
-		var border_width = 8;
-		var img_ratio = Math.max(image.width / (cell_width - (2 * border_width)),
-					 image.height / (cell_height - (2 * border_width)));
-		var tb_height = Math.min(image.height, Math.round(image.height / img_ratio));
-		var y_offset = Math.round((cell_height - tb_height) / 2);
-		var tb_width = Math.min(image.width, Math.round(image.width / img_ratio));
-		var x_offset = Math.round((cell_width - tb_width) / 2);
-
-		/* XXX micro-pricetags */
-		var right_offset = 5 + x_offset;
-		var top_offset = -cell_height  + 13 + y_offset + 3;
-		var bottom_offset = 7;
-		/*
-		log("img_ratio " + img_ratio);
-		log("border_width " + border_width);
-		log("cell_height " + cell_height + " tb_height " + tb_height + " y_offset " + y_offset);
-		log("cell_width " + cell_width + " tb_width " + tb_width + " y_offset " + x_offset);
-		log("right " + right_offset + " top " + top_offset);
-		 */
-		
-		priceTag = A({ href: window.location.hash},
-			     IMG({'class': 'image_pricetag_micro',
-				  'src': "/image/pricetag-micro",
-				  'id': 'pricetag-micro-' + image.id,
-				  'onclick': "init_shop_overlay(query_result_pages[" +
-				  current_page_index +"][" + row_index + "][" + image_index + "])",
-				  'style': "bottom: " + bottom_offset + "px; right: " + right_offset + "px"}));
-	    }
-
 	    var imageLink = A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name) },
 
                               imageElement
 			     );
-	    var imageSpan = SPAN({'style': "position:relative"}, imageLink, priceTag);
+	    var imageSpan = SPAN({'style': "position:relative"}, imageLink);
 	    thumbnail_nodes.push(imageSpan);
         }
         thumbnail_nodes.push(BR());
@@ -1104,30 +988,6 @@ function display_thumbnail_page() {
 }
 
 /* image browser - displaying one image */
-
-function make_images_navbar() {
-    var result_links = [];
-
-    if (query_position > 0) {
-	push(result_links,
-             internal_link(current_directory + '/' + current_subdirectory + '/' + query_result[query_position - 1].name,
-                           "<<"));
-    } else {
-	push(result_links, "<<");
-    }
-    push(result_links, " ");
-    if (query_position < (query_result.length - 1)) {
-	push(result_links,
-             internal_link(current_directory + '/' + current_subdirectory + '/' + query_result[query_position + 1].name,
-                           ">>"));
-    } else {
-	push(result_links, ">>");
-    }
-    $('back_to_results_link').href = '#' + current_directory + '/' + current_subdirectory + '/' + position_to_page_number(query_position);
-
-    replaceChildNodes("image_navbar", result_links);
-    replaceChildNodes("result_image_count", "result " + (query_position + 1) + " of " + query_result.length);
-}
 
 function display_image(index) {
 
@@ -1145,7 +1005,6 @@ function display_image(index) {
 function display_current_image() {
     overlay_remove();
     display_path();
-    make_images_navbar();
     make_image_action_buttons();
 
     var ratio = 1 / Math.max(current_image.width / 648, current_image.height / 648);
@@ -1247,20 +1106,8 @@ function display_current_image() {
                         style: 'visibility: hidden',
                         src: '/image/' + encodeURI(current_image.name) + imageproc_ops });
 
-	var priceTag = null;
-	if ((current_image.shop_file != undefined) && (current_image.shop_price != undefined)) {
-	    priceTag = A({href: window.location.hash
-			 },
-			 IMG({'class': 'image_pricetag',
-			      'src': "/image/pricetag-small-" + current_image.shop_price,
-			      'id': "pricetag-small",
-			      'style': "right: " + (648 - display_width) / 2 + "px;",
-			      'onclick': "init_shop_overlay(current_image)"}));
-	}
-	
 	var divNode = DIV({ style: 'position: relative; margin-top: ' + top_padding + 'px; margin-left: ' + left_padding + 'px' },
-                              may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img,
-			 priceTag);
+                          may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img);
         replaceChildNodes('image_detail', divNode);
         wait_for_images(function () { img.style.visibility = 'inherit'; });
     }
@@ -1394,8 +1241,6 @@ function init_application() {
     load_json("/json-login", login_status);
     load_json("/json-clients", set_clients);
     load_json('/json-news-archive/quickhoney', initialize_news_archive);
-
-    init_shop();
 
     var path = 'home';
     if (document.location.pathname != '/') {
@@ -1814,7 +1659,6 @@ function make_ipod_image() {
 }
 
 NOTICE = partial(SPAN, { 'class': 'notice' });
-PRICE = partial(SPAN, { 'class': 'price' });
 SPACER = partial(DIV, { 'class': 'spacer' });
 ARTWORK_NAME = partial(SPAN, { 'class': 'artwork-name' });
 BOLD = partial(SPAN, { 'class': 'bold' });

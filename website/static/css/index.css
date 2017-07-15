@@ -53,11 +53,6 @@ body.news #news {
 	visibility: inherit;
 }
 
-body.shop #shop {
-        display: block;
-	visibility: inherit;
-}
-
 body.contact #contact {
         display: block;
 	visibility: inherit;
@@ -118,30 +113,12 @@ a.debugger {
 #menu.news a#m_news img.selected { visibility: inherit;  }
 #menu.news a#m_news img.unselected { visibility: hidden }
 
-#menu.shop a img { background-color: #0054ff; }
-.shop a { color: #0054ff; }
-#menu.shop a#m_shop img.selected { visibility: inherit; }
-#menu.shop a#m_shop img.unselected { visibility: hidden }
-
 #menu.contact a img { background-color: #ffa200; }
 .contact a { color: #ffa200; }
 #menu.contact a#m_contact img.selected { visibility: inherit; }
 #menu.contact a#m_contact img.unselected { visibility: hidden }
 
-#menu.paypal a img { background-color: #ff00ff; }
-.paypal a { color: #ff00ff; }
-#menu.paypal a#m_pixel img.selected { visibility: inherit; }
-#menu.paypal a#m_pixel img.unselected { visibility: hidden }
-
 #m_home { top: 30px; left: 36px; }
-/*
-#m_pixel { top: 36px; left: 247px; }
-#m_vector { top: 36px; left: 317px; }
-#m_pen { top: 36px; left: 398px; }
-#m_news { top: 36px; left: 450px; }
-#m_shop { top: 36px; left: 523px; }
-#m_contact { top: 36px; left: 586px; }
-*/
 
 #m_pixel { top: 36px; left: 259px; }
 #m_vector { top: 36px; left: 340px; }
@@ -203,25 +180,6 @@ div#image_browser.directory #directory { display: block }
 div#image_browser.results #results { display: block }
 div#image_browser.browse #browse { display: block }
 
-.navbar {
-	position: relative;
-        left: 0px;
-        top: 0px;
-        width: 648px;
-}
-
-.navbar .left {
-        position: absolute;
-        left: 0px;
-        top: 0px;
-}
-
-.navbar .right {
-	position: absolute;
-        right: 0px;
-        top: 0px;
-}
-
 div#thumbnails {
 	visibility: inherit;
 	position: relative;
@@ -253,21 +211,6 @@ div#metadata {
 
 #full_click {
 	margin-left: 10px;
-}
-
-/* shop */
-
-div#shop_page {
-	position: absolute;
-	visibility: hidden;
-	top: 136px;
-	left: 36px;
-	width: 648px;
-}
-
-img#shop-type {
-	margin-top: 50px;
-	margin-bottom: 10px;
 }
 
 /* contact */
@@ -505,7 +448,7 @@ input.invisibleSubmit {
 	padding-left: 13px;
 }
 
-.pdf-info-overlay h1, .download-overlay h1, .paypal-overlay h1 {
+.pdf-info-overlay h1, .download-overlay h1 {
     font-size: 160%;
     margin-right: 30px;
     margin-top: 7px;
@@ -581,10 +524,6 @@ input.invisibleSubmit {
 
 .overlay span.notice {
 	color: #999999;
-}
-
-.overlay span.price {
-	color: #33cc00;
 }
 
 .overlay div.spacer {
@@ -729,35 +668,3 @@ body.pen .button-section-items {
 	font-size: 70%;
 }
 
-/* styles for the pricetags */
-img#pricetag-big {
-    background-color: transparent;
-    position: absolute;
-    top: 36px;
-    left: 225px;
-    z-index: 2;
-}
-
-img#pricetag-medium {
-    background-color: transparent;
-    position: absolute;
-    top: 36px;
-    left: 232px;
-    z-index: 2;
-}
-
-img.image_pricetag_micro {
-    width: 11px;
-    height: 31px;
-    position: absolute;
-    right: 15px;
-    z-index: 2;
-}
-
-img.image_pricetag {
-    width: 17px;
-    height: 41px;
-    position: absolute;
-    bottom: -41px;
-    z-index: 2;
-}

@@ -35,7 +35,6 @@
       </table>
       <button name="login" type="submit" value="/">login</button>
       <button name="login" type="submit" value="/admin">login to admin area</button>
-      <button name="login" type="submit" value="/paypal">login to paypal area</button>
     </form>
 
     <h1 id="logging-in" style="display: none">Logging in...</h1>

@@ -28,13 +28,11 @@
                :cl-gd
                :unit-test
                :yason
-               :cl-paypal
                :cl-pdf
                :cl-oauth)
 
   :components ((:file "packages")
                (:file "config" :depends-on ("packages"))
-	       (:file "paypal-config" :depends-on ("packages"))
                (:file "image" :depends-on ("config"))
 
                (:file "quickhoney-shop" :depends-on ("image"))
@@ -44,9 +42,8 @@
                (:file "tweet")
                (:file "handlers" :depends-on ("layout" "config" "image" "news" "quickhoney-shop" "tweet"))
                (:file "tags" :depends-on ("image"))
-               (:file "paypal-handlers" :depends-on ("config" "handlers" "paypal-config"))
                (:file "twitter-oauth")
-               (:file "webserver" :depends-on ("handlers" "paypal-handlers" "twitter-oauth"))
+               (:file "webserver" :depends-on ("handlers" "twitter-oauth"))
 
                (:file "daily" :depends-on ("config"))
 
