@@ -32,7 +32,6 @@ function wait_for_images(callback) {
         }, getElementsByTagAndClassName('img', null));
 
     if (waiting == 0 || window.opera) {
-        hide_cue();
         callback();
     } else {
         callLater(.2, partial(wait_for_images, callback));
