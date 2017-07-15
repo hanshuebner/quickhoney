@@ -1,5 +1,13 @@
-// Copyright 2005-2008 Hans Huebner, hans.huebner@gmail.com
+// Copyright 2005-2017 Hans Huebner, hans.huebner@gmail.com
 // All rights reserved.
+
+// You will find that this program is kind of ugly, full of global
+// variables and overall badly structured.  To my excuse, I want to
+// say that when I started writing it back in 2005, JavaScript was not
+// generally considered to be a real programming language.  Also,
+// maybe surprisingly, this system was substantially changed and
+// updated a few times over the years, which despite all the ugliness
+// worked well.
 
 /* safari global variable - used to trigger some compatibility hacks */
 
@@ -893,17 +901,6 @@ function subdirectory(subdirectory, page) {
     display_cms_window();
 
     return false;
-}
-
-function goto_results_page(page) {
-    query_position = 0;
-    for (var page_index = 0; page_index < (page - 1); page_index++) {
-	for (var row_index = 0; row_index < query_result_pages[page_index].length; row_index++) {
-	    query_position += query_result_pages[page_index][row_index].length - 2;
-	}
-    }
-
-    display_thumbnail_page();
 }
 
 function position_to_page_number(position) {
