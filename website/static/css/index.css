@@ -91,6 +91,15 @@ a.debugger {
 
 /* menu */
 
+#menu-backdrop {
+    width: 900px;
+    height: 100px;
+    z-index: 100;
+    background-color: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+}
 #menu.home a img { background-color: #953cfd; }
 
 #menu.pixel a img { background-color: #ff00ff; }
@@ -298,6 +307,7 @@ div#footer {
 	text-align: left;
 	color: white;
         padding: 0em 0.5em 0em 0.5em;
+        z-index: 200;
 }
 
 /* news styles */
