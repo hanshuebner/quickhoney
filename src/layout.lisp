@@ -216,19 +216,11 @@
 
 (defmethod make-pages ((layout row-layout))
   "Creates pages from rows after optimization"
-  (let (pages)
-    (loop with page = (make-instance 'page :layout layout)
-	  for row in (row-layout-rows layout)
-	  do (if (or (not (page-rows page))
-		     (<= (+ (page-height page)
-			    (row-height row)) ; assume that the row is as high as the first cell
-			 (layout-page-height layout)))
-		 (page-add-row page row)
-		 (progn
-		   (push page pages)
-		   (setf page (make-instance 'page :layout layout :rows (list row)))))
-	  finally (push page pages))
-    (reverse pages)))
+  ;; We're carrying some baggage from when we had server-side pagination around
+  (let ((page (make-instance 'page :layout layout)))
+    (dolist (row (row-layout-rows layout))
+      (page-add-row page row))
+    (list page)))
 
 (defun group-in-rows (cells)
   "given a list of cells, return list of lists containing cells with equal dimensions"
