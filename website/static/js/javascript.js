@@ -522,12 +522,10 @@ function display_query_result() {
 
 function show_cue() {
     $("cue").style.visibility = 'visible';
-    log('show cue');
 }
 
 function hide_cue() {
     $("cue").style.visibility = 'hidden';
-    log('hide cue');
 }
 
 var db_cache = {};
@@ -954,6 +952,48 @@ function display_thumbnail_page() {
 
 /* image browser - displaying one image */
 
+function make_images_navbar() {
+    var result_links = [];
+
+    if (query_position > 0) {
+       push(result_links,
+             internal_link(current_directory + '/' + current_subdirectory + '/' + query_result[query_position - 1].name,
+                           "<<"));
+    } else {
+       push(result_links, "<<");
+    }
+    push(result_links, " ");
+    if (query_position < (query_result.length - 1)) {
+       push(result_links,
+             internal_link(current_directory + '/' + current_subdirectory + '/' + query_result[query_position + 1].name,
+                           ">>"));
+    } else {
+       push(result_links, ">>");
+    }
+    $('back_to_results_link').href = '#' + current_directory + '/' + current_subdirectory;
+
+    replaceChildNodes("image_navbar", result_links);
+    replaceChildNodes("result_image_count", "result " + (query_position + 1) + " of " + query_result.length);
+}
+
+function right_arrow_pressed() {
+    if (document.location.hash.match(/\/.*\//) && (query_position < (query_result.length - 1))) {
+        document.location.hash = current_directory + '/' + current_subdirectory + '/' + query_result[query_position + 1].name;
+    }
+}
+
+function left_arrow_pressed() {
+    if (document.location.hash.match(/\/.*\//) && (query_position > 0)) {
+        document.location.hash = current_directory + '/' + current_subdirectory + '/' + query_result[query_position - 1].name;
+    }
+}
+
+function up_arrow_pressed() {
+    if (document.location.hash.match(/\/.*\//)) {
+        document.location.hash = document.location.hash.replace(/\/[^\/]*$/, '');
+    }
+}
+
 function display_image(index) {
 
     $('image_browser').className = 'browse page';
@@ -969,6 +1009,7 @@ function display_image(index) {
 
 function display_current_image() {
     overlay_remove();
+    make_images_navbar();
     make_image_action_buttons();
 
     var ratio = 1 / Math.max(current_image.width / 648, current_image.height / 648);
@@ -1218,6 +1259,20 @@ function init_application() {
     document.location.href = "/#" + path;
 
     poll_path();
+
+    window.addEventListener('keydown', function (e) {
+        switch (e.keyCode) {
+        case 37: /* left */
+            left_arrow_pressed();
+            break;
+        case 38: /* up */
+            up_arrow_pressed();
+            break;
+        case 39: /* right */
+            right_arrow_pressed();
+            break;
+        }
+    }, false);
 
     application_initialized = true;
     log('init_application done');
