@@ -571,7 +571,7 @@ function query_imagedb(directory, subdirectory, force) {
 
     } else {
         show_cue();
-	      loadJSONDoc("/json-image-query/" + key)
+	loadJSONDoc("/json-image-query/" + key)
             .addCallbacks(partial(process_query_result, key), alert);
     }
 }
@@ -871,6 +871,7 @@ function directory(directory_name, subpath, image_name) {
     } else {
         show_directory_buttons(directory_name);
         $('image_browser').className = 'directory page';
+        window.current_scroll_position = 0;
     }
 
     display_cms_window();
@@ -903,6 +904,11 @@ function subdirectory(subdirectory, page) {
 }
 
 function display_thumbnail_page() {
+    log('display_thumbnail_page, current_scroll_position', window.current_scroll_position);
+    if (window.current_scroll_position) {
+        setTimeout("window.scrollTo(0, window.current_scroll_position)", 300);
+    }
+
     $('image_browser').className = 'results page';
     overlay_remove();
 
@@ -922,7 +928,8 @@ function display_thumbnail_page() {
                                      width: cell_width,
                                      height: cell_height});
             imageElement.src = '/image/' + encodeURI(image.name) + '/cell,ffffff,' + cell_width + ',' + cell_height + ',8';
-	    var imageLink = A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name) },
+	    var imageLink = A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name),
+                                onclick: function () { window.current_scroll_position = getScrollXY().y; } },
                               imageElement);
 	    var imageSpan = SPAN({'style': "position:relative"}, imageLink);
 	    row_nodes.push(imageSpan);
@@ -1231,7 +1238,7 @@ function init() {
 function jump_to(path) {
     document.current_path = path;
 
-    log('jump_to - path is ', path);
+    log('jump_to - path is', path, 'current_scroll_position', window.current_scroll_position);
 
     path = decodeURI(path.replace(/[?#].*/, ""));
     var components = path.split("/");
