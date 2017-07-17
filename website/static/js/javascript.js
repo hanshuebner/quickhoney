@@ -1047,9 +1047,6 @@ function display_current_image() {
 	appendChildNodes("metadata", "Client: ", current_image.client, BR());
     }
 
-    appendChildNodes("metadata", current_image.width + "x" + current_image.height
-                     + "px | " + percent + "%");
-
     if (may_enlarge) {
 	replaceChildNodes("full_click", A({ href: '#' + link, onclick: enlarge },
                                           "full size"));
