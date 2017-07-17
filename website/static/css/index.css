@@ -110,6 +110,18 @@ a.debugger {
     background-color: #000000;
 }
 
+/* Image Detail */
+
+.social-icons {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.social-icons a {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
 /* menu */
 
 #menu-backdrop {
@@ -574,64 +586,6 @@ a#checkout {
     top: 0px;
     left: 585px;
     visibility: hidden;
-}
-
-/* image action button box / "floating remote" */
-
-#image_action_buttons {
-    left: 624px;
-    top: 142px;
-    width: 61px;
-}
-
-.buttonbox {
-    overflow: hidden;
-    z-index: 100;
-    position: absolute;
-}
-
-.buttonbox .button-section-items {
-    border: 1px solid;
-    border-bottom-width: 0px;
-    margin-left: 37px;
-    background: white;
-}
-
-body.pixel .button-section-items {
-    border-color: #ff00ff;
-}
-
-body.vector .button-section-items {
-    border-color: #00ccff;
-}
-
-body.pen .button-section-items {
-    border-color: #ff0000;
-}
-
-.buttonbox .button-section-items li {
-    background-repeat: no-repeat;
-    background-position: 2px 1px;
-    white-space: nowrap;
-    height: 22px;
-}
-
-.buttonbox .button-section-items a {
-    padding: 0px 5px 0px 27px;
-    color: black;
-    vertical-align: -3px;
-}
-
-.buttonbox .button-section-items.last {
-    border-bottom-width: 1px;
-}
-
-.buttonbox li img {
-    margin: 0px 3px 0px 3px;
-}
-
-.buttonbox img.flag {
-    float: left;
 }
 
 #loading #logo {

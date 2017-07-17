@@ -1010,7 +1010,6 @@ function display_image(index) {
 function display_current_image() {
     overlay_remove();
     make_images_navbar();
-    make_image_action_buttons();
 
     var ratio = 1 / Math.max(current_image.width / 860, current_image.height / 860);
     var imageproc_ops = "";
@@ -1046,6 +1045,14 @@ function display_current_image() {
     if (current_image.client != "") {
 	appendChildNodes("metadata", "Client: ", current_image.client, BR());
     }
+
+    appendChildNodes("metadata", DIV({class: 'social-icons'},
+                                     A({ href: '#' }, IMG({src: '/static/images/social/' + current_directory + '-mail.png'})),
+                                     A({ href: '#' }, IMG({src: '/static/images/social/' + current_directory + '-facebook.png'})),
+                                     A({ href: '#' }, IMG({src: '/static/images/social/' + current_directory + '-twitter.png'})),
+                                     A({ href: '#' }, IMG({src: '/static/images/social/' + current_directory + '-tumblr.png'})),
+                                     A({ href: '#' }, IMG({src: '/static/images/social/' + current_directory + '-pinterest.png'})),
+                                     A({ href: '#' }, IMG({src: '/static/images/social/' + current_directory + '-instagram.png'}))));
 
     if (may_enlarge) {
 	replaceChildNodes("full_click", A({ href: '#' + link, onclick: enlarge },
@@ -1511,45 +1518,3 @@ function hidden_IMG(obj) {
     obj.style = 'visibility: hidden';
     return IMG(obj);
 }
-
-function make_image_action_buttons()
-{
-    var buttons = [];
-
-    $('image_action_buttons').style.visibility = 'hidden';
-
-    var groups = [];
-
-    function make_image_action_button(keyword, title, action)
-    {
-        var item = LI({ style: 'background-image: url(' + recolored_image_path(keyword) + ')' },
-                      A({ href: '#' }, title));
-        item.onclick = function() { action(); return false; };
-        return item;
-    }
-
-    groups.push(DIV({ 'class': 'button-section' },
-                    hidden_IMG({ src: recolored_image_path('hey'), 'class': 'flag', width: 37, height: 16}),
-                    DIV({ 'class': 'button-section-items last' },
-                        UL(null,
-                           make_image_action_button('comment', 'Comment', make_comment_form)))));
-
-    replaceChildNodes('image_action_buttons', groups);
-    log('image_action_buttons width: ', getElementDimensions('image_action_buttons').w);
-
-    var animator = new YAHOO.util.Anim('image_action_buttons', {}, 0.3,
-                                       YAHOO.util.Easing.easeBoth);
-    $('image_action_buttons').onmouseover = function () {
-        animator.stop();
-        animator.attributes = { width: { to: 132 }, left: { to: 553 } };
-        animator.animate();
-    };
-    $('image_action_buttons').onmouseout = function () {
-        animator.stop();
-        animator.attributes = { width: { to: 61 }, left: { to: 623 } };
-        animator.animate();
-    };
-
-    wait_for_images(function () { $('image_action_buttons').style.visibility = 'inherit'; });
-}
-
