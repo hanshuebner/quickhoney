@@ -549,14 +549,6 @@ input.invisibleSubmit {
     margin-top: 5px;
 }
 
-.overlay #shoot div {
-    margin: 0px 5px 1em 5px;
-}
-
-.overlay #shoot img {
-    margin: 8px;
-}
-
 .overlay span.notice {
     color: #999999;
 }
