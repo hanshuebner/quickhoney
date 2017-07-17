@@ -3,7 +3,7 @@
 (cl-interpol:enable-interpol-syntax)
 
 (define-bknr-tag version-and-last-change ()
-  (html "v3.2 | updated "
+  (html "v4.0 | updated "
         (:princ-safe (string-downcase
                       (substitute #\Space #\-
                                   (format-date-time (last-image-upload-timestamp)
