@@ -10,6 +10,10 @@ body {
     vertical-align: middle;
 }
 
+#content {
+    position: relative;
+}
+
 /* remove dotted borders around links */
 a:active { outline: none }
 a:focus { -moz-outline-style: none }
@@ -19,7 +23,6 @@ a:focus { -moz-outline-style: none }
         display: none;
         border: 0px;
         margin: 0px;
-        padding-top: 116px;
         padding-left: 20px;
         padding-right: 20px;
         background: #fff;
@@ -107,7 +110,6 @@ a.debugger {
     height: 100px;
     z-index: 100;
     background-color: white;
-    position: fixed;
     top: 0px;
     left: 0px;
 }
@@ -145,6 +147,13 @@ a.debugger {
 #m_pen { top: 36px; left: 435px; } 
 #m_news { top: 36px; left: 500px; } 
 #m_contact { top: 36px; left: 586px; }
+
+#menu {
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+}
 
 #menu img.selected {
 	visibility: hidden;
@@ -312,7 +321,6 @@ div#footer {
     position: fixed;
     visibility: hidden;
     left: 0px;
-    background-color: white;
     top: 8px;
     text-align: left;
     color: white;

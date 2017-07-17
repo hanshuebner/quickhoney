@@ -17,324 +17,320 @@
 
   <body id="body" class="loading yui-skin-sam">
 
-    <div id="overlay">
-    </div>
-
-    <div id="overlay-pdf">
-    </div>
-
-
-    <a id="checkout" href="#cart" onclick="show_page('cart');"><img src="/image/checkout" alt="" width="112" height="24"/></a>
- 
-    <div id="menu">
-      <div id="menu-backdrop">
-        <a onclick="show_home_buttons()" href="#home" id="m_home">
-          <img alt="" class="menu" src="/image/quickhoney" />
-        </a>
-        <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
-          <img alt="" class="unselected" src="/image/pixel-unselected" />
-          <img alt="" class="selected" src="/image/pixel-selected" />
-        </a>
-        <a onclick="show_directory_buttons('vector')" href="#vector" id="m_vector">
-          <img alt="" class="unselected" src="/image/vector-unselected" />
-          <img alt="" class="selected" src="/image/vector-selected" />
-        </a>
-        <a onclick="show_directory_buttons('pen')" href="#pen" id="m_pen">
-          <img alt="" class="unselected" src="/image/pen-unselected" />
-          <img alt="" class="selected" src="/image/pen-selected" />
-        </a>
-        <a href="#news" id="m_news">
-          <img alt="" class="unselected" src="/image/news-unselected" />
-          <img alt="" class="selected" src="/image/news-selected" />
-        </a>
-        <a href="#contact" id="m_contact">
-          <img alt="" class="unselected" src="/image/contact-unselected" />
-          <img alt="" class="selected" src="/image/contact-selected" />
-        </a>
+    <div id="content">
+      <div id="overlay">
       </div>
-    </div>
 
-    <div id="loading" class="page">
-      <quickhoney:simple-image-browser>
-        <img alt="" src="/image/startscreen" id="logo" border="0" width="438" height="67" />
-
-        <h1>QuickHoney Illustrations</h1>
-        <p>Studio for Illustration, New York</p>
-        <h1>Peter Stemmler</h1>
-        <p>Phone: 646.270.5562<br/>Email: p@quickhoney.com</p>
-        <p>Works: <a href="/vector">vector</a> and <a href="/pen">pen</a></p>
-        <h1>Nana Rausch</h1>
-        <p>Phone 646.270.5592<br/>Email: n@quickhoney.com</p>
-        <p>Works: <a href="/pixel">pixel</a></p>
-      </quickhoney:simple-image-browser>
-    </div>
-
-    <div id="home" class="page">
-    </div>
-
-    <div id="image_browser" class="page">
-
-      <div id="directory" class="subform">
-      </div>
-      
-      <div id="results" class="subform">
-        <div id="thumbnails">
+      <div id="menu">
+        <div id="menu-backdrop">
+          <a onclick="show_home_buttons()" href="#home" id="m_home">
+            <img alt="" class="menu" src="/image/quickhoney" />
+          </a>
+          <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
+            <img alt="" class="unselected" src="/image/pixel-unselected" />
+            <img alt="" class="selected" src="/image/pixel-selected" />
+          </a>
+          <a onclick="show_directory_buttons('vector')" href="#vector" id="m_vector">
+            <img alt="" class="unselected" src="/image/vector-unselected" />
+            <img alt="" class="selected" src="/image/vector-selected" />
+          </a>
+          <a onclick="show_directory_buttons('pen')" href="#pen" id="m_pen">
+            <img alt="" class="unselected" src="/image/pen-unselected" />
+            <img alt="" class="selected" src="/image/pen-selected" />
+          </a>
+          <a href="#news" id="m_news">
+            <img alt="" class="unselected" src="/image/news-unselected" />
+            <img alt="" class="selected" src="/image/news-selected" />
+          </a>
+          <a href="#contact" id="m_contact">
+            <img alt="" class="unselected" src="/image/contact-unselected" />
+            <img alt="" class="selected" src="/image/contact-selected" />
+          </a>
         </div>
       </div>
-      
-      <div id="browse" class="subform">
-        <div class="navbar">
-          <div class="left">
-            <span id="image_navbar" class="text"> </span>
-            <span id="full_click" class="text"> </span>
-          </div>
-          <div class="right">
-            <span id="back_to_results"><a id="back_to_results_link" href="#">back to results</a></span>
-            <span id="result_image_count"> </span>
+
+      <div id="loading" class="page">
+        <quickhoney:simple-image-browser>
+          <img alt="" src="/image/startscreen" id="logo" border="0" width="438" height="67" />
+
+          <h1>QuickHoney Illustrations</h1>
+          <p>Studio for Illustration, New York</p>
+          <h1>Peter Stemmler</h1>
+          <p>Phone: 646.270.5562<br/>Email: p@quickhoney.com</p>
+          <p>Works: <a href="/vector">vector</a> and <a href="/pen">pen</a></p>
+          <h1>Nana Rausch</h1>
+          <p>Phone 646.270.5592<br/>Email: n@quickhoney.com</p>
+          <p>Works: <a href="/pixel">pixel</a></p>
+        </quickhoney:simple-image-browser>
+      </div>
+
+      <div id="home" class="page">
+      </div>
+
+      <div id="image_browser" class="page">
+
+        <div id="directory" class="subform">
+        </div>
+
+        <div id="results" class="subform">
+          <div id="thumbnails">
           </div>
         </div>
-        
-        <div id="image_action_buttons" class="buttonbox">
+
+        <div id="browse" class="subform">
+          <div class="navbar">
+            <div class="left">
+              <span id="image_navbar" class="text"> </span>
+              <span id="full_click" class="text"> </span>
+            </div>
+            <div class="right">
+              <span id="back_to_results"><a id="back_to_results_link" href="#">back to results</a></span>
+              <span id="result_image_count"> </span>
+            </div>
+          </div>
+
+          <div id="image_action_buttons" class="buttonbox">
+          </div>
+
+          <div id="image_detail">
+          </div>
+
+          <div id="metadata" class="text">
+            (not available)
+          </div>
         </div>
 
-        <div id="image_detail">
+      </div>
+
+      <div id="news" class="page">
+        <table border="0">
+          <tbody>
+            <tr>
+              <td valign="top" id="newsentries">
+              </td>
+              <td class="archive" id="archive-navigation" valign="top" align="right">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="contact" class="page">
+        <div style="height: 300px">
+          <img id="contactimage" alt="" src="/image/pixelcontact"/>
+          <br /><br />
+          <h1>email</h1>
+          <p>
+            Peter Stemmler: <a href="mailto:p@quickhoney.com">p@quickhoney.com</a><br />
+            Nana Rausch: <a href="mailto:n@quickhoney.com">n@quickhoney.com</a>
+          </p>
+          <h1>Phone</h1>
+          <p>
+            Peter Stemmler: 646.270.5562<br />
+            Nana Rausch: 646.270.5592
+          </p>
+          <h1>Address</h1>
+          <p>
+            QuickHoney LLC<br />
+            536 Sixth Avenue, 2nd Floor<br />
+            New York, NY 10011<br />
+            USA <br />
+          </p>
         </div>
-        
-        <div id="metadata" class="text">
-          (not available)
+        <div>
+          <h1>Clients</h1>
+          <p id="client_names"> </p>
         </div>
       </div>
 
+      <div id="footer" class="text">
+        ©1998-2017 QuickHoney Nana Rausch &amp; Peter Stemmler. No part of
+        this website may be reproduced in any manner without permission.
+        Programming by Hübner/Odendahl
+      </div>
+
+      <!-- CMS elements -->
+
+      <div id="cms">
+        <div id="upload_form" class="cms_form">
+          <form id="upload_form_element" action="/upload-image" method="post"
+                enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">
+            <div class="cms_title">Upload new image</div>
+            <p class="cms">
+              Category: <b><span id="upload_category"> </span></b><br /><br />
+              Bitmap file: <input type="file" name="image-file" /><br />
+            </p>
+            <p class="cms">
+              Client:<br />
+              <input type="text" id="upload_client" name="client" value="" /><br />
+              <span id="upload_client_select">
+              </span>
+              <br />
+              Dscription:<br />
+              <textarea id="upload_description" name="description" rows="5" cols="60"> </textarea><br />
+              Keywords:<br />
+              <input type="text" id="upload_keywords" name="spider-keywords" value="" size="60" /><br />
+              <input type="checkbox" id="explicit" name="explicit" value="1" /> Explicit<br/>
+            </p>
+            <p class="cms">
+              <input type="submit" name="upload" value="upload" />
+            </p>
+          </form>
+        </div>
+
+        <div id="pixel_button_upload_form" class="cms_form">
+          <form action="/upload-button" method="post"
+                enctype="multipart/form-data" target="upload_result" onsubmit="do_button_upload(this.target);">
+            <input type="hidden" name="directory" value="pixel" />
+            <div class="cms_title">Upload new button</div>
+            <p class="cms">
+              Category:
+              <select name="subdirectory" size="1">
+                <option selected="selected"> </option>
+                <option>birdview</option>
+                <option>parts</option>
+                <option>icons</option>
+                <option>editorial</option>
+                <option>animation</option>
+                <option>smallworld</option>
+              </select>
+              <br /><br />
+              <input type="file" name="image-file" /><br />
+            </p>
+            <p class="cms">
+              <input type="submit" name="upload" value="upload" />
+            </p>
+          </form>
+        </div>
+
+        <div id="upload_animation_form" class="cms_form">
+          <form id="upload_animation_form_element" action="/upload-animation" method="post"
+                enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">
+            <div class="cms_title">Upload new animation</div>
+            <p class="cms">
+              Thumbnail image (for Flash and QuickTime) or GIF animation:<br />
+              <input type="file" name="image-file" /><br />
+              Animation (Flash file or QuickTime movie):<br />
+              <input type="file" name="animation-file" /><br />
+            </p>
+            <p class="cms">
+              Client:<br />
+              <input type="text" id="upload_animation_client" name="client" value="" /><br />
+              <span id="upload_animation_client_select">
+              </span>
+            </p>
+            <p class="cms">
+              <input type="submit" name="upload" value="upload" />
+            </p>
+          </form>
+        </div>
+
+        <div id="edit_form" class="cms_form">
+          <form id="edit_form_element" action="#" method="post" onsubmit="return false;">
+            <div class="cms_title">Edit image</div>
+            <p class="cms">
+              Client:<br />
+              <input type="text" id="edit_client" name="client" value="" /><br />
+              <span id="edit_client_select">
+              </span>
+              <br />
+              Keywords:<br />
+              <input type="text" id="edit_keywords" name="spider-keywords" value="" size="60" /><br />
+              Description:<br />
+              <textarea id="edit_description" name="description" rows="5" cols="60"> </textarea><br />
+              <input type="checkbox" id="edit_explicit" name="explicit" value="1" /> Explicit<br/>
+            </p>
+            <p class="cms">
+              <button type="submit" onclick="do_edit();">edit</button>
+              <button type="submit" onclick="do_delete();">delete</button>
+            </p>
+          </form>
+
+	  <br />
+
+          <form id="tweet_form_element" action="/tweet-image" method="post" onsubmit="return do_tweet(this)"
+                target="tweet_result">
+            <div class="cms_title">Tweet this image</div>
+            <p class="cms">
+              Accounts:<br/>
+              <quickhoney:twitter-account-checkboxes/>
+              <br/>
+              Text:<br/>
+              <input name="tweet" size="80"/> <br/>
+              <input type="submit" name="tweet" value="tweet"/>
+            </p>
+          </form>
+        </div>
+
+        <div id="edit_news" class="cms_form">
+          <div class="cms_title" id="edit_news_title">Create news entry</div>
+          <form action="/upload-news" method="post" id="edit_news_form"
+                enctype="multipart/form-data" target="upload_result" onsubmit="return upload_news(this.target);">
+            <table class="cms">
+              <tbody>
+                <tr id="edit_image_upload_row">
+                  <td>Image:</td>
+                  <td><input id="news_file" type="file" name="image-file" /></td>
+                </tr>
+                <tr>
+                  <td>Title:</td>
+                  <td><input id="news_title" name="title" size="60"/></td>
+                </tr>
+                <tr>
+                  <td>Text:</td>
+                  <td><textarea id="news_editor" name="text" cols="80" rows="10"> </textarea></td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="cms">
+              <input type="submit" name="action" id="edit_news_action" value="save" />
+            </p>
+          </form>
+          <br />
+          <form id="tweet_news_form_element" action="/tweet-image" method="post" onsubmit="return do_tweet(this)"
+                target="tweet_result">
+            <div class="cms_title">Tweet this image</div>
+            <p class="cms">
+              Accounts:<br/>
+              <quickhoney:twitter-account-checkboxes/>
+              <br/>
+              Text:<br/>
+              <input name="tweet" size="80"/> <br/>
+              <input type="submit" name="tweet" value="tweet"/>
+            </p>
+          </form>
+        </div>
+
+        <div id="saving_edits_form" class="cms_form">
+          <div class="cms_title">Saving Edits</div>
+          <p class="cms">
+            Your request is being processed.
+          </p>
+        </div>
+
+        <div id="image_edited_form" class="cms_form">
+          <div class="cms_title">Edits saved</div>
+          <p class="cms">
+            Your edits have been saved.
+          </p>
+        </div>
+
+        <div id="image_deleted_form" class="cms_form">
+          <div class="cms_title">Image deleted</div>
+          <p class="cms">
+            The image has been deleted.
+          </p>
+        </div>
+
+        <div id="login_status" class="cms_form">
+          <p>You are logged in as <b id="username"> </b></p>
+          <p><a href="#" onclick="send_logout();" class="cmslink">logout</a></p>
+        </div>
+
+      </div>
+
+      <div id="cue"><img alt="" src="/static/images/spinner.gif" width="16" height="16"/></div>
     </div>
-    
-    <div id="news" class="page">
-      <table border="0">
-        <tbody>
-          <tr>
-            <td valign="top" id="newsentries">
-            </td>
-            <td class="archive" id="archive-navigation" valign="top" align="right">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div id="contact" class="page">
-      <div style="height: 300px">
-        <img id="contactimage" alt="" src="/image/pixelcontact"/>
-        <br /><br />
-        <h1>email</h1>
-        <p>
-          Peter Stemmler: <a href="mailto:p@quickhoney.com">p@quickhoney.com</a><br />
-          Nana Rausch: <a href="mailto:n@quickhoney.com">n@quickhoney.com</a>
-        </p>
-        <h1>Phone</h1>
-        <p>
-          Peter Stemmler: 646.270.5562<br />
-          Nana Rausch: 646.270.5592
-        </p>
-        <h1>Address</h1>
-        <p>
-          QuickHoney LLC<br />
-          536 Sixth Avenue, 2nd Floor<br />
-          New York, NY 10011<br />
-          USA <br />
-        </p>
-      </div>
-      <div>
-        <h1>Clients</h1>
-        <p id="client_names"> </p>
-      </div>
-    </div>
-    
-    <div id="footer" class="text">
-      ©1998-2017 QuickHoney Nana Rausch &amp; Peter Stemmler. No part of
-      this website may be reproduced in any manner without permission.
-      Programming by Hübner/Odendahl
-    </div>
-
-    <!-- CMS elements -->
-
-    <div id="cms">
-      <div id="upload_form" class="cms_form">
-        <form id="upload_form_element" action="/upload-image" method="post"
-              enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">
-          <div class="cms_title">Upload new image</div>
-          <p class="cms">
-            Category: <b><span id="upload_category"> </span></b><br /><br />
-            Bitmap file: <input type="file" name="image-file" /><br />
-          </p>
-          <p class="cms">
-            Client:<br />
-            <input type="text" id="upload_client" name="client" value="" /><br />
-            <span id="upload_client_select">
-            </span>
-            <br />
-            Dscription:<br />
-            <textarea id="upload_description" name="description" rows="5" cols="60"> </textarea><br />
-            Keywords:<br />
-            <input type="text" id="upload_keywords" name="spider-keywords" value="" size="60" /><br />
-            <input type="checkbox" id="explicit" name="explicit" value="1" /> Explicit<br/>
-          </p>
-          <p class="cms">
-            <input type="submit" name="upload" value="upload" />
-          </p>
-        </form>
-      </div>
-
-      <div id="pixel_button_upload_form" class="cms_form">
-        <form action="/upload-button" method="post"
-              enctype="multipart/form-data" target="upload_result" onsubmit="do_button_upload(this.target);">
-          <input type="hidden" name="directory" value="pixel" />
-          <div class="cms_title">Upload new button</div>
-          <p class="cms">
-            Category:
-            <select name="subdirectory" size="1">
-              <option selected="selected"> </option>
-              <option>birdview</option>
-              <option>parts</option>
-              <option>icons</option>
-              <option>editorial</option>
-              <option>animation</option>
-              <option>smallworld</option>
-            </select>
-            <br /><br />
-            <input type="file" name="image-file" /><br />
-          </p>
-          <p class="cms">
-            <input type="submit" name="upload" value="upload" />
-          </p>
-        </form>
-      </div>
-      
-      <div id="upload_animation_form" class="cms_form">
-        <form id="upload_animation_form_element" action="/upload-animation" method="post"
-              enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">
-          <div class="cms_title">Upload new animation</div>
-          <p class="cms">
-            Thumbnail image (for Flash and QuickTime) or GIF animation:<br />
-            <input type="file" name="image-file" /><br />
-            Animation (Flash file or QuickTime movie):<br />
-            <input type="file" name="animation-file" /><br />
-          </p>
-          <p class="cms">
-            Client:<br />
-            <input type="text" id="upload_animation_client" name="client" value="" /><br />
-            <span id="upload_animation_client_select">
-            </span>
-          </p>
-          <p class="cms">
-            <input type="submit" name="upload" value="upload" />
-          </p>
-        </form>
-      </div>
-      
-      <div id="edit_form" class="cms_form">
-        <form id="edit_form_element" action="#" method="post" onsubmit="return false;">
-          <div class="cms_title">Edit image</div>
-          <p class="cms">
-            Client:<br />
-            <input type="text" id="edit_client" name="client" value="" /><br />
-            <span id="edit_client_select">
-            </span>
-            <br />
-            Keywords:<br />
-            <input type="text" id="edit_keywords" name="spider-keywords" value="" size="60" /><br />
-            Description:<br />
-            <textarea id="edit_description" name="description" rows="5" cols="60"> </textarea><br />
-            <input type="checkbox" id="edit_explicit" name="explicit" value="1" /> Explicit<br/>
-          </p>
-          <p class="cms">
-            <button type="submit" onclick="do_edit();">edit</button>
-            <button type="submit" onclick="do_delete();">delete</button>
-          </p>
-        </form>
-
-	<br />
-
-        <form id="tweet_form_element" action="/tweet-image" method="post" onsubmit="return do_tweet(this)"
-              target="tweet_result">
-          <div class="cms_title">Tweet this image</div>
-          <p class="cms">
-            Accounts:<br/>
-            <quickhoney:twitter-account-checkboxes/>
-            <br/>
-            Text:<br/>
-            <input name="tweet" size="80"/> <br/>
-            <input type="submit" name="tweet" value="tweet"/>
-          </p>
-        </form>
-      </div>
-      
-      <div id="edit_news" class="cms_form">
-        <div class="cms_title" id="edit_news_title">Create news entry</div>
-        <form action="/upload-news" method="post" id="edit_news_form"
-              enctype="multipart/form-data" target="upload_result" onsubmit="return upload_news(this.target);">
-          <table class="cms">
-            <tbody>
-              <tr id="edit_image_upload_row">
-                <td>Image:</td>
-                <td><input id="news_file" type="file" name="image-file" /></td>
-              </tr>
-              <tr>
-                <td>Title:</td>
-                <td><input id="news_title" name="title" size="60"/></td>
-              </tr>
-              <tr>
-                <td>Text:</td>
-                <td><textarea id="news_editor" name="text" cols="80" rows="10"> </textarea></td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="cms">
-            <input type="submit" name="action" id="edit_news_action" value="save" />
-          </p>
-        </form>
-        <br />
-        <form id="tweet_news_form_element" action="/tweet-image" method="post" onsubmit="return do_tweet(this)"
-              target="tweet_result">
-          <div class="cms_title">Tweet this image</div>
-          <p class="cms">
-            Accounts:<br/>
-            <quickhoney:twitter-account-checkboxes/>
-            <br/>
-            Text:<br/>
-            <input name="tweet" size="80"/> <br/>
-            <input type="submit" name="tweet" value="tweet"/>
-          </p>
-        </form>
-      </div>
-      
-      <div id="saving_edits_form" class="cms_form">
-        <div class="cms_title">Saving Edits</div>
-        <p class="cms">
-          Your request is being processed.
-        </p>
-      </div>
-      
-      <div id="image_edited_form" class="cms_form">
-        <div class="cms_title">Edits saved</div>
-        <p class="cms">
-          Your edits have been saved.
-        </p>
-      </div>
-      
-      <div id="image_deleted_form" class="cms_form">
-        <div class="cms_title">Image deleted</div>
-        <p class="cms">
-          The image has been deleted.
-        </p>
-      </div>
-      
-      <div id="login_status" class="cms_form">
-        <p>You are logged in as <b id="username"> </b></p>
-        <p><a href="#" onclick="send_logout();" class="cmslink">logout</a></p>
-      </div>
-      
-    </div>
-
-    <div id="cue"><img alt="" src="/static/images/spinner.gif" width="16" height="16"/></div>
 
     <script type="text/javascript">
       var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
