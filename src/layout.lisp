@@ -68,9 +68,11 @@
 	(setq width (round (/ width factor))
 	      height (round (/ height factor)))))
     (setf (cell-width cell)
-	  (or (find (+ 10 width) (image-layout-cell-widths layout) :test #'<)  (image-layout-cell-widths layout)))
+	  (or (find (+ 10 width) (image-layout-cell-widths layout) :test #'<)
+              (first (last (image-layout-cell-widths layout)))))
     (setf (slot-value cell 'height)
-	  (or (find (+ 10 height) (image-layout-cell-heights layout) :test #'<) (image-layout-cell-heights layout)))))
+	  (or (find (+ 10 height) (image-layout-cell-heights layout) :test #'<)
+              (first (last (image-layout-cell-heights layout)))))))
 
 (defmethod cell-caption ((cell image-cell))
   (store-image-name (cell-image cell)))
