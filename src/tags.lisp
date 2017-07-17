@@ -76,6 +76,26 @@
           (html (:tr (:th "keywords")
                      (:td (:princ (quickhoney-image-spider-keywords image))))))))))))
 
+(define-bknr-tag image-meta-tags ()
+  (let* ((image-name (nth 3 (mapcar #'hunchentoot:url-decode (cl-ppcre:split "/" (hunchentoot:script-name*)))))
+         (image (and image-name
+                     (bknr.images:store-image-with-name image-name))))
+    (when image
+      (html
+       ((:meta :property "og:title"
+               :content (or (quickhoney-image-description image)
+                            image-name)))
+       ((:meta :property "og:type"
+               :content "article"))
+       ((:meta :property "og:url"
+               :content (format nil "http://quickhoney.com/~(~A/~A~)/~A"
+                                (quickhoney-image-category image)
+                                (quickhoney-image-subcategory image)
+                                image-name)))
+       ((:meta :property "og:image"
+               :content (format nil "http://quickhoney.com/image/~A"
+                                image-name)))))))
+
 (define-bknr-tag simple-image-browser ()
   (tbnl:handle-if-modified-since (last-image-upload-timestamp))
   (destructuring-bind (&optional category subcategory image-name)

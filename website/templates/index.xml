@@ -2,12 +2,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html
-   xmlns="http://www.w3.org/1999/xhtml"
-   xmlns:bknr="http://bknr.net/"
-   xmlns:quickhoney="http://quickhoney.com/">
+    prefix="og: http://ogp.me/ns#"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:bknr="http://bknr.net/"
+    xmlns:quickhoney="http://quickhoney.com/">
   <head>
     <meta name="verify-v1" content="0lfE42KxaTLpCzUEkuTA7V2a9Ojdwk9BG2XSaZGPaoA=" />
-<meta name="google-site-verification" content="cjcPiugrx-HQafIK8tVOnLE1nmbJXMQzsWGLmKqyU_I" />
+    <meta name="google-site-verification" content="cjcPiugrx-HQafIK8tVOnLE1nmbJXMQzsWGLmKqyU_I" />
+    <quickhoney:image-meta-tags/>
     <link rel="stylesheet" href="/static/js/yui/reset-fonts/reset-fonts.css,js/yui/fonts/fonts-min.css,js/yui/editor/assets/skins/sam/simpleeditor.css,css/quickhoney.css,css/index.css,css/ydsf.css" />
     <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss/quickhoney" />
     <script src="/static/js/detectplugins.js,js/AC_QuickTime.js,js/MochiKit/MochiKit.js,js/yui/yahoo-dom-event/yahoo-dom-event.js,js/yui/animation/animation-min.js,js/yui/element/element-beta-min.js,js/yui/container/container_core-min.js,js/yui/editor/simpleeditor-beta-min.js,js/helpers.js,js/pdf_shop.js,js/javascript.js" type="text/javascript"> </script>
