@@ -15,6 +15,7 @@ body {
     background-color: transparent;
     display: table-cell;
     vertical-align: middle;
+    overflow: scroll;
 }
 
 #content {
