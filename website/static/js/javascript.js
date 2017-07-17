@@ -1482,150 +1482,7 @@ function compute_title() {
         }
     }
     return title;
-}
-
-var social_bookmark_sites = [
-                        { icon: 'blinkbits.gif', width: 16, height: 16,
-                          name: 'Blinkbits',
-                          url: 'http://www.blinkbits.com'},
-                        { icon: 'blinklists.gif', width: 18, height: 18,
-                          name: 'Blinklist',
-                          url: 'http://www.blinklist.com',
-                          action: 'http://www.blinklist.com/index.php?Action=Blink/addblink.php&Description=&Url=%URL%&Title=%TITLE%',
-                          window: 'location=yes,links=no,scrollbars=no,toolbar=no,width=550,height=380'},
-                        { icon: 'blogdigger.gif', width: 16, height: 16,
-                          name: 'Blogdigger',
-                          url: 'http://www.blogdigger.com'},
-                        { icon: 'blogmarks.gif', width: 16, height: 16,
-                          name: 'Blogmarks',
-                          url: 'http://blogmarks.net'/* ,
-                                                        action: 'http://blogmarks.net/my/new.php?mini=1&title=%TITLE%&url=%URL%' */},
-                        { icon: 'buzznet.gif', width: 16, height: 16,
-                          name: 'Buzznet',
-                          url: 'http://www.buzznet.com'},
-                        { icon: 'citeulike.gif', width: 16, height: 16,
-                          name: 'Citeulike',
-                          url: 'http://www.citeulike.org'},
-                        { icon: 'comments.gif', width: 16, height: 16,
-                          name: 'Co.mments',
-                          url: 'http://co.mments.com'},
-                        { icon: 'connotea.gif', width: 16, height: 16,
-                          name: 'Connotea',
-                          url: 'http://www.connotea.org'},
-                        { icon: 'delicious.png', width: 16, height: 16,
-                          name: 'Delicious',
-                          url: 'http://del.icio.us',
-                          action: 'http://delicious.com/save?url=%URL%&title=%TITLE%&v=5&noui=1&jump=doclose',
-                          window: 'location=yes,links=no,scrollbars=no,toolbar=no,width=550,height=550'
-                        },
-                        { icon: 'digg.png', width: 16, height: 14,
-                          name: 'Digg',
-                          url: 'http://www.digg.com',
-                          action: 'http://digg.com/submit?phase=2&url=%IMAGEURL%&title=%TITLE%&media=image&topic=design&thumbnails=0'},
-                        { icon: 'fark.gif', width: 15, height: 18,
-                          name: 'Fark',
-                          url: 'http://www.fark.com'},
-                        { icon: 'feedmelinks.gif', width: 20, height: 19,
-                          name: 'Feedmelinks',
-                          url: 'http://feedmelinks.com'},
-                        { icon: 'feedster-icon.gif', width: 16, height: 16,
-                          name: 'Feedster',
-                          url: 'http://feedster.com'},
-                        { icon: 'findory.gif', width: 16, height: 16,
-                          name: 'Findory',
-                          url: 'http://findory.com'},
-                        { icon: 'flickr.gif', width: 16, height: 16,
-                          name: 'Flickr',
-                          url: 'http://www.flickr.com'},
-                        { icon: 'furl.png', width: 16, height: 17,
-                          name: 'Furl',
-                          url: 'http://www.furl.net',
-                          action: 'http://www.furl.net/storeIt.jsp?u=%URL%&t=%TITLE%',
-                          window: 'location=yes,links=no,scrollbars=no,toolbar=no,width=570,height=700'},
-                        { icon: 'google.gif', width: 16, height: 16,
-                          name: 'Google',
-                          url: 'http://www.google.com',
-                          action: 'http://www.google.com/bookmarks/mark?op=add&bkmk=%URL%&title=%TITLE%' },
-                        { icon: 'icerocket.gif', width: 16, height: 16,
-                          name: 'Ice Rocket',
-                          url: 'www.icerocket.com'},
-                        { icon: 'linkagogo.gif', width: 16, height: 16,
-                          name: 'Linkagogo',
-                          url: 'http://www.linkagogo.com'},
-                        { icon: 'magnolia.gif', width: 16, height: 16,
-                          name: 'Magnolia',
-                          url: 'http://ma.gnolia.com'},
-                        { icon: 'mister-wong.gif', width: 16, height: 16,
-                          name: 'Mister Wong',
-                          action: 'http://www.mister-wong.de/index.php?action=addurl&bm_url=%URL%&bm_description=%TITLE%' },
-                        { icon: 'netscape.gif', width: 16, height: 15,
-                          name: 'Netscape',
-                          url: 'http://www.netscape.com'},
-                        { icon: 'newsvine.gif', width: 16, height: 16,
-                          name: 'Newsvine',
-                          url: 'http://www.newsvine.com'},
-                        { icon: 'nowpublic.gif', width: 15, height: 11,
-                          name: 'NowPublic',
-                          url: 'http://www.nowpublic.com'},
-                        { icon: 'onlywire.gif', width: 20, height: 16,
-                          name: 'OnlyWire',
-                          url: 'http://www.onlywire.com'},
-                        { icon: 'paypal.gif', width: 16, height: 16,
-                          name: 'PayPal',
-                          url: 'http://www.paypal.com'},
-                        { icon: 'reddit.gif', width: 18, height: 18,
-                          name: 'Reddit',
-                          url: 'http://reddit.com',
-                          action: 'http://reddit.com/submit?url=%URL%&title=%TITLE%',
-                          window: 'location=yes,links=no,scrollbars=no,toolbar=no,width=640,height=670'},
-                        { icon: 'rocketnews.gif', width: 16, height: 16,
-                          name: 'RocketNews',
-                          url: 'http://www.rocketnews.com'},
-                        { icon: 'scuttle.gif', width: 16, height: 16,
-                          name: 'Scuttle',
-                          url: 'http://scuttle.org'},
-                        { icon: 'scoopt.gif', width: 15, height: 11,
-                          name: 'Scoopt',
-                          url: 'http://www.scoopt.com/words'},
-                        { icon: 'shadows.gif', width: 16, height: 16,
-                          name: 'Shadows',
-                          url: 'http://www.shadows.com'},
-                        { icon: 'simpy.gif', width: 16, height: 16,
-                          name: 'Simpy',
-                          url: 'http://www.simpy.com',
-                          action: 'http://www.simpy.com/simpy/LinkAdd.do?href=%URL%&title=%TITLE%'},
-                        { icon: 'slashdot.gif', width: 17, height: 17,
-                          name: 'Slashdot',
-                          url: 'http://slashdot.org',
-                          action: 'http://slashdot.org/slashdot-it.pl?op=basic&url=%URL%'},
-                        { icon: 'smarking.gif', width: 16, height: 16,
-                          name: 'Smarking',
-                          url: 'http://www.smarking.com'},
-                        { icon: 'sphere.gif', width: 16, height: 16,
-                          name: 'Sphere',
-                          url: 'http://www.sphere.com'},
-                        { icon: 'spurl.gif', width: 16, height: 16,
-                          name: 'Spurl',
-                          url: 'http://www.spurl.net'},
-                        { icon: 'stumbleupon.gif', width: 16, height: 16,
-                          name: 'StumbleUpon',
-                          url: 'http://www.stumbleupon.com',
-                          action: 'http://www.stumbleupon.com/submit?url=%URL%&title=%TITLE%'},
-                        { icon: 'technorati.gif', width: 14, height: 17,
-                          name: 'Technorati',
-                          url: 'http://www.technorati.com'},
-                        { icon: 'webride.gif', width: 16, height: 16,
-                          name: 'Webride',
-                          url: 'http://webride.org'},
-                        { icon: 'wists.gif', width: 16, height: 16,
-                          name: 'Wists',
-                          url: 'http://www.wists.com'},
-                        { icon: 'yahoo.png', width: 16, height: 16,
-                          name: 'Yahoo',
-                          url: 'http://www.yahoo.com',
-                          action: 'http://beta.bookmarks.yahoo.com/toolbar/savebm?t=%TITLE%&u=%URL%',
-                          window: 'location=yes,links=no,scrollbars=no,toolbar=no,width=400,height=300'} ];
-
+};
 
 function current_url()
 {
@@ -1637,42 +1494,6 @@ function current_image_url()
     return document.location.protocol
         + '//' + document.location.host + (document.location.port ? ':' + document.location.port : '')
         + '/image/' + current_image.name;
-}
-
-function make_shout_form() {
-
-    function bookmark_link(image, action) {
-        return A({ href: '#' + document.current_path, onclick: action },
-                 IMG({ src: '/image/' + image }));
-    }
-
-    function submit_bookmark(site) {
-        var url = site.action;
-        url = url.replace("%IMAGEURL%", encodeURIComponent(current_image_url()));
-        url = url.replace("%URL%", encodeURIComponent(current_url()));
-        url = url.replace("%TITLE%", encodeURIComponent(compute_title()));
-        window.open(url,
-                    'submit-bookmark',
-                    site.window);
-    }
-
-    make_overlay('shoot', 'Shout', 320,
-                 DIV(null,
-                     map(function (site) {
-                             var img = IMG({ src: '/static/icons/' + site.icon,
-                                             width: site.width, height: site.height,
-                                             title: site.name });
-                             img.onclick = partial(submit_bookmark, site);
-                             return img;
-                         }, filter(function (site) { return site.action; }, social_bookmark_sites))));
-}
-
-function make_ipod_image() {
-    window.open('/image/'
-                + encodeURI(current_image.name)
-                + '/cell,,'
-                + ((current_image.width < current_image.height) ? '320,480' : '480,320')
-                + '/download,' + encodeURI(current_image.name) + '.jpg');
 }
 
 NOTICE = partial(SPAN, { 'class': 'notice' });
@@ -1691,10 +1512,6 @@ function hidden_IMG(obj) {
     return IMG(obj);
 }
 
-var action_button_titles = { 'buy-file': 'File',
-                             'buy-print': 'Art Print',
-                             'buy-t-shirt': 'T-Shirt' };
-
 function make_image_action_buttons()
 {
     var buttons = [];
@@ -1702,7 +1519,6 @@ function make_image_action_buttons()
     $('image_action_buttons').style.visibility = 'hidden';
 
     var groups = [];
-    var buyable = intersection(keys(current_image.keywords), keys(action_button_titles)).length > 0;
 
     function make_image_action_button(keyword, title, action)
     {
@@ -1712,27 +1528,11 @@ function make_image_action_buttons()
         return item;
     }
 
-    function make_buy_button(keyword) {
-        return make_image_action_button(keyword,
-                                        action_button_titles[keyword],
-                                        partial(make_buy_form, keyword));
-    }
-
-    if (buyable) {
-        groups.push(DIV({ 'class': 'button-section' },
-                        hidden_IMG({ src: recolored_image_path('buy'), 'class': 'flag', width: 37, height: 16}),
-                        DIV({ 'class': 'button-section-items' },
-                            UL(null,
-                               map(make_buy_button, keys(current_image.keywords))))));
-    }
-
     groups.push(DIV({ 'class': 'button-section' },
                     hidden_IMG({ src: recolored_image_path('hey'), 'class': 'flag', width: 37, height: 16}),
                     DIV({ 'class': 'button-section-items last' },
                         UL(null,
-                           make_image_action_button('ipod', 'iPhone', make_ipod_image),
-                           make_image_action_button('comment', 'Comment', make_comment_form),
-                           make_image_action_button('shoot', 'Shoot', make_shout_form)))));
+                           make_image_action_button('comment', 'Comment', make_comment_form)))));
 
     replaceChildNodes('image_action_buttons', groups);
     log('image_action_buttons width: ', getElementDimensions('image_action_buttons').w);
