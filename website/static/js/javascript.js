@@ -756,7 +756,7 @@ function show_directory_buttons(category) {
                  },
                  IMG({ 'class': 'button-image',
                        id: 'hidden-button' + i++,
-                       src: random_button_image(category, subcategory, 208, height || 208, category),
+                       src: random_button_image(category, subcategory, 276, height || 276, category),
                        style: 'visibility: hidden' }));
     }
 
@@ -765,8 +765,8 @@ function show_directory_buttons(category) {
     var subs = subcategories[category];
     if (category == 'vector') {
         buttons = [ DIV(null,
-                        make_subcategory_button(subs[0], 0, 428),
-                        make_subcategory_button(subs[1], 1, 428),
+                        make_subcategory_button(subs[0], 0, 568),
+                        make_subcategory_button(subs[1], 1, 568),
                         make_subcategory_button(subs[2], 2)),
                     DIV(null,
                         make_subcategory_button(subs[3], 5)),
@@ -777,8 +777,8 @@ function show_directory_buttons(category) {
         rows = 3;
     } else if (category == 'pen') {
         buttons = [ DIV(null,
-                        make_subcategory_button(subs[0], 0, 428),
-                        make_subcategory_button(subs[1], 1, 428),
+                        make_subcategory_button(subs[0], 0, 568),
+                        make_subcategory_button(subs[1], 1, 568),
                         make_subcategory_button(subs[2], 2)),
                     DIV(null,
                         make_subcategory_button(subs[3], 5)) ];
@@ -790,7 +790,7 @@ function show_directory_buttons(category) {
         }
         rows = Math.ceil(subs.length / 3);
     }
-    setStyle($('directory'), { height: rows * 224 + 'px' });
+    setStyle($('directory'), { height: (100 + rows * 279) + 'px' });
     replaceChildNodes('directory', buttons);
 
     wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'hidden-button'), seq(0, subs.length))); });
@@ -804,8 +804,8 @@ function show_home_buttons() {
         return A({ href: '#' + category, 'class': 'home_button'},
                  IMG({ id: 'home_' + category,
                        'class': 'button-image',
-                       width: 318, height: 318,
-                       src: random_button_image('home', category, 318, 318, category),
+                       width: 414, height: 414,
+                       src: random_button_image('home', category, 414, 414, category),
                        style: 'visibility: hidden' }));
     }
 
@@ -1012,7 +1012,7 @@ function display_current_image() {
     make_images_navbar();
     make_image_action_buttons();
 
-    var ratio = 1 / Math.max(current_image.width / 648, current_image.height / 648);
+    var ratio = 1 / Math.max(current_image.width / 860, current_image.height / 860);
     var imageproc_ops = "";
 
     if (ratio > 1 && current_directory == 'pixel') {
@@ -1065,7 +1065,7 @@ function display_current_image() {
                 content = "<p>To display this content, the <a href='http://www.apple.com/quicktime/download/' target='_new'>Apple Quicktime plugin</a> is required.</p>";
             } else {
                 content = "<div style='height: 81px'> </div>"
-                    + _QTGenerate("QT_GenerateOBJECTText_XHTML", true, ['/animation/' + current_image.id, '648', '486', '',
+                    + _QTGenerate("QT_GenerateOBJECTText_XHTML", true, ['/animation/' + current_image.id, '860', '486', '',
                                                                         'scale', 'aspect',
                                                                         'showlogo', 'false',
                                                                         'loop', 'true',
@@ -1077,9 +1077,9 @@ function display_current_image() {
                 content = "<p>To display this content, the <a href='http://www.adobe.com/shockwave/download/' target='_new'>Adobe Shockwave plugin</a> is required.</p>";
             } else {
                 content
-                    = '<object width="648" height="648" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
+                    = '<object width="860" height="860" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
                     + ' <param name="movie" value="/animation/' + current_image.id + '" />'
-                    + ' <embed src="/animation/' + current_image.id + '" width="648" height="648">'
+                    + ' <embed src="/animation/' + current_image.id + '" width="860" height="860">'
                     + ' </embed>'
                     + '</object>';
             }
@@ -1089,9 +1089,9 @@ function display_current_image() {
                 content = "<p>To display this content, the <a href='http://www.adobe.com/products/flashplayer/' target='_new'>Adobe Flash Player</a> is required.</p>";
             } else {
                 content
-                    = '<object width="648" height="648" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
+                    = '<object width="860" height="860" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
                     + ' <param name="movie" value="/animation/' + current_image.id + '" />'
-                    + ' <embed src="/animation/' + current_image.id + '" width="648" height="648">'
+                    + ' <embed src="/animation/' + current_image.id + '" width="860" height="860">'
                     + ' </embed>'
                     + '</object>';
             }
@@ -1104,8 +1104,8 @@ function display_current_image() {
     } else {
         show_cue();
 
-	var top_padding = Math.round(648 - display_height) / 2;
-	var left_padding = Math.round(648 - display_width) / 2;
+	var top_padding = Math.round(860 - display_height) / 2;
+	var left_padding = Math.round(860 - display_width) / 2;
         var img = IMG({ width: display_width,
                         height: display_height,
                         style: 'visibility: hidden',

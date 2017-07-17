@@ -4,11 +4,11 @@
 
 ;;; layouter parameters
 
-(defvar *layout-max-width* 648)
-(defvar *layout-max-height* 648)
+(defvar *layout-max-width* 860)
+(defvar *layout-max-height* 860)
 
-(defvar *layout-cell-widths* '(54 72 81 108 162 216 324 648))
-(defvar *layout-cell-heights* '(54 108 162 216 270 324 378 432 486 540 594 648))
+(defvar *layout-cell-widths* '(43 86 172 215 430 860))
+(defvar *layout-cell-heights* '(43 86 172 215))
 (defvar *thumbnails-per-page* 24)
 
 (defun object-name (object)

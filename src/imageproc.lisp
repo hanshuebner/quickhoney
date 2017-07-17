@@ -1,7 +1,7 @@
 (in-package :quickhoney.imageproc)
 
-(defparameter *button-size* 208)
-(defparameter *big-button-size* 318)
+(defparameter *button-size* 276)
+(defparameter *big-button-size* 414)
 
 (cl-interpol:enable-interpol-syntax)
 

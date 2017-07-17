@@ -1,6 +1,13 @@
+html {
+    background: #ccc;
+    display: table;
+    margin: auto;
+}
 
 body {
-	width: 648px;
+    background-color: transparent;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 /* remove dotted borders around links */
@@ -8,10 +15,14 @@ a:active { outline: none }
 a:focus { -moz-outline-style: none }
 
 .page {
+	width: 860px;
         display: none;
         border: 0px;
         margin: 0px;
         padding-top: 116px;
+        padding-left: 20px;
+        padding-right: 20px;
+        background: #fff;
 }
 
 .italic {
@@ -61,7 +72,7 @@ body.contact #contact {
 /* quickhoney website styles */
 
 p {
-	width: 648px;
+	width: 860px;
 }
 
 .text {
@@ -160,7 +171,7 @@ a.debugger {
 	position: absolute;
         top: 68px;
         left: 36px;
-        width: 648px;
+        width: 860px;
 }
 
 #path {
@@ -194,8 +205,7 @@ div#thumbnails {
 	position: relative;
 	padding: 0px;
 	border-width: 0px;
-	width: 648px;
-	height: 648px;
+	width: 860px;
 	top: 25px;
 }
 
@@ -207,14 +217,14 @@ img.inherited_image {
 /* image browser */
 
 div#image_detail {
-	width: 648px;
-	height: 648px;
+	width: 860px;
+	height: 860px;
 	padding-top: 26px;
 }
 
 div#metadata {
 	margin-top: 18px;
-	width: 648px;
+	width: 860px;
 	text-align: center;
 }
 
@@ -244,8 +254,8 @@ a.home_button {
 
 a.home_button img {
         margin-left: 12px;
-	width: 318px;
-	height: 318px;
+	width: 414px;
+	height: 414px;
 }
 
 a.home_button:first-child img {
@@ -264,7 +274,7 @@ a.button {
 }
 
 a.button img {
-    width: 208px;
+    width: 276px;
 }
 
 a.button:first-child img {
@@ -280,16 +290,16 @@ a.button:first-child img {
 }
 
 a#button0, a#button3, a#button6 { left: 0px; }
-a#button1, a#button4, a#button7 { left: 220px; }
-a#button2, a#button5, a#button8 { left: 440px; }
+a#button1, a#button4, a#button7 { left: 292px; }
+a#button2, a#button5, a#button8 { left: 585px; }
 a#button0, a#button1, a#button2 { top: 0px; }
-a#button3, a#button4, a#button5 { top: 220px; }
-a#button6, a#button7, a#button8 { top: 440px; }
+a#button3, a#button4, a#button5 { top: 292px; }
+a#button6, a#button7, a#button8 { top: 585px; }
 
 /* footer */
 
 div#footer {
-	width: 648px;
+	width: 860px;
         margin-top: 8px;
         margin-bottom: 16px;
 	text-align: center;
