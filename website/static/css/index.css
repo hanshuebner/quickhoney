@@ -1,8 +1,15 @@
 html {
-    background: #ccc;
+    background-color: transparent;
     display: table;
     margin: auto;
 }
+
+body.home { background-image: url(/static/images/background-home.png) }
+body.news { background-image: url(/static/images/background-news.png) }
+body.pen { background-image: url(/static/images/background-pen.png) }
+body.vector { background-image: url(/static/images/background-vector.png) }
+body.pixel { background-image: url(/static/images/background-pixel.png) }
+body.contact { background-image: url(/static/images/background-contact.png) }
 
 body {
     background-color: transparent;
