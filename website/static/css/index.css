@@ -127,7 +127,7 @@ a.debugger {
 
 #menu-backdrop {
     width: 900px;
-    height: 100px;
+    height: 150px;
     z-index: 100;
     background-color: white;
     top: 0px;
@@ -160,13 +160,13 @@ a.debugger {
 #menu.contact a#m_contact img.selected { visibility: inherit; }
 #menu.contact a#m_contact img.unselected { visibility: hidden }
 
-#m_home { top: 30px; left: 36px; }
+#m_home { top: 35px; left: 20px; }
 
-#m_pixel { top: 36px; left: 259px; }
-#m_vector { top: 36px; left: 340px; }
-#m_pen { top: 36px; left: 435px; } 
-#m_news { top: 36px; left: 500px; } 
-#m_contact { top: 36px; left: 586px; }
+#m_pixel { top: 60px; left: 443px; }
+#m_vector { top: 60px; left: 524px; }
+#m_pen { top: 60px; left: 619px; } 
+#m_news { top: 60px; left: 684px; } 
+#m_contact { top: 60px; left: 770px; }
 
 #menu {
     position: sticky;
@@ -282,7 +282,7 @@ a.home_button {
 }
 
 a.home_button img {
-    margin-left: 12px;
+    margin-left: 16px;
     width: 414px;
     height: 414px;
 }
@@ -292,7 +292,7 @@ a.home_button:first-child img {
 }
 
 #home div {
-    padding-bottom: 12px;
+    padding-bottom: 16px;
 }
 
 /* directory */
