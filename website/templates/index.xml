@@ -26,7 +26,7 @@
       <div id="menu">
         <div id="menu-backdrop">
           <a onclick="show_home_buttons()" href="#home" id="m_home">
-            <img alt="" class="menu" src="/image/quickhoney" />
+            <img alt="" class="menu" src="/static/images/logo-c.png" />
           </a>
           <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
             <img alt="" class="unselected" src="/image/pixel-unselected" />
