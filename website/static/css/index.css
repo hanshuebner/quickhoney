@@ -60,7 +60,6 @@ body.home #home {
 body.image_browser #image_browser {
     display: block;
     visibility: inherit;
-    padding-bottom: 100px;
 }
 
 body.vector #vector {
@@ -233,6 +232,7 @@ div#thumbnails {
     visibility: inherit;
     position: relative;
     padding: 0px;
+    padding-bottom: 100px;
     border-width: 0px;
     width: 860px;
     top: 25px;
