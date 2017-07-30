@@ -257,11 +257,11 @@ img.inherited_image {
 
 div#image_detail {
     width: 860px;
-    padding-top: 26px;
+    padding-top: 16px;
 }
 
 div#metadata {
-    margin-top: 18px;
+    margin-top: 35px;
     width: 860px;
     text-align: center;
 }
