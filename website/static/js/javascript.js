@@ -17,15 +17,9 @@ var safari = false;
 
 var max_news_items = 50;        /* maximum number of news items to display */
 
-/* directory definitions */
+/* home button definitions */
 
 var home_buttons = ['pixel', 'vector', 'pen', 'news'];
-
-var subcategories = {
-    pixel: ['birdview', 'headon', 'spot', 'icons', 'animation', 'smallworld'],
-    vector: ['icons', 'portraits', 'celebrities', 'blackwhite', 'editorial', 'microspots', 'nudes'],
-    pen: ['honeypen', 'portraits', 'nudes', 'stuff']
-};
 
 /* rich text editor toolbar configuration */
 
@@ -706,7 +700,6 @@ function display_path() {
 
 /* directory - first level category */
 
-var button_images = [];
 var last_category_buttons = {};
 
 function random_button_image(category, subcategory, width, height, cut_category) {
@@ -837,19 +830,6 @@ function reveal_buttons_nicely(images, n) {
     if (n != images.length) {
         window.button_reveal_timer = callLater(0.1, partial(reveal_buttons_nicely, images, n));
     }
-}
-
-function load_button_images(callback) {
-
-    loadJSONDoc('/json-buttons'
-                + '/home/pixel,vector,news,pen'
-                + '/pixel/' + subcategories['pixel'].join(',')
-                + '/vector/' + subcategories['vector'].join(',')
-                + '/pen/' + subcategories['pen'].join(','))
-        .addCallbacks(function(json_result) {
-                button_images = json_result.buttons;
-                callback && callback();
-            }, alert);
 }
 
 function directory(directory_name, subpath, image_name) {
@@ -1300,16 +1280,11 @@ function init_application() {
     log('init_application done');
 }
 
-function button_images_loaded() {
-    log('button_images_loaded');
-    wait_for_images(init_application);
-}
-
 function init() {
     log('init');
     show_cue();
 
-    load_button_images(button_images_loaded);
+    wait_for_images(init_application);
 }
 
 function jump_to(path) {

@@ -269,7 +269,7 @@
 	     (:td (:princ-safe text)))))))
        t t))))
   
-(defclass json-buttons-handler (prefix-handler quickhoney-image-dependent-handler)
+(defclass desktop-config-js-handler (prefix-handler quickhoney-image-dependent-handler)
   ())
 
 (defun preproduced-buttons (category subcategory)
@@ -299,35 +299,59 @@
                           for image in images
                           when (or (< i 10)
                                    (> (blob-timestamp image) since))
-                          collect image)))))
+                            collect image)))))
 
-(defmethod handle ((handler json-buttons-handler))
-  (with-json-response ()
-    (yason:with-object-element ("buttons")
-      (yason:with-object ()
-        (loop
-           for (category subcategories-string) on (decoded-handler-path handler) by #'cddr
-           do (dolist (subcategory (split "," subcategories-string))
-                (yason:with-object-element ((format nil "~(~A/~A~)" category subcategory))
-                  (yason:with-array ()
-                    ;; For each subcategory, an array of buttons is
-                    ;; generated.  The first element of the array is
-                    ;; either "buttons" or "images", indicating
-                    ;; whether the object ids that follow represent
-                    ;; preproduced buttons or images.  Preproduced
-                    ;; buttons are already in the required 208x208
-                    ;; format and come with the caption rendered into
-                    ;; them.
-                    (let ((category (make-keyword-from-string category))
-                          (subcategory (make-keyword-from-string subcategory)))
-                      (destructuring-bind (&optional type &rest images)
-                          (or (preproduced-buttons category subcategory)
-                              (newest-images category subcategory :include-explicit nil)
-                              (warn "No images for ~A ~A found" category subcategory))
-                        (yason:encode-array-element type)
-                        (dolist (image (or images
-                                           (list (store-image-with-name "button-dummy"))))
-                          (yason:encode-array-element (store-object-id image)))))))))))))
+(defparameter *home-buttons* '("pixel" "vector" "news" "pen"))
+(defparameter *categories*
+  '(("pixel" "birdview" "headon" "spot" "icons" "animation" "smallworld")
+    ("vector" "icons" "portraits" "celebrities" "blackwhite" "editorial" "microspots" "nudes")
+    ("pen" "honeypen" "portraits" "nudes" "stuff")))
+
+(defun make-subcategories-json ()
+  (yason:with-output-to-string* ()
+    (yason:with-object ()
+      (loop for (category . subcategories) in *categories*
+            do (yason:with-object-element (category)
+                 (yason:with-array ()
+                   (dolist (subcategory subcategories)
+                     (yason:encode-array-element subcategory))))))))
+
+(defparameter *button-definitions*
+  (cons (cons "home" *home-buttons*)
+        *categories*))
+
+(defun make-buttons-json ()
+  (yason:with-output-to-string* ()
+    (yason:with-object ()
+      (loop
+        for (category . subcategories) in *button-definitions*
+        do (dolist (subcategory subcategories)
+             (yason:with-object-element ((format nil "~(~A/~A~)" category subcategory))
+               (yason:with-array ()
+                 ;; For each subcategory, an array of buttons is
+                 ;; generated.  The first element of the array is
+                 ;; either "buttons" or "images", indicating
+                 ;; whether the object ids that follow represent
+                 ;; preproduced buttons or images.  Preproduced
+                 ;; buttons are already in the required 208x208
+                 ;; format and come with the caption rendered into
+                 ;; them.
+                 (let ((category (make-keyword-from-string category))
+                       (subcategory (make-keyword-from-string subcategory)))
+                   (destructuring-bind (&optional type &rest images)
+                       (or (preproduced-buttons category subcategory)
+                           (newest-images category subcategory :include-explicit nil)
+                           (warn "No images for ~A ~A found" category subcategory))
+                     (yason:encode-array-element type)
+                     (dolist (image (or images
+                                        (list (store-image-with-name "button-dummy"))))
+                       (yason:encode-array-element (store-object-id image))))))))))))
+
+(defmethod handle ((handler desktop-config-js-handler))
+  (with-http-response (:content-type "application/javascript")
+    (with-output-to-string (out)
+      (format out "var button_images = ~A;~%" (make-buttons-json))
+      (format out "var subcategories = ~A;~%" (make-subcategories-json)))))
 
 (defclass upload-image-handler (admin-only-handler prefix-handler)
   ())

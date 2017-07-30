@@ -26,12 +26,13 @@
        ("/twitter-oauth-callback" twitter-oauth:callback-handler)
        ("/register-twitter-account" twitter-oauth:register-twitter-account-handler)
 
+       ("/desktop-config.js" desktop-config-js-handler)
+
        ("/json-image-query" json-image-query-handler)
        ("/json-image-info" json-image-info-handler)
        ("/json-login" json-login-handler)
        ("/json-logout" json-logout-handler)
        ("/json-clients" json-clients-handler)
-       ("/json-buttons" json-buttons-handler)
        ("/json-edit-image" json-edit-image-handler)
        ("/json-edit-news" json-edit-news-item-handler)
        ("/json-news-archive" json-news-archive-handler)
