@@ -67,6 +67,9 @@
       </div>
 
       <div id="home" class="page">
+        ©1998-2017 QuickHoney Nana Rausch &amp; Peter Stemmler. No part of
+        this website may be reproduced in any manner without permission.
+        Programming by Hübner/Odendahl
       </div>
 
       <div id="image_browser" class="page">
@@ -142,12 +145,6 @@
           <h1>Clients</h1>
           <p id="client_names"> </p>
         </div>
-      </div>
-
-      <div id="footer" class="text">
-        ©1998-2017 QuickHoney Nana Rausch &amp; Peter Stemmler. No part of
-        this website may be reproduced in any manner without permission.
-        Programming by Hübner/Odendahl
       </div>
 
       <!-- CMS elements -->

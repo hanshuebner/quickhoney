@@ -812,7 +812,12 @@ function show_home_buttons() {
     var buttons = [ DIV(null, map(make_category_button, home_buttons.slice(0, 2))),
                     DIV(null, map(make_category_button, home_buttons.slice(2, 4))) ];
 
-    replaceChildNodes('home', buttons);
+    replaceChildNodes('home',
+                      buttons,
+                      DIV({ class: 'footer' },
+                          '©1998-2017 QuickHoney Nana Rausch & Peter Stemmler. No part of ',
+                          'this website may be reproduced in any manner without permission.  ',
+                          'Programming by Hübner/Odendahl'));
 
     wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'home_'), home_buttons)); });
 }
@@ -1362,8 +1367,6 @@ function fade_out_page(to, callback) {
 		  duration: duration});
     fade('image_browser', {to: to,
 			  duration: duration});
-    fade('footer', {to: to,
-		    duration: duration});
     setTimeout(callback, duration * 1000);
 }
 

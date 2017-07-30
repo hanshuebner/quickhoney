@@ -20,6 +20,8 @@ body {
 
 #content {
     position: relative;
+    height: 100%;
+    background-color: white;
 }
 
 /* remove dotted borders around links */
@@ -58,6 +60,7 @@ body.home #home {
 body.image_browser #image_browser {
     display: block;
     visibility: inherit;
+    padding-bottom: 100px;
 }
 
 body.vector #vector {
@@ -84,9 +87,6 @@ body.contact #contact {
 
 p {
     width: 860px;
-}
-
-.text {
 }
 
 /* debugger */
@@ -327,12 +327,12 @@ a#button6, a#button7, a#button8 { top: 585px; }
 
 /* footer */
 
-div#footer {
-    width: 860px;
-    margin-top: 8px;
+div.footer {
+    margin-top: 35px;
     margin-bottom: 16px;
+    margin-left: 15em;
+    margin-right: 15em;
     text-align: center;
-    visibility: hidden;
 }
 
 /* cue bar */
@@ -645,7 +645,7 @@ a#checkout {
     background-color: white;
 }
 
-#loading #footer {
+#loading {
     padding-top: 30px;
     font-size: 70%;
 }
