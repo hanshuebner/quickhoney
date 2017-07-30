@@ -26,7 +26,7 @@
        ("/twitter-oauth-callback" twitter-oauth:callback-handler)
        ("/register-twitter-account" twitter-oauth:register-twitter-account-handler)
 
-       ("/desktop-config.js" desktop-config-js-handler)
+       ("/category-config.js" category-config-js-handler)
 
        ("/json-image-query" json-image-query-handler)
        ("/json-image-info" json-image-info-handler)

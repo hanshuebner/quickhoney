@@ -269,7 +269,7 @@
 	     (:td (:princ-safe text)))))))
        t t))))
   
-(defclass desktop-config-js-handler (prefix-handler quickhoney-image-dependent-handler)
+(defclass category-config-js-handler (prefix-handler quickhoney-image-dependent-handler)
   ())
 
 (defun preproduced-buttons (category subcategory)
@@ -347,7 +347,7 @@
                                         (list (store-image-with-name "button-dummy"))))
                        (yason:encode-array-element (store-object-id image))))))))))))
 
-(defmethod handle ((handler desktop-config-js-handler))
+(defmethod handle ((handler category-config-js-handler))
   (with-http-response (:content-type "application/javascript")
     (with-output-to-string (out)
       (format out "var button_images = ~A;~%" (make-buttons-json))
