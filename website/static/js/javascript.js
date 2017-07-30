@@ -1119,6 +1119,8 @@ function display_current_image() {
         }
     }
 
+    window.scrollTo(0, 0);
+
     if (content) {
         $("image_detail").innerHTML = content;
     } else {
