@@ -85,12 +85,15 @@
         <div id="browse" class="subform">
           <div class="navbar">
             <div class="left">
-              <span id="image_navbar" class="text"> </span>
-              <span id="full_click" class="text"> </span>
+              <span id="previous_image" class="text"> </span>
             </div>
             <div class="right">
-              <span id="back_to_results"><a id="back_to_results_link" href="#">back to results</a></span>
+              <span id="next_image" class="text"> </span>
+            </div>
+            <div class="center">
+              <span id="full_click" class="text"> </span>
               <span id="result_image_count"> </span>
+              <span id="back_to_results"><a id="back_to_results_link" href="#">back to results</a></span>
             </div>
           </div>
 

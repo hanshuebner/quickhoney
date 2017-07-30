@@ -961,23 +961,21 @@ function make_images_navbar() {
     var result_links = [];
 
     if (query_position > 0) {
-       push(result_links,
-             internal_link(current_directory + '/' + current_subdirectory + '/' + query_result[query_position - 1].name,
-                           "<<"));
+        replaceChildNodes("previous_image",
+                          internal_link(current_directory + '/' + current_subdirectory + '/' + query_result[query_position - 1].name,
+                                        "<<"));
     } else {
-       push(result_links, "<<");
+        replaceChildNodes("previous_image", "<<");
     }
-    push(result_links, " ");
     if (query_position < (query_result.length - 1)) {
-       push(result_links,
-             internal_link(current_directory + '/' + current_subdirectory + '/' + query_result[query_position + 1].name,
-                           ">>"));
+        replaceChildNodes("next_image",
+                          internal_link(current_directory + '/' + current_subdirectory + '/' + query_result[query_position + 1].name,
+                                        ">>"));
     } else {
-       push(result_links, ">>");
+        replaceChildNodes("next_image", ">>");
     }
     $('back_to_results_link').href = '#' + current_directory + '/' + current_subdirectory;
 
-    replaceChildNodes("image_navbar", result_links);
     replaceChildNodes("result_image_count", "result " + (query_position + 1) + " of " + query_result.length);
 }
 
@@ -1076,7 +1074,7 @@ function display_current_image() {
 	replaceChildNodes("full_click", A({ href: '#' + link, onclick: enlarge },
                                           "full size"));
     } else {
-	replaceChildNodes("full_click");
+	replaceChildNodes("full_click", SPAN({ style: "visibility: hidden" }, "full size"));
     }
 
     var content;
@@ -1133,7 +1131,7 @@ function display_current_image() {
                         style: 'visibility: hidden',
                         src: '/image/' + encodeURI(current_image.name) + imageproc_ops });
 
-	var divNode = DIV({ style: 'position: relative; margin-top: ' + top_padding + 'px; margin-left: ' + left_padding + 'px' },
+	var divNode = DIV({ style: 'position: relative; margin-left: ' + left_padding + 'px' },
                           may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img);
         replaceChildNodes('image_detail', divNode);
         wait_for_images(function () {

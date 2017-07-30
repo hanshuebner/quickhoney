@@ -245,9 +245,18 @@ img.inherited_image {
 
 /* image browser */
 
+.center {
+    margin: 0 auto;
+    width: 40%;
+}
+
+#result_image_count {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
 div#image_detail {
     width: 860px;
-    height: 860px;
     padding-top: 26px;
 }
 
@@ -258,7 +267,7 @@ div#metadata {
 }
 
 #full_click {
-    margin-left: 10px;
+    margin-left: 3em;
 }
 
 /* contact */
