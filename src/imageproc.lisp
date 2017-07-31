@@ -76,7 +76,8 @@
          (radius (parse-integer radius)))
     (copy-image input-image button-image
                 (floor (- (image-width input-image) cutout-width) 2)
-                (if (eq :pixel category)
+                (if (or (eq :pixel category)
+                        (> button-width button-height))
                     (floor (- (image-height input-image) cutout-height) 2)
                     0)
                 0 0
