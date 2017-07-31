@@ -49,9 +49,9 @@
 (defmethod image-to-json ((image quickhoney-image))
   (yason:with-object ()
     (yason:encode-object-element "class"
-                                (string-downcase (cl-ppcre:regex-replace "^QUICKHONEY-"
-                                                                         (symbol-name (class-name (class-of image)))
-                                                                         "")))
+                                 (string-downcase (cl-ppcre:regex-replace "^QUICKHONEY-"
+                                                                          (symbol-name (class-name (class-of image)))
+                                                                          "")))
     (yason:encode-object-element "name" (store-image-name image))
     (when (quickhoney-image-category image)
       (yason:encode-object-element "category" (quickhoney-image-category image))
@@ -62,17 +62,9 @@
     (yason:encode-object-element "width" (store-image-width image))
     (yason:encode-object-element "height" (store-image-height image))
     (yason:encode-object-element "client" (or (quickhoney-image-client image) ""))
-    (let ((product (quickhoney-image-pdf-product image)))
-      (when product
-	(when (or (quickhoney-product-active product) (admin-p (bknr-session-user)))
-	  (yason:encode-object-element "shop_file" (store-object-id product))
-	  (yason:encode-object-element "shop_price" (quickhoney-product-price product))
-	  (yason:encode-object-element "shop_size" (blob-size product))
-	  (yason:encode-object-element "shop_active" (quickhoney-product-active product)))
-	))
     (when (typep image 'quickhoney-animation-image)
       (yason:encode-object-element "animation_type"
-                             (image-content-type (blob-mime-type (quickhoney-animation-image-animation image)))))
+                                   (image-content-type (blob-mime-type (quickhoney-animation-image-animation image)))))
     (when (quickhoney-image-spider-keywords image)
       (yason:encode-object-element "spider_keywords" (quickhoney-image-spider-keywords image)))
     (when (quickhoney-image-description image)
@@ -87,14 +79,14 @@
     (yason:with-object-element ("image")
       (image-to-json image))))
 
-(defclass json-image-query-handler (object-handler quickhoney-image-dependent-handler)
+(defclass json-layout-query-handler (object-handler quickhoney-image-dependent-handler)
   ())
 
 (defun images-in-category-sorted-by-time (cat-sub)
   (sort (copy-list (images-in-category cat-sub))
         #'> :key #'blob-timestamp))
 
-(defmethod object-handler-get-object ((handler json-image-query-handler))
+(defmethod object-handler-get-object ((handler json-layout-query-handler))
   (images-in-category-sorted-by-time (mapcar #'make-keyword-from-string (decoded-handler-path handler))))
 
 (defmethod layout-to-json ((layout layout))
@@ -108,7 +100,7 @@
             (dolist (image (row-images row))
               (image-to-json image))))))))
 
-(defmethod handle-object ((handler json-image-query-handler) images)
+(defmethod handle-object ((handler json-layout-query-handler) images)
   (with-json-response ()
     (yason:with-object-element ("queryResult")
       (with-query-params (layout)
@@ -116,6 +108,19 @@
                                          (:smallworld 'quickhoney-name-layout)
                                          (t 'quickhoney-standard-layout))
                                        :objects images))))))
+
+(defclass json-image-query-handler (object-handler quickhoney-image-dependent-handler)
+  ())
+
+(defmethod object-handler-get-object ((handler json-image-query-handler))
+  (images-in-category-sorted-by-time (mapcar #'make-keyword-from-string (decoded-handler-path handler))))
+
+(defmethod handle-object ((handler json-image-query-handler) images)
+  (with-json-response ()
+    (yason:with-object-element ("queryResult")
+      (yason:with-array ()
+        (dolist (image images)
+          (image-to-json image))))))
 
 (defclass json-login-handler (page-handler)
   ())

@@ -29,7 +29,7 @@ function gotoCategory(category)
     $('#category')
         .empty()
         .append(subcategories[category].map(function (subcategory) {
-            with(DOMBuilder.dom) {
+            with (DOMBuilder.dom) {
                 return A({ href: '#' + category + '/' + subcategory },
                          IMG({ 'class': 'button',
                                src: random_button_image(category, subcategory, screenWidth(), 120, subcategory),
@@ -39,10 +39,47 @@ function gotoCategory(category)
         }));
 }
 
+function makeImageDisplay(image)
+{
+    console.log('image', image);
+    var ratio = screenWidth() / image.width;
+    var width = Math.round(image.width * ratio);
+    var height = Math.round(image.height * ratio);
+    with (DOMBuilder.dom) {
+        return IMG({ src: '/static/images/transparent.gif',
+                     'data-src': '/image/' + image.name + '/cell,,' + width + ',' + height,
+                     width: width,
+                     height: height});
+    }
+}
+
+function reveal(element)
+{
+    var url = element.attr('data-src');
+    if (url) {
+        console.log('reveal', url);
+        element
+            .attr('src', url)
+            .removeAttr('data-src');
+    }
+}
+
 function gotoSubcategory(category, subcategory)
 {
-    setPage('subcategory', category);
-    console.log('subcategory', subcategory);
+    setPage('images', category);
+    console.log('images', subcategory);
+    $('#images').empty();
+    $.get('/json-image-query/' + category + '/' + subcategory,
+          function (data) {
+              console.log(data.queryResult);
+              $('#images')
+                  .append(data.queryResult.map(makeImageDisplay));
+              $('#images img')
+                  .waypoint(function () {
+                      reveal($(this.element).next().next());
+                  });
+              reveal($('#images img').first());
+          });
 }
 
 function news()

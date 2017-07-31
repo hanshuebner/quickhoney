@@ -28,6 +28,7 @@
 
        ("/category-config.js" category-config-js-handler)
 
+       ("/json-layout-query" json-layout-query-handler)
        ("/json-image-query" json-image-query-handler)
        ("/json-image-info" json-image-info-handler)
        ("/json-login" json-login-handler)

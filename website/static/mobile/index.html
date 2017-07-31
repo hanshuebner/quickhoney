@@ -19,17 +19,19 @@
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <nav class="menu">
-      <a class="open-menu" href="#"><img src="/static/images/hamburger.png"/></a>
-      <a href="#home"><img src="/static/images/logo-a.png"/></a>
-      <menu>
-        <li><a href="#pixel"><img src="/image/pixel-unselected"/></a></li>
-        <li><a href="#vector"><img src="/image/vector-unselected"/></a></li>
-        <li><a href="#pen"><img src="/image/pen-unselected"/></a></li>
-        <li><a href="#news"><img src="/image/news-unselected"/></a></li>
-        <li><a href="#contact"><img src="/image/contact-unselected"/></a></li>
-      </menu>
-    </nav>
+    <div class="header">
+      <nav class="menu">
+        <a class="open-menu" href="#"><img src="/static/images/hamburger.png"/></a>
+        <a href="#home"><img src="/static/images/logo-a.png"/></a>
+        <menu>
+          <li><a href="#pixel"><img src="/image/pixel-unselected"/></a></li>
+          <li><a href="#vector"><img src="/image/vector-unselected"/></a></li>
+          <li><a href="#pen"><img src="/image/pen-unselected"/></a></li>
+          <li><a href="#news"><img src="/image/news-unselected"/></a></li>
+          <li><a href="#contact"><img src="/image/contact-unselected"/></a></li>
+        </menu>
+      </nav>
+    </div>
 
     <div id="home" class="page">
       <div><a href="#pixel"><img class="pixel button" height="120" src="/static/images/transparent.gif"/></a></div>
@@ -42,7 +44,7 @@
     <div id="category" class="page">
     </div>
 
-    <div id="subcategory" class="page">
+    <div id="images" class="page">
     </div>
 
     <div id="news" class="page">
@@ -53,6 +55,7 @@
       <script src="js/plugins.js"></script>
       <script src="js/path.min.js"></script>
       <script src="/static/js/DOMBuilder.min.js"></script>
+      <script src="/static/js/jquery.waypoints.min.js"></script>
       <script src="/category-config.js"></script>
       <script src="/static/js/common.js"></script>
       <script src="js/main.js"></script>

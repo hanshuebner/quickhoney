@@ -10,3 +10,4 @@ Links
 http://hammerjs.github.io/
 https://github.com/mtrpcic/pathjs
 https://github.com/insin/DOMBuilder
+http://imakewebthings.com/waypoints/

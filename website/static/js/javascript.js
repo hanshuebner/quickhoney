@@ -563,7 +563,7 @@ function query_imagedb(directory, subdirectory, force) {
 
     } else {
         show_cue();
-	loadJSONDoc("/json-image-query/" + key)
+	loadJSONDoc("/json-layout-query/" + key)
             .addCallbacks(partial(process_query_result, key), alert);
     }
 }
