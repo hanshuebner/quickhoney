@@ -3,6 +3,8 @@ function setSection(name)
 {
     console.log('section', name);
     $('body').attr('class', name);
+    $('.section').css('visibility', 'hidden');
+    $('#' + name).css('visibility', 'visible');
 }
 
 function home()
