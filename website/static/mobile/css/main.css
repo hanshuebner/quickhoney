@@ -108,10 +108,13 @@ menu, ul {
     padding: 0;
 }
 
-body.home nav img { background-color: #953cfd; }
-body.pixel nav img { background-color: #ff00ff; }
+body.home nav img { background-color: #953cfd }
+body.pixel nav img { background-color: #ff00ff }
+body.pixel .image-info { border-color: #ff00ff; }
 body.vector nav img { background-color: #00ccff; }
+body.vector .image-info { border-color: #00ccff; }
 body.pen nav img { background-color: #ff0000; }
+body.pen .image-info { border-color: #ff0000; }
 body.news nav img { background-color: #30be01; }
 body.contact nav img { background-color: #ffa200; }
 
@@ -128,6 +131,7 @@ nav menu {
     padding: 4px;
     box-shadow: 0 0 10px #888888;
     visibility: hidden;
+    z-index: 100;
 }
 
 nav menu li {
@@ -162,8 +166,20 @@ nav .open-menu {
     margin: 0;
 }
 
-#images img {
+.image-display {
+    position: relative;
     margin-bottom: 20px;
+}
+
+.image-info {
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid black;
 }
 
 /* ==========================================================================

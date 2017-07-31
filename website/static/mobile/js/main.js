@@ -41,22 +41,47 @@ function gotoCategory(category)
         }));
 }
 
+function toggleImageInfo(e)
+{
+    var image = e.data;
+    console.log('show info', e, image);
+    var imageInfo = $(e.delegateTarget).find('.image-info');
+    if (imageInfo.length) {
+        imageInfo.remove();
+    } else {
+        with (DOMBuilder.dom) {
+            var info = [];
+            if (image.description) {
+                info = info.concat([image.description, BR()]);
+            }
+            info = info.concat(['Image name: ', image.name, BR()]);
+            if (image.client) {
+                info = info.concat(['Client: ', image.client]);
+            }
+            $(e.delegateTarget).append(DIV({ 'class': 'image-info' }, info));
+        }
+        e.delegateTarget.scrollIntoView(false);
+    }
+}
+
 function makeImageDisplay(image)
 {
     var ratio = screenWidth() / image.width;
     var width = Math.round(image.width * ratio);
     var height = Math.round(image.height * ratio);
     with (DOMBuilder.dom) {
-        return IMG({ src: '/static/images/transparent.gif',
-                     'data-src': '/image/' + image.name + '/cell,,' + width + ',' + height,
-                     width: width,
-                     height: height});
+        return $(DIV({ 'class': 'image-display' },
+                     IMG({ src: '/static/images/transparent.gif',
+                           'data-src': '/image/' + image.name + '/cell,,' + width + ',' + height,
+                           width: width,
+                           height: height})))
+            .on('click', image, toggleImageInfo);
     }
 }
 
 $.fn.reveal = function ()
 {
-    return this.each(function () {
+    return this.find('img').each(function () {
         var url = $(this).attr('data-src');
         if (url) {
             console.log('reveal', url);
@@ -76,11 +101,11 @@ function gotoSubcategory(category, subcategory)
           function (data) {
               $('#images')
                   .append(data.queryResult.map(makeImageDisplay));
-              $('#images img')
+              $('#images div')
                   .waypoint(function () {
                       $(this.element).nextAll().slice(0, preloadCount + 1).reveal();
                   });
-              $('#images img').slice(0, preloadCount + 1).reveal();
+              $('#images div').slice(0, preloadCount + 1).reveal();
           });
 }
 
