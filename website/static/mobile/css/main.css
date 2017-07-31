@@ -147,11 +147,11 @@ nav .open-menu {
     min-height: 300px;
 }
 
-.section {
-    visibility: hidden;
+.page {
+    display: none;
 }
 
-#home div {
+.button {
     display: inline-block;
     margin-bottom: 16px;
 }

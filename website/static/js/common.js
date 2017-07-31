@@ -15,7 +15,7 @@ function random_button_image(category, subcategory, width, height, cut_category)
         var type = image_ids[0];
         var ids = image_ids.slice(1);
         var image_id = ids[Math.floor(Math.random() * ids.length)];
-        if (last_category_buttons[category] && findValue(ids, last_category_buttons[category]) != -1) {
+        if (last_category_buttons[category] && ids.indexOf(last_category_buttons[category]) != -1) {
             image_id = last_category_buttons[category];
             last_category_buttons[category] = null;
         }

@@ -1,37 +1,58 @@
 
-function setSection(name)
+function setPage(name, category)
 {
-    console.log('section', name);
-    $('body').attr('class', name);
-    $('.section').css('visibility', 'hidden');
-    $('#' + name).css('visibility', 'visible');
+    console.log('page', name, category);
+    $('body').attr('class', category || name);
+    $('.page').css('display', 'none');
+    $('#' + name).css('display', 'block');
+}
+
+function screenWidth()
+{
+    return $(window).width() - 40;
 }
 
 function home()
 {
-    setSection('home');
-    var screenWidth = $(window).width() - 40;
-    ['pixel', 'vector', 'pen', 'news'].forEach(function (section) {
-        $('#home .' + section)
+    setPage('home');
+    ['pixel', 'vector', 'pen', 'news'].forEach(function (page) {
+        $('#home .' + page)
             .attr('src',
-                  random_button_image('home', section, screenWidth, 120, section))
-            .attr('width', screenWidth);
+                  random_button_image('home', page, screenWidth(), 120, page))
+            .attr('width', screenWidth());
     });
 }
 
 function gotoCategory(category)
 {
-    setSection(category);
+    setPage('category', category);
+    $('#category')
+        .empty()
+        .append(subcategories[category].map(function (subcategory) {
+            with(DOMBuilder.dom) {
+                return A({ href: '#' + category + '/' + subcategory },
+                         IMG({ 'class': 'button',
+                               src: random_button_image(category, subcategory, screenWidth(), 120, subcategory),
+                               width: screenWidth(),
+                               height: 120 }));
+            }
+        }));
+}
+
+function gotoSubcategory(category, subcategory)
+{
+    setPage('subcategory', category);
+    console.log('subcategory', subcategory);
 }
 
 function news()
 {
-    setSection('news');
+    setPage('news');
 }
 
 function contact()
 {
-    setSection('contact');
+    setPage('contact');
 }
 
 function openMenu(e)
@@ -53,9 +74,14 @@ function main()
     $('body').on('click', closeMenu);
 
     Path.map('#home').to(home);
-    Path.map('#pixel').to(function () { gotoCategory('pixel'); });
-    Path.map('#vector').to(function () { gotoCategory('vector'); });
-    Path.map('#pen').to(function () { gotoCategory('pen'); });
+    ['pixel', 'vector', 'pen'].forEach(function (category) {
+        Path.map('#' + category).to(function () {
+            gotoCategory(category);
+        });
+        Path.map('#' + category + '/:subcategory').to(function () {
+            gotoSubcategory(category, this.params['subcategory']);
+        });
+    });
     Path.map('#news').to(news);
     Path.map('#contact').to(contact);
     Path.listen();
