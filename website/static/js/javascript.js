@@ -995,26 +995,7 @@ function display_current_image() {
 	appendChildNodes("metadata", "Client: ", current_image.client, BR());
     }
 
-    appendChildNodes("metadata", DIV({class: 'social-icons'},
-                                     A({ href: '#',
-                                         title: 'Share by Email' },
-                                       IMG({src: '/static/images/social/' + current_directory + '-mail.png'})),
-                                     A({ href: 'https://www.facebook.com/sharer/sharer.php?u=http://quickhoney.com/' + link,
-                                         title: 'Share on Facebook',
-                                         target: '_new'},
-                                       IMG({src: '/static/images/social/' + current_directory + '-facebook.png'})),
-                                     A({ href: 'https://twitter.com/home?status=http%3A//quickhoney.com/' + link,
-                                         title: 'Tweet',
-                                         target: '_new'},
-                                       IMG({src: '/static/images/social/' + current_directory + '-twitter.png'})),
-                                     A({ href: 'http://tumblr.com/widgets/share/tool?canonicalUrl=http://quickhoney.com/' + link,
-                                         title: 'Share on Tumblr',
-                                         target: '_new'},
-                                       IMG({src: '/static/images/social/' + current_directory + '-tumblr.png'})),
-                                     A({ href: 'https://pinterest.com/pin/create/button/?url=http://quickhoney.com/' + link + '&media=http://quickhoney.com/image/' + current_image.name + '&description=',
-                                         title: 'Share on Pinterest',
-                                         target: '_new'},
-                                       IMG({src: '/static/images/social/' + current_directory + '-pinterest.png'}))));
+    appendChildNodes("metadata", makeSocialIcons(query_result[query_position]));
 
     if (may_enlarge) {
 	replaceChildNodes("full_click", A({ href: '#' + link, onclick: enlarge },

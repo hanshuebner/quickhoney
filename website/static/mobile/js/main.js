@@ -44,7 +44,6 @@ function gotoCategory(category)
 function toggleImageInfo(e)
 {
     var image = e.data;
-    console.log('show info', e, image);
     var imageInfo = $(e.delegateTarget).find('.image-info');
     if (imageInfo.length) {
         imageInfo.remove();
@@ -58,10 +57,13 @@ function toggleImageInfo(e)
             if (image.client) {
                 info = info.concat(['Client: ', image.client]);
             }
-            $(e.delegateTarget).append(DIV({ 'class': 'image-info' }, info));
+            $(e.delegateTarget).append(DIV({ 'class': 'image-info' },
+                                           info,
+                                           makeSocialIcons(image)));
         }
         e.delegateTarget.scrollIntoViewIfNeeded();
     }
+    e.stopPropagation();
 }
 
 function makeImageDisplay(image)
