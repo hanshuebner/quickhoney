@@ -1,4 +1,6 @@
 
+var preloadCount = 5;
+
 function setPage(name, category)
 {
     console.log('page', name, category);
@@ -41,7 +43,6 @@ function gotoCategory(category)
 
 function makeImageDisplay(image)
 {
-    console.log('image', image);
     var ratio = screenWidth() / image.width;
     var width = Math.round(image.width * ratio);
     var height = Math.round(image.height * ratio);
@@ -53,15 +54,17 @@ function makeImageDisplay(image)
     }
 }
 
-function reveal(element)
+$.fn.reveal = function ()
 {
-    var url = element.attr('data-src');
-    if (url) {
-        console.log('reveal', url);
-        element
-            .attr('src', url)
-            .removeAttr('data-src');
-    }
+    return this.each(function () {
+        var url = $(this).attr('data-src');
+        if (url) {
+            console.log('reveal', url);
+            $(this)
+                .attr('src', url)
+                .removeAttr('data-src');
+        }
+    });
 }
 
 function gotoSubcategory(category, subcategory)
@@ -71,14 +74,13 @@ function gotoSubcategory(category, subcategory)
     $('#images').empty();
     $.get('/json-image-query/' + category + '/' + subcategory,
           function (data) {
-              console.log(data.queryResult);
               $('#images')
                   .append(data.queryResult.map(makeImageDisplay));
               $('#images img')
                   .waypoint(function () {
-                      reveal($(this.element).next().next());
+                      $(this.element).nextAll().slice(0, preloadCount + 1).reveal();
                   });
-              reveal($('#images img').first());
+              $('#images img').slice(0, preloadCount + 1).reveal();
           });
 }
 
