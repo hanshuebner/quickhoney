@@ -60,7 +60,7 @@ function toggleImageInfo(e)
             }
             $(e.delegateTarget).append(DIV({ 'class': 'image-info' }, info));
         }
-        e.delegateTarget.scrollIntoView(false);
+        e.delegateTarget.scrollIntoViewIfNeeded();
     }
 }
 
