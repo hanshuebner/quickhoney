@@ -59,7 +59,7 @@ function toggleImageInfo(e)
             }
             $(e.delegateTarget).append(DIV({ 'class': 'image-info' },
                                            info,
-                                           makeSocialIcons(image)));
+                                           makeSocialIcons(image, true)));
         }
         e.delegateTarget.scrollIntoViewIfNeeded();
     }

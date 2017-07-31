@@ -60,29 +60,30 @@ function random_button_image(category, subcategory, width, height, cut_category)
     }
 }
 
-function makeSocialIcons(image)
+function makeSocialIcons(image, mobile)
 {
     var link = image.category + '/' + image.subcategory + '/' + encodeURI(image.name);
+    var mobile = mobile ? '-mobile' : '';
     with (DOMBuilder.dom) {
-        return DIV({class: 'social-icons'},
+        return DIV({ 'class': 'social-icons' },
                    A({ href: '#',
                        title: 'Share by Email' },
-                     IMG({src: '/static/images/social/' + image.category + '-mail.png'})),
+                     IMG({src: '/static/images/social/' + image.category + mobile + '-mail.png'})),
                    A({ href: 'https://www.facebook.com/sharer/sharer.php?u=http://quickhoney.com/' + link,
                        title: 'Share on Facebook',
                        target: '_new'},
-                     IMG({src: '/static/images/social/' + image.category + '-facebook.png'})),
+                     IMG({src: '/static/images/social/' + image.category + mobile + '-facebook.png'})),
                    A({ href: 'https://twitter.com/home?status=http%3A//quickhoney.com/' + link,
                        title: 'Tweet',
                        target: '_new'},
-                     IMG({src: '/static/images/social/' + image.category + '-twitter.png'})),
+                     IMG({src: '/static/images/social/' + image.category + mobile + '-twitter.png'})),
                    A({ href: 'http://tumblr.com/widgets/share/tool?canonicalUrl=http://quickhoney.com/' + link,
                        title: 'Share on Tumblr',
                        target: '_new'},
-                     IMG({src: '/static/images/social/' + image.category + '-tumblr.png'})),
+                     IMG({src: '/static/images/social/' + image.category + mobile + '-tumblr.png'})),
                    A({ href: 'https://pinterest.com/pin/create/button/?url=http://quickhoney.com/' + link + '&media=http://quickhoney.com/image/' + image.name + '&description=',
                        title: 'Share on Pinterest',
                        target: '_new'},
-                     IMG({src: '/static/images/social/' + image.category + '-pinterest.png'})));
+                     IMG({src: '/static/images/social/' + image.category + mobile + '-pinterest.png'})));
     }
 }

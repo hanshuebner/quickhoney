@@ -182,6 +182,14 @@ nav .open-menu {
     border: 1px solid black;
 }
 
+.social-icons {
+    margin-top: 16px;
+}
+
+.social-icons a {
+    margin-right: 20px;
+}
+
 /* ==========================================================================
    Helper classes
    ========================================================================== */
