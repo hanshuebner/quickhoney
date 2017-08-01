@@ -14,13 +14,19 @@ function screenWidth()
     return $(window).width() - 40;
 }
 
+function homeButtonHeight()
+{
+    return Math.floor(($(window).height() - 170) / 4);
+}
+
 function home()
 {
+    $('#home .button').css('height', homeButtonHeight());
     setPage('home');
     ['pixel', 'vector', 'pen', 'news'].forEach(function (page) {
         $('#home .' + page)
             .attr('src',
-                  random_button_image('home', page, screenWidth(), 120, page))
+                  random_button_image('home', page, screenWidth(), homeButtonHeight(), page))
             .attr('width', screenWidth());
     });
 }
@@ -34,9 +40,9 @@ function gotoCategory(category)
             with (DOMBuilder.dom) {
                 return A({ href: '#' + category + '/' + subcategory },
                          IMG({ 'class': 'button',
-                               src: random_button_image(category, subcategory, screenWidth(), 120, subcategory),
+                               src: random_button_image(category, subcategory, screenWidth(), homeButtonHeight(), subcategory),
                                width: screenWidth(),
-                               height: 120 }));
+                               height: homeButtonHeight() }));
             }
         }));
 }
@@ -71,11 +77,20 @@ function makeImageDisplay(image)
     var ratio = screenWidth() / image.width;
     var width = Math.round(image.width * ratio);
     var height = Math.round(image.height * ratio);
+    var proc;
+    if (image.category == 'pixel' && ratio >= 2) {
+        proc = 'double,' + Math.floor(ratio);
+    } else {
+        if (ratio > 1) {
+            height = Math.max(image.height, 120);
+        }
+        proc = 'cell,,' + width + ',' + height;
+    }
     with (DOMBuilder.dom) {
         return $(DIV({ 'class': 'image-display' },
                      IMG({ src: '/static/images/transparent.gif',
-                           'data-src': '/image/' + image.name + '/cell,,' + width + ',' + height,
-                           width: width,
+                           'data-src': '/image/' + image.name + '/' + proc,
+                           width: screenWidth(),
                            height: height})))
             .on('click', image, toggleImageInfo);
     }
