@@ -118,6 +118,18 @@ body.pen .image-info { border-color: #ff0000; }
 body.news nav img { background-color: #30be01; }
 body.contact nav img { background-color: #ffa200; }
 
+.header {
+    background: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    box-sizing: border-box;
+    height: 72px;
+    width: 100%;
+    padding: 20px;
+    z-index: 100;
+}
+
 nav {
     margin-bottom: 36px;
 }
@@ -153,6 +165,7 @@ nav .open-menu {
 
 .page {
     display: none;
+    padding-top: 50px;
 }
 
 .button {
