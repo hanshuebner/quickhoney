@@ -190,7 +190,12 @@ function main()
     Path.map('#contact').to(contact);
     Path.root("#home");
     Path.listen();
-    $(window).resize(function () { location.reload() });
+    var currentWidth = screenWidth();
+    $(window).resize(function () {
+        if (currentWidth != screenWidth()) {
+            location.reload();
+        }
+    });
 }
 
 $(document).ready(main);
