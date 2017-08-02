@@ -18,7 +18,11 @@ function setPage(name, category)
                 console.log('unmatched menu image name in image path', this.src);
             }
         });
-    $('body').attr('class', category);
+    if (this.category) {
+        $('body').removeClass(this.category);
+    }
+    this.category = category;
+    $('body').addClass(category);
     $('.page').css('display', 'none');
     $('#' + name).css('display', 'block');
 }
@@ -167,14 +171,14 @@ function closeMenu()
 
 function main()
 {
-    if (screenWidth() <= 648) {
-        $('nav menu').addClass('collapsed');
+    var mode = (screenWidth() <= 648) ? 'collapsed' : 'expanded';
+    $('body').addClass(mode);
+
+    if (mode == 'collapsed') {
         $('.open-menu')
             .css('display', 'block')
             .on('click', toggleMenu);
         $('body').on('click', closeMenu);
-    } else {
-        $('nav menu').addClass('expanded');
     }
 
     Path.map('#home').to(home);
