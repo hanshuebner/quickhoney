@@ -167,8 +167,15 @@ function closeMenu()
 
 function main()
 {
-    $('.open-menu').on('click', toggleMenu);
-    $('body').on('click', closeMenu);
+    if (screenWidth() <= 648) {
+        $('nav menu').addClass('collapsed');
+        $('.open-menu')
+            .css('display', 'block')
+            .on('click', toggleMenu);
+        $('body').on('click', closeMenu);
+    } else {
+        $('nav menu').addClass('expanded');
+    }
 
     Path.map('#home').to(home);
     ['pixel', 'vector', 'pen'].forEach(function (category) {

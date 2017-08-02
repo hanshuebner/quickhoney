@@ -134,7 +134,7 @@ nav {
     margin-bottom: 36px;
 }
 
-nav menu {
+nav menu.collapsed {
     position: absolute;
     background: white;
     top: 70px;
@@ -148,17 +148,27 @@ nav menu {
     z-index: 100;
 }
 
-nav menu li {
+nav menu.collapsed li {
     padding-top: 16px;
     padding-left: 4px;
 }
 
-nav menu li:first-of-type {
+nav menu.collapsed li:first-of-type {
     padding-top: 0px;
 }
 
 nav .open-menu {
     float: right;
+    display: none;
+}
+
+nav menu.expanded {
+    float: right;
+    margin-right: -12px;
+}
+
+nav menu.expanded li {
+    display: inline-block;
 }
 
 .content {
