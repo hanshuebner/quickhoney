@@ -182,7 +182,11 @@ body.expanded nav menu li {
 
 .button {
     display: inline-block;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+}
+
+a:nth-child(odd) .button {
+    margin-right: 12px;
 }
 
 #home .copyright {

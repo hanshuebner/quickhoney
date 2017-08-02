@@ -32,21 +32,42 @@ function screenWidth()
     return $(window).width() - 40;
 }
 
-function homeButtonHeight()
+function buttonWidth()
 {
-    return Math.floor(($(window).height() - 170) / 4);
+    if (window.mode == 'wide') {
+        return Math.floor((screenWidth() - 12) / 2);
+    } else {
+        return screenWidth();
+    }
+}
+
+function buttonHeight(count)
+{
+    if (window.mode == 'wide') {
+        return Math.floor(($(window).height() - 170) / Math.ceil(count / 2));
+    } else {
+        return Math.floor(($(window).height() - 170) / count);
+    }
 }
 
 function home()
 {
-    $('#home .button').css('height', homeButtonHeight());
+    $('#home .button')
+        .css('width', buttonWidth())
+        .css('height', buttonHeight(4));
     setPage('home');
-    ['pixel', 'vector', 'pen', 'news'].forEach(function (page) {
-        $('#home .' + page)
-            .attr('src',
-                  random_button_image('home', page, screenWidth(), homeButtonHeight(), page))
-            .attr('width', screenWidth());
-    });
+    $('#home')
+        .empty()
+        .append(['pixel', 'vector', 'pen', 'news'].map(function (category) {
+            console.log('category', category);
+            with (DOMBuilder.dom) {
+                return A({ href: '#' + category },
+                         IMG({ 'class': 'button',
+                               src: random_button_image('home', category, buttonWidth(), buttonHeight(4), category),
+                               width: buttonWidth(),
+                               height: buttonHeight(4) }));
+            }
+        }));
 }
 
 function gotoCategory(category)
@@ -58,9 +79,9 @@ function gotoCategory(category)
             with (DOMBuilder.dom) {
                 return A({ href: '#' + category + '/' + subcategory },
                          IMG({ 'class': 'button',
-                               src: random_button_image(category, subcategory, screenWidth(), homeButtonHeight(), subcategory),
-                               width: screenWidth(),
-                               height: homeButtonHeight() }));
+                               src: random_button_image(category, subcategory, buttonWidth(), buttonHeight(subcategories[category].length), subcategory),
+                               width: buttonWidth(),
+                               height: buttonHeight(subcategories[category].length) }));
             }
         }));
 }
@@ -171,14 +192,17 @@ function closeMenu()
 
 function main()
 {
-    var mode = (screenWidth() <= 648) ? 'collapsed' : 'expanded';
-    $('body').addClass(mode);
+    window.mode = (screenWidth() <= 428) ? 'narrow' : 'wide';
+    $('body').addClass(window.mode);
 
-    if (mode == 'collapsed') {
+    if (screenWidth() <= 648) {
         $('.open-menu')
             .css('display', 'block')
             .on('click', toggleMenu);
         $('body').on('click', closeMenu);
+        $('body').addClass('collapsed');
+    } else {
+        $('body').addClass('expanded');
     }
 
     Path.map('#home').to(home);
