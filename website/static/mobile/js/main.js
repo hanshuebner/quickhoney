@@ -3,8 +3,22 @@ var preloadCount = 5;
 
 function setPage(name, category)
 {
-    console.log('page', name, category);
-    $('body').attr('class', category || name);
+    console.log('setPage', name, category);
+    category = category || name;
+    $('nav.menu menu img')
+        .each(function () {
+            var match = this.src.match(/\/image\/(.*)-(|un)selected/);
+            if (match) {
+                var menuCategory = match[1];
+                this.src = '/image/'
+                    + menuCategory
+                    + '-'
+                    + ((menuCategory == category) ? "selected" : "unselected");
+            } else {
+                console.log('unmatched menu image name in image path', this.src);
+            }
+        });
+    $('body').attr('class', category);
     $('.page').css('display', 'none');
     $('#' + name).css('display', 'block');
 }

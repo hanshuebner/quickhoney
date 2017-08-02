@@ -141,6 +141,8 @@ nav menu {
     right: 20px;
     margin: 0;
     padding: 4px;
+    padding-top: 16px;
+    padding-bottom: 16px;
     box-shadow: 0 0 10px #888888;
     visibility: hidden;
     z-index: 100;
