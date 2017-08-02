@@ -150,10 +150,12 @@ function contact()
     setPage('contact');
 }
 
-function openMenu(e)
+function toggleMenu(e)
 {
-    console.log('open menu');
-    $('nav menu').css('visibility', 'visible');
+    console.log('toggle menu');
+    var status = $('nav menu').css('visibility');
+    var newStatus = (status == 'visible') ? 'hidden' : 'visible'
+    $('nav menu').css('visibility', newStatus);
     e.stopPropagation();
 }
 
@@ -165,7 +167,7 @@ function closeMenu()
 
 function main()
 {
-    $('.open-menu').on('click', openMenu);
+    $('.open-menu').on('click', toggleMenu);
     $('body').on('click', closeMenu);
 
     Path.map('#home').to(home);
