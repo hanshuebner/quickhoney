@@ -165,7 +165,9 @@ function main()
     });
     Path.map('#news').to(news);
     Path.map('#contact').to(contact);
+    Path.root("#home");
     Path.listen();
+    $(window).resize(function () { location.reload() });
 }
 
 $(document).ready(main);
