@@ -11,7 +11,7 @@ body.vector { background-image: url(/static/images/background-vector.png) }
 body.pixel { background-image: url(/static/images/background-pixel.png) }
 body.contact { background-image: url(/static/images/background-contact.png) }
 
-body {
+div#content {
     background-color: transparent;
     display: table-cell;
     vertical-align: middle;
@@ -83,10 +83,6 @@ body.contact #contact {
 }
 
 /* quickhoney website styles */
-
-p {
-    width: 860px;
-}
 
 /* debugger */
 
@@ -420,6 +416,11 @@ div.news_sep { width: 486px; height: 17px; background-image: url(/image/news-sep
 #archive-navigation.m12 a.m12 { color: #000; }
 
 /* cms styles */
+#site {
+    width: 100%;
+    heigth: 100%;
+    box-sizing: border-box;
+}
 
 .cms {
     width: auto !important;
@@ -428,10 +429,9 @@ div.news_sep { width: 486px; height: 17px; background-image: url(/image/news-sep
 
 #cms {
     position: fixed;
-    visibility: hidden;
     top: 0px;
     right: 0px;
-    width: 600px;
+    width: 400px;
     z-index: 1000;
 }
 

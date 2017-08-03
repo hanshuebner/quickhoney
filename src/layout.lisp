@@ -459,21 +459,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defclass shop-layout (keyword-affinity-layout)
-  ())
-
-(defmethod initialize-instance :after ((layout shop-layout) &key &allow-other-keys)
-  (setf (slot-value layout 'captions) t))
-
-(defmethod make-cell ((layout shop-layout) item)
-  (make-instance 'item-cell :layout layout :item item))
-
-(defun make-item-url (index)
-  (format nil "~a/~(~a~)" (request-variable :template-path) (object-name (nth index (session-value :current-query-result)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; general layout helpers
 
 (defun reorder-query-result ()
@@ -493,5 +478,4 @@
 
 (defvar *layouters* (list (list :ecity 'ecity-layout)
 			  (list :affinity 'keyword-affinity-layout)
-			  (list :shop 'shop-layout)
 			  (list :no 'no-layout)))

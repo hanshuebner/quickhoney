@@ -17,8 +17,21 @@
                     :initform nil)
    (description :update
                 :initform nil)
-   (products :update
-             :initform nil)))
+   (center-x :update :initform 0)
+   (center-y :update :initform 0)))
+
+(defmethod quickhoney-image-init-center ((image quickhoney-image))
+  (with-transaction (:init-center)
+    (setf (quickhoney-image-center-x image) (floor (store-image-width image) 2)
+          (quickhoney-image-center-y image) (floor (store-image-height image) 2))))
+
+(defmethod quickhoney-image-center-x :before ((image quickhoney-image))
+  (unless (slot-boundp image 'center-x)
+    (quickhoney-image-init-center image)))
+
+(defmethod quickhoney-image-center-y :before ((image quickhoney-image))
+  (unless (slot-boundp image 'center-y)
+    (quickhoney-image-init-center image)))
 
 (defvar *last-image-upload-timestamp* 0)
 

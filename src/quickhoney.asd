@@ -35,12 +35,11 @@
                (:file "config" :depends-on ("packages"))
                (:file "image" :depends-on ("config"))
 
-               (:file "quickhoney-shop" :depends-on ("image"))
                (:file "news" :depends-on ("image"))
                (:file "layout" :depends-on ("config"))
                (:file "imageproc" :depends-on ("config"))
                (:file "tweet")
-               (:file "handlers" :depends-on ("layout" "config" "image" "news" "quickhoney-shop" "tweet"))
+               (:file "handlers" :depends-on ("layout" "config" "image" "news" "tweet"))
                (:file "tags" :depends-on ("image"))
                (:file "twitter-oauth")
                (:file "webserver" :depends-on ("handlers" "twitter-oauth"))

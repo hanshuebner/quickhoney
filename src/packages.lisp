@@ -21,21 +21,6 @@
 	:quickhoney.config)
   (:export))
 
-(defpackage :shop
-  (:use :cl
-        :bknr.datastore
-        :bknr.indices
-        :bknr.user)
-  (:export #:download-product
-           #:emailable-product
-           #:mailable-product
-           #:product-stock-count
-           #:shopping-cart
-           #:put-to-cart
-           #:insufficient-inventory
-           #:product-already-in-shopping-cart
-           #:fulfill))
-
 (defpackage :quickhoney
   (:use :cl
 	:cl-user

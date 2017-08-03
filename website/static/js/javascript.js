@@ -163,9 +163,12 @@ function do_edit() {
     current_image.spider_keywords = $("edit_keywords").value;
     current_image.description = $("edit_description").value;
     current_image.keywords.explicit = $("edit_explicit").checked ? true : false;
+    current_image.center_x = $("edit_center_x").value;
+    current_image.center_y = $("edit_center_y").value;
 
     show_cms_window('saving_edits_form'); // hide edit window until server replies
 
+    console.log('saving', current_image);
     submit_json('/json-edit-image/' + current_image.id + '?action=edit', 'edit_form_element', image_edited);
 
     return false;
@@ -730,7 +733,7 @@ function show_directory_buttons(category) {
                         make_subcategory_button(subs[5], 7),
                         make_subcategory_button(subs[6], 6)) ];
         rows = 3;
-    } else if (category == 'pen') {
+    } else if (category == 'pen' || category == 'pixel') {
         buttons = [ DIV(null,
                         make_subcategory_button(subs[0], 0, 568),
                         make_subcategory_button(subs[1], 1, 568),
@@ -952,6 +955,31 @@ function display_image(index) {
     display_current_image();
 }
 
+function cutout_button_dimensions(image, ratio)
+{
+    var width = Math.round((image.width / 2) * ratio);
+    var height = 120;
+    var left = Math.max(0, Math.min(image.center_x * ratio - width / 2, image.width * ratio - width));
+    var top = Math.max(0, Math.min(image.center_y * ratio - height / 2, image.height * ratio - height));
+    return { left: left,
+             top: top,
+             width: width,
+             height: height };
+}
+
+function make_button_cutout_box(image, ratio) {
+    var dims = cutout_button_dimensions(image, ratio);
+
+    return DIV({ id: 'button_cutout_box',
+                 style: 'position: absolute;'
+                 + 'top: ' + dims.top + 'px; left: ' + dims.left + 'px;'
+                 + 'width: ' + dims.width + 'px; height: ' + dims.height + 'px;'
+                 + 'border: 1px solid black;'
+                 + 'cursor: crosshair;'
+                 + 'pointer-events: none;'
+                 + 'box-shadow: 0 0 10px rgba(255,255,255,1)'});
+}
+
 function display_current_image() {
     overlay_remove();
     make_images_navbar();
@@ -1056,15 +1084,26 @@ function display_current_image() {
                         style: 'visibility: hidden',
                         src: '/image/' + encodeURI(current_image.name) + imageproc_ops });
 
+        var button_cutout_box = '';
         if (logged_in) {
             img.style.cursor = 'crosshair';
             $(img)
                 .onclick = function (e) {
                     console.log('set image center', current_image.name, e.offsetX, e.offsetY);
+                    var center_x = Math.floor(e.offsetX / ratio);
+                    var center_y = Math.floor(e.offsetY / ratio);
+                    $("edit_center_x").value = current_image.center_x = center_x;
+                    $("edit_center_y").value = current_image.center_y = center_y;
+                    var dims = cutout_button_dimensions(current_image, ratio);
+                    $("button_cutout_box").style.left = dims.left + 'px';
+                    $("button_cutout_box").style.top = dims.top + 'px';
+                    submit_json('/json-edit-image/' + current_image.id + '?action=set-center&center-x=' + center_x + '&center-y=' + center_y, null, image_edited);
                 }
+            button_cutout_box = make_button_cutout_box(current_image, ratio);
         }
 	var divNode = DIV({ style: 'position: relative; margin-left: ' + left_padding + 'px' },
-                          (may_enlarge && !logged_in) ? A({ onclick: 'enlarge()', href: '#' }, img) : img);
+                          (may_enlarge && !logged_in) ? A({ onclick: 'enlarge()', href: '#' }, img) : img,
+                          button_cutout_box);
         replaceChildNodes('image_detail', divNode);
         wait_for_images(function () {
             hide_cue();
@@ -1076,6 +1115,8 @@ function display_current_image() {
 	$("edit_client").value = current_image.client;
         $("edit_keywords").value = current_image.spider_keywords || "";
         $("edit_description").value = current_image.description || "";
+        $("edit_center_x").value = current_image.center_x;
+        $("edit_center_y").value = current_image.center_y;
 
         map(function(keyword) {
                 $('edit_' + keyword).checked = current_image.keywords[keyword] ? true : false;

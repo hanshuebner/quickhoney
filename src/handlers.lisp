@@ -2,7 +2,7 @@
 
 (enable-interpol-syntax)
 
-(defparameter *editable-keywords* '(:explicit :buy-file :buy-print :buy-t-shirt)
+(defparameter *editable-keywords* '(:explicit)
   "List of keywords that are image keywords which can be edited through the CMS")
 
 (defclass quickhoney-image-dependent-handler (page-handler)
@@ -61,6 +61,8 @@
     (yason:encode-object-element "type" (image-content-type (blob-mime-type image)))
     (yason:encode-object-element "width" (store-image-width image))
     (yason:encode-object-element "height" (store-image-height image))
+    (yason:encode-object-element "center_x" (quickhoney-image-center-x image))
+    (yason:encode-object-element "center_y" (quickhoney-image-center-y image))
     (yason:encode-object-element "client" (or (quickhoney-image-client image) ""))
     (when (typep image 'quickhoney-animation-image)
       (yason:encode-object-element "animation_type"
@@ -104,9 +106,7 @@
   (with-json-response ()
     (yason:with-object-element ("queryResult")
       (with-query-params (layout)
-        (layout-to-json (make-instance (case (make-keyword-from-string layout)
-                                         (:smallworld 'quickhoney-name-layout)
-                                         (t 'quickhoney-standard-layout))
+        (layout-to-json (make-instance 'quickhoney-standard-layout
                                        :objects images))))))
 
 (defclass json-image-query-handler (object-handler quickhoney-image-dependent-handler)
@@ -169,14 +169,26 @@
         (push keyword retval)))))
   
 (defmethod handle-object-form ((handler json-edit-image-handler) (action (eql :edit)) image)
-  (with-query-params (client spider-keywords description)
+  (with-query-params (center-x center-y client spider-keywords description)
     (setf description (when description (string-trim '(#\return #\linefeed #\space) description)))
     (with-transaction (:edit-image)
       (setf (quickhoney-image-client image) client
             (quickhoney-image-spider-keywords image) spider-keywords
             (quickhoney-image-description image) description
+            (quickhoney-image-center-x image) center-x
+            (quickhoney-image-center-y image) center-y
             (store-image-keywords image) (append (set-difference (store-image-keywords image) *editable-keywords*)
                                                  (image-keywords-from-request-parameters)))))
+  (setf *last-image-upload-timestamp* (get-universal-time))
+  (with-json-response ()
+    (yason:encode-object-element "result" "edited")))
+  
+(defmethod handle-object-form ((handler json-edit-image-handler) (action (eql :set-center)) image)
+  (with-query-params (center-x center-y)
+    (format t "set center-x ~A center-y ~A~%" center-x center-y)
+    (with-transaction (:set-center)
+      (setf (quickhoney-image-center-x image) center-x
+            (quickhoney-image-center-y image) center-y)))
   (setf *last-image-upload-timestamp* (get-universal-time))
   (with-json-response ()
     (yason:encode-object-element "result" "edited")))
@@ -308,7 +320,7 @@
 
 (defparameter *home-buttons* '("pixel" "vector" "news" "pen"))
 (defparameter *categories*
-  '(("pixel" "birdview" "headon" "spot" "icons" "animation" "smallworld")
+  '(("pixel" "birdview" "headon" "spot" "icons")
     ("vector" "icons" "portraits" "celebrities" "blackwhite" "editorial" "microspots" "nudes")
     ("pen" "honeypen" "portraits" "nudes" "stuff")))
 

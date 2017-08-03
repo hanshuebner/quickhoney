@@ -20,134 +20,149 @@
 
   <body id="body" class="loading yui-skin-sam">
 
-    <div id="content">
-      <div id="overlay">
-      </div>
-
-      <div id="menu">
-        <div id="menu-backdrop">
-          <a onclick="show_home_buttons()" href="#home" id="m_home">
-            <img alt="" class="menu" src="/static/images/logo-c.png" />
-          </a>
-          <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
-            <img alt="" class="unselected" src="/image/pixel-unselected" />
-            <img alt="" class="selected" src="/image/pixel-selected" />
-          </a>
-          <a onclick="show_directory_buttons('vector')" href="#vector" id="m_vector">
-            <img alt="" class="unselected" src="/image/vector-unselected" />
-            <img alt="" class="selected" src="/image/vector-selected" />
-          </a>
-          <a onclick="show_directory_buttons('pen')" href="#pen" id="m_pen">
-            <img alt="" class="unselected" src="/image/pen-unselected" />
-            <img alt="" class="selected" src="/image/pen-selected" />
-          </a>
-          <a href="#news" id="m_news">
-            <img alt="" class="unselected" src="/image/news-unselected" />
-            <img alt="" class="selected" src="/image/news-selected" />
-          </a>
-          <a href="#contact" id="m_contact">
-            <img alt="" class="unselected" src="/image/contact-unselected" />
-            <img alt="" class="selected" src="/image/contact-selected" />
-          </a>
-        </div>
-      </div>
-
-      <div id="loading" class="page">
-        <quickhoney:simple-image-browser>
-          <img alt="" src="/image/startscreen" id="logo" border="0" width="438" height="67" />
-
-          <h1>QuickHoney Illustrations</h1>
-          <p>Studio for Illustration, New York</p>
-          <h1>Peter Stemmler</h1>
-          <p>Phone: 646.270.5562<br/>Email: p@quickhoney.com</p>
-          <p>Works: <a href="/vector">vector</a> and <a href="/pen">pen</a></p>
-          <h1>Nana Rausch</h1>
-          <p>Phone 646.270.5592<br/>Email: n@quickhoney.com</p>
-          <p>Works: <a href="/pixel">pixel</a></p>
-        </quickhoney:simple-image-browser>
-      </div>
-
-      <div id="home" class="page">
-        ©1998-2017 QuickHoney Nana Rausch &amp; Peter Stemmler. No part of
-        this website may be reproduced in any manner without permission.
-        Programming by Hübner/Odendahl
-      </div>
-
-      <div id="image_browser" class="page">
-
-        <div id="directory" class="subform">
+    <div id="site">
+      <div id="content">
+        <div id="overlay">
         </div>
 
-        <div id="results" class="subform">
-          <div id="thumbnails">
+        <div id="menu">
+          <div id="menu-backdrop">
+            <a onclick="show_home_buttons()" href="#home" id="m_home">
+              <img alt="" class="menu" src="/static/images/logo-c.png" />
+            </a>
+            <a onclick="show_directory_buttons('pixel')" href="#pixel" id="m_pixel">
+              <img alt="" class="unselected" src="/image/pixel-unselected" />
+              <img alt="" class="selected" src="/image/pixel-selected" />
+            </a>
+            <a onclick="show_directory_buttons('vector')" href="#vector" id="m_vector">
+              <img alt="" class="unselected" src="/image/vector-unselected" />
+              <img alt="" class="selected" src="/image/vector-selected" />
+            </a>
+            <a onclick="show_directory_buttons('pen')" href="#pen" id="m_pen">
+              <img alt="" class="unselected" src="/image/pen-unselected" />
+              <img alt="" class="selected" src="/image/pen-selected" />
+            </a>
+            <a href="#news" id="m_news">
+              <img alt="" class="unselected" src="/image/news-unselected" />
+              <img alt="" class="selected" src="/image/news-selected" />
+            </a>
+            <a href="#contact" id="m_contact">
+              <img alt="" class="unselected" src="/image/contact-unselected" />
+              <img alt="" class="selected" src="/image/contact-selected" />
+            </a>
           </div>
         </div>
 
-        <div id="browse" class="subform">
-          <div class="navbar">
-            <div class="left">
-              <span id="previous_image" class="text"> </span>
-            </div>
-            <div class="right">
-              <span id="next_image" class="text"> </span>
-            </div>
-            <div class="center">
-              <span id="full_click" class="text"> </span>
-              <span id="result_image_count"> </span>
-              <span id="back_to_results"><a id="back_to_results_link" href="#">back to results</a></span>
+        <div id="loading" class="page">
+          <quickhoney:simple-image-browser>
+            <img alt="" src="/image/startscreen" id="logo" border="0" width="438" height="67" />
+
+            <h1>QuickHoney Illustrations</h1>
+            <p>Studio for Illustration, New York</p>
+            <h1>Peter Stemmler</h1>
+            <p>Phone: 646.270.5562<br/>Email: p@quickhoney.com</p>
+            <p>Works: <a href="/vector">vector</a> and <a href="/pen">pen</a></p>
+            <h1>Nana Rausch</h1>
+            <p>Phone 646.270.5592<br/>Email: n@quickhoney.com</p>
+            <p>Works: <a href="/pixel">pixel</a></p>
+          </quickhoney:simple-image-browser>
+        </div>
+
+        <div id="home" class="page">
+          ©1998-2017 QuickHoney Nana Rausch &amp; Peter Stemmler. No part of
+          this website may be reproduced in any manner without permission.
+          Programming by Hübner/Odendahl
+        </div>
+
+        <div id="image_browser" class="page">
+
+          <div id="directory" class="subform">
+          </div>
+
+          <div id="results" class="subform">
+            <div id="thumbnails">
             </div>
           </div>
 
-          <div id="image_action_buttons" class="buttonbox">
-          </div>
+          <div id="browse" class="subform">
+            <div class="navbar">
+              <div class="left">
+                <span id="previous_image" class="text"> </span>
+              </div>
+              <div class="right">
+                <span id="next_image" class="text"> </span>
+              </div>
+              <div class="center">
+                <span id="full_click" class="text"> </span>
+                <span id="result_image_count"> </span>
+                <span id="back_to_results"><a id="back_to_results_link" href="#">back to results</a></span>
+              </div>
+            </div>
 
-          <div id="image_detail">
-          </div>
+            <div id="image_action_buttons" class="buttonbox">
+            </div>
 
-          <div id="metadata" class="text">
-            (not available)
+            <div id="image_detail">
+            </div>
+
+            <div id="metadata" class="text">
+              (not available)
+            </div>
           </div>
         </div>
-      </div>
 
-      <div id="news" class="page">
-        <table border="0">
-          <tbody>
-            <tr>
-              <td valign="top" id="newsentries">
-              </td>
-              <td class="archive" id="archive-navigation" valign="top" align="right">
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div id="contact" class="page">
-        <div style="height: 300px">
-          <img id="contactimage" alt="" src="/image/pixelcontact"/>
-          <br /><br />
-          <h1>email</h1>
-          <p>
-            Peter Stemmler: <a href="mailto:p@quickhoney.com">p@quickhoney.com</a><br />
-            Nana Rausch: <a href="mailto:n@quickhoney.com">n@quickhoney.com</a>
-          </p>
-          <h1>Phone</h1>
-          <p>
-            Peter Stemmler: 646.270.5562<br />
-            Nana Rausch: 646.270.5592
-          </p>
-          <h1>Address</h1>
-          <p>
-            QuickHoney LLC<br />
-            536 Sixth Avenue, 2nd Floor<br />
-            New York, NY 10011<br />
-            USA <br />
-          </p>
+        <div id="news" class="page">
+          <table border="0">
+            <tbody>
+              <tr>
+                <td valign="top" id="newsentries">
+                </td>
+                <td class="archive" id="archive-navigation" valign="top" align="right">
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div>
-          <h1>Clients</h1>
-          <p id="client_names"> </p>
+
+        <div id="contact" class="page">
+          <div style="display: table-row">
+            <div style="display: table-cell; width: 50%;">
+              <h1 style="margin-top: 0;">Email</h1>
+              <p>
+                Peter Stemmler: <a href="mailto:p@quickhoney.com">p@quickhoney.com</a><br />
+                Nana Rausch: <a href="mailto:n@quickhoney.com">n@quickhoney.com</a>
+              </p>
+              <h1>Phone</h1>
+              <p>
+                US 646.270.5562<br />
+                DE +49.160.9627.1946
+              </p>
+            </div>
+            <div style="display: table-cell; width: 35%;">
+              <h1>Address</h1>
+              <p>
+                NEW YORK<br/>
+                QuickHoney LLC<br />
+                Woodward Avenue<br />
+                Ridgewood, Queens, NY 11385<br />
+                USA <br />
+              </p>
+            </div>
+            <div style="display: table-cell">
+              <p>
+                <br/>
+                BERLIN<br/>
+                QuickHoney LLC<br/>
+                Brixener Straße 54<br/>
+                13187 Berlin<br/>
+                Germany
+              </p>
+            </div>
+          </div>
+          <div>
+            <h1>Clients</h1>
+            <p id="client_names"> </p>
+          </div>
         </div>
       </div>
 
@@ -241,6 +256,8 @@
               Description:<br />
               <textarea id="edit_description" name="description" rows="5" cols="45"> </textarea><br />
               <input type="checkbox" id="edit_explicit" name="explicit" value="1" /> Explicit<br/>
+              Center: <input type="text" id="edit_center_x" name="center-x" value="" size="4"/>
+                      <input type="text" id="edit_center_y" name="center-y" value="" size="4"/> <br/>
             </p>
             <p class="cms">
               <button type="submit" onclick="do_edit();">edit</button>
