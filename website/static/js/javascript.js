@@ -610,8 +610,6 @@ function display_cms_window() {
 		    show_cms_window('upload_form');
 		}
 	    }
-	} else if (current_directory == 'pixel') {
-	    show_cms_window("pixel_button_upload_form");
 	} else {
 	    show_cms_window();
 	}
@@ -1185,17 +1183,6 @@ function do_tweet(form) {
 
     var tweet_window = window.open('', form.target, "width=500,height=300,status=no,toolbar=no,menubar=no,resizable=no,scrollbars=no");
     tweet_window.focus();
-
-    return true;
-}
-
-/* open the button upload window */
-
-function do_button_upload(target) {
-    log('do_button_upload - target is ', target);
-
-    var upload_window = window.open('', target, "width=500,height=300,status=no,toolbar=no,menubar=no,resizable=no,scrollbars=no");
-    upload_window.focus();
 
     return true;
 }

@@ -38,10 +38,8 @@ function random_button_image(category, subcategory, width, height, cut_category)
      */
 
     var key = category + '/' + subcategory;
-    var image_ids = button_images[key];
-    if (image_ids && image_ids.length) {
-        var type = image_ids[0];
-        var ids = image_ids.slice(1);
+    var ids = button_images[key];
+    if (ids && ids.length) {
         var image_id = ids[Math.floor(Math.random() * ids.length)];
         if (last_category_buttons[category] && ids.indexOf(last_category_buttons[category]) != -1) {
             image_id = last_category_buttons[category];
@@ -50,11 +48,7 @@ function random_button_image(category, subcategory, width, height, cut_category)
         if (category == 'home') {
             last_category_buttons[subcategory] = image_id;
         }
-        if (type == 'buttons') {
-            return '/image/' + image_id;
-        } else {
-            return '/image/' + image_id + '/cutout-button,' + subcategory + ',ffffff,' + width + ',' + height + ',8,' + cut_category;
-        }
+        return '/image/' + image_id + '/cutout-button,' + subcategory + ',ffffff,' + width + ',' + height + ',8,' + cut_category;
     } else {
         console.log('no button image for ' + key + ' found');
     }

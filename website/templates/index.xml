@@ -195,31 +195,6 @@
           </form>
         </div>
 
-        <div id="pixel_button_upload_form" class="cms_form">
-          <form action="/upload-button" method="post"
-                enctype="multipart/form-data" target="upload_result" onsubmit="do_button_upload(this.target);">
-            <input type="hidden" name="directory" value="pixel" />
-            <div class="cms_title">Upload new button</div>
-            <p class="cms">
-              Category:
-              <select name="subdirectory" size="1">
-                <option selected="selected"> </option>
-                <option>birdview</option>
-                <option>parts</option>
-                <option>icons</option>
-                <option>editorial</option>
-                <option>animation</option>
-                <option>smallworld</option>
-              </select>
-              <br /><br />
-              <input type="file" name="image-file" /><br />
-            </p>
-            <p class="cms">
-              <input type="submit" name="upload" value="upload" />
-            </p>
-          </form>
-        </div>
-
         <div id="upload_animation_form" class="cms_form">
           <form id="upload_animation_form_element" action="/upload-animation" method="post"
                 enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">

@@ -105,9 +105,8 @@
 (defmethod handle-object ((handler json-layout-query-handler) images)
   (with-json-response ()
     (yason:with-object-element ("queryResult")
-      (with-query-params (layout)
-        (layout-to-json (make-instance 'quickhoney-standard-layout
-                                       :objects images))))))
+      (layout-to-json (make-instance 'quickhoney-standard-layout
+                                     :objects images)))))
 
 (defclass json-image-query-handler (object-handler quickhoney-image-dependent-handler)
   ())
@@ -289,11 +288,6 @@
 (defclass category-config-js-handler (prefix-handler quickhoney-image-dependent-handler)
   ())
 
-(defun preproduced-buttons (category subcategory)
-  (let ((images (get-keywords-intersection-store-images (list category subcategory :button))))
-    (when images
-      (cons :buttons images))))
-
 (defun images-in-all-subcategories-sorted-by-time (category)
   (sort (apply #'append (mapcar (lambda (cat-sub)
                                   (when (eq category (car cat-sub))
@@ -310,13 +304,12 @@
                                (remove :nudes (images-in-all-subcategories-sorted-by-time subcategory)
                                        :key #'quickhoney-image-subcategory)
                                (images-in-category-sorted-by-time (list category subcategory))))))
-    (when images
-      (cons :images (loop with since = (- (get-universal-time) (* 60 60 24 14))
-                          for i from 0
-                          for image in images
-                          when (or (< i 10)
-                                   (> (blob-timestamp image) since))
-                            collect image)))))
+    (loop with since = (- (get-universal-time) (* 60 60 24 14))
+          for i from 0
+          for image in images
+          when (or (< i 10)
+                   (> (blob-timestamp image) since))
+            collect image)))
 
 (defparameter *home-buttons* '("pixel" "vector" "news" "pen"))
 (defparameter *categories*
@@ -345,21 +338,10 @@
         do (dolist (subcategory subcategories)
              (yason:with-object-element ((format nil "~(~A/~A~)" category subcategory))
                (yason:with-array ()
-                 ;; For each subcategory, an array of buttons is
-                 ;; generated.  The first element of the array is
-                 ;; either "buttons" or "images", indicating
-                 ;; whether the object ids that follow represent
-                 ;; preproduced buttons or images.  Preproduced
-                 ;; buttons are already in the required 208x208
-                 ;; format and come with the caption rendered into
-                 ;; them.
                  (let ((category (make-keyword-from-string category))
                        (subcategory (make-keyword-from-string subcategory)))
-                   (destructuring-bind (&optional type &rest images)
-                       (or (preproduced-buttons category subcategory)
-                           (newest-images category subcategory :include-explicit nil)
-                           (warn "No images for ~A ~A found" category subcategory))
-                     (yason:encode-array-element type)
+                   (let ((images (or (newest-images category subcategory :include-explicit nil)
+                                     (warn "No images for ~A ~A found" category subcategory))))
                      (dolist (image (or images
                                         (list (store-image-with-name "button-dummy"))))
                        (yason:encode-array-element (store-object-id image))))))))))))
