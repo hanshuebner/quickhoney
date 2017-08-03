@@ -195,28 +195,6 @@
           </form>
         </div>
 
-        <div id="upload_animation_form" class="cms_form">
-          <form id="upload_animation_form_element" action="/upload-animation" method="post"
-                enctype="multipart/form-data" target="upload_result" onsubmit="do_upload(this.target);">
-            <div class="cms_title">Upload new animation</div>
-            <p class="cms">
-              Thumbnail image (for Flash and QuickTime) or GIF animation:<br />
-              <input type="file" name="image-file" /><br />
-              Animation (Flash file or QuickTime movie):<br />
-              <input type="file" name="animation-file" /><br />
-            </p>
-            <p class="cms">
-              Client:<br />
-              <input type="text" id="upload_animation_client" name="client" value="" /><br />
-              <span id="upload_animation_client_select">
-              </span>
-            </p>
-            <p class="cms">
-              <input type="submit" name="upload" value="upload" />
-            </p>
-          </form>
-        </div>
-
         <div id="edit_form" class="cms_form">
           <form id="edit_form_element" action="#" method="post" onsubmit="return false;">
             <div class="cms_title">Edit image</div>

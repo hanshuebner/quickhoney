@@ -259,7 +259,6 @@ function set_clients(json_data) {
     }
     $("client_names").innerHTML = rendered_clients.join("; ");
     $("upload_client_select").innerHTML = make_clients_selector('upload_client');
-    $("upload_animation_client_select").innerHTML = make_clients_selector('upload_client');
     $("edit_client_select").innerHTML = make_clients_selector('edit_client');
 }
 
@@ -604,11 +603,7 @@ function display_cms_window() {
 	    } else {
 		replaceChildNodes("upload_category", current_directory, " / ", current_subdirectory);
 		$("upload_form_element").setAttribute("action", "/upload-image/" + current_directory + "/" + current_subdirectory);
-		if (current_directory == 'pixel' && current_subdirectory == 'animation') {
-		    show_cms_window('upload_animation_form');
-		} else {
-		    show_cms_window('upload_form');
-		}
+		show_cms_window('upload_form');
 	    }
 	} else {
 	    show_cms_window();
@@ -1026,88 +1021,43 @@ function display_current_image() {
 	replaceChildNodes("full_click", SPAN({ style: "visibility: hidden" }, "full size"));
     }
 
-    var content;
-    if (current_directory == 'pixel' && current_subdirectory == 'animation') {
-        switch (current_image.animation_type) {
-        case "video/quicktime":
-            if (!detectQuickTime()) {
-                content = "<p>To display this content, the <a href='http://www.apple.com/quicktime/download/' target='_new'>Apple Quicktime plugin</a> is required.</p>";
-            } else {
-                content = "<div style='height: 81px'> </div>"
-                    + _QTGenerate("QT_GenerateOBJECTText_XHTML", true, ['/animation/' + current_image.id, '860', '486', '',
-                                                                        'scale', 'aspect',
-                                                                        'showlogo', 'false',
-                                                                        'loop', 'true',
-                                                                        'bgcolor', 'white']);
-            }
-            break;
-        case "application/x-director":
-            if (!detectDirector()) {
-                content = "<p>To display this content, the <a href='http://www.adobe.com/shockwave/download/' target='_new'>Adobe Shockwave plugin</a> is required.</p>";
-            } else {
-                content
-                    = '<object width="860" height="860" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
-                    + ' <param name="movie" value="/animation/' + current_image.id + '" />'
-                    + ' <embed src="/animation/' + current_image.id + '" width="860" height="860">'
-                    + ' </embed>'
-                    + '</object>';
-            }
-            break;
-        case "application/x-shockwave-flash":
-            if (!detectFlash()) {
-                content = "<p>To display this content, the <a href='http://www.adobe.com/products/flashplayer/' target='_new'>Adobe Flash Player</a> is required.</p>";
-            } else {
-                content
-                    = '<object width="860" height="860" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'
-                    + ' <param name="movie" value="/animation/' + current_image.id + '" />'
-                    + ' <embed src="/animation/' + current_image.id + '" width="860" height="860">'
-                    + ' </embed>'
-                    + '</object>';
-            }
-            break;
-        }
-    }
-
     window.scrollTo(0, 0);
 
-    if (content) {
-        $("image_detail").innerHTML = content;
-    } else {
-        show_cue();
+    show_cue();
 
-	var top_padding = Math.round(860 - display_height) / 2;
-	var left_padding = Math.round(860 - display_width) / 2;
-        var img = IMG({ width: display_width,
-                        height: display_height,
-                        style: 'visibility: hidden',
-                        src: '/image/' + encodeURI(current_image.name) + imageproc_ops });
+    var top_padding = Math.round(860 - display_height) / 2;
+    var left_padding = Math.round(860 - display_width) / 2;
+    var img = IMG({ width: display_width,
+                    height: display_height,
+                    style: 'visibility: hidden',
+                    src: '/image/' + encodeURI(current_image.name) + imageproc_ops });
 
-        var button_cutout_box = '';
-        if (logged_in) {
-            img.style.cursor = 'crosshair';
-            $(img)
-                .onclick = function (e) {
-                    console.log('set image center', current_image.name, e.offsetX, e.offsetY);
-                    var center_x = Math.floor(e.offsetX / ratio);
-                    var center_y = Math.floor(e.offsetY / ratio);
-                    $("edit_center_x").value = current_image.center_x = center_x;
-                    $("edit_center_y").value = current_image.center_y = center_y;
-                    var dims = cutout_button_dimensions(current_image, ratio);
-                    $("button_cutout_box").style.left = dims.left + 'px';
-                    $("button_cutout_box").style.top = dims.top + 'px';
-                    submit_json('/json-edit-image/' + current_image.id + '?action=set-center&center-x=' + center_x + '&center-y=' + center_y, null, image_edited);
-                }
-            button_cutout_box = make_button_cutout_box(current_image, ratio);
-        }
-	var divNode = DIV({ style: 'position: relative; margin-left: ' + left_padding + 'px' },
-                          (may_enlarge && !logged_in) ? A({ onclick: 'enlarge()', href: '#' }, img) : img,
-                          button_cutout_box);
-        replaceChildNodes('image_detail', divNode);
-        wait_for_images(function () {
-            hide_cue();
-            img.style.visibility = 'inherit';
-        });
+    var button_cutout_box = '';
+    if (logged_in) {
+        img.style.cursor = 'crosshair';
+        $(img)
+            .onclick = function (e) {
+                console.log('set image center', current_image.name, e.offsetX, e.offsetY);
+                var center_x = Math.floor(e.offsetX / ratio);
+                var center_y = Math.floor(e.offsetY / ratio);
+                $("edit_center_x").value = current_image.center_x = center_x;
+                $("edit_center_y").value = current_image.center_y = center_y;
+                var dims = cutout_button_dimensions(current_image, ratio);
+                $("button_cutout_box").style.left = dims.left + 'px';
+                $("button_cutout_box").style.top = dims.top + 'px';
+                submit_json('/json-edit-image/' + current_image.id + '?action=set-center&center-x=' + center_x + '&center-y=' + center_y, null, image_edited);
+                return false;
+            }
+        button_cutout_box = make_button_cutout_box(current_image, ratio);
     }
+    var divNode = DIV({ style: 'position: relative; margin-left: ' + left_padding + 'px' },
+                      (may_enlarge && !logged_in) ? A({ onclick: 'enlarge()', href: '#' }, img) : img,
+                      button_cutout_box);
+    replaceChildNodes('image_detail', divNode);
+    wait_for_images(function () {
+        hide_cue();
+        img.style.visibility = 'inherit';
+    });
 
     if (logged_in) {
 	$("edit_client").value = current_image.client;

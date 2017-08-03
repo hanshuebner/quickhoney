@@ -20,7 +20,6 @@
 		 :name "Quickhoney CMS"
 		 :handler-definitions
      `(("/random-image" random-image-handler)
-       ("/animation" animation-handler)
        ("/digg-image" digg-image-handler)
        ("/tweet-image" tweet-image-handler)
        ("/twitter-oauth-callback" twitter-oauth:callback-handler)
@@ -40,8 +39,6 @@
        ("/json-news" json-news-handler)
 
        ("/upload-image" upload-image-handler)
-       ("/upload-animation" upload-animation-handler)
-       ("/upload-button" upload-button-handler)
        ("/upload-news" upload-news-handler)
 
        ("/rss" rss-handler)

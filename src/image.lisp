@@ -66,12 +66,6 @@
             (format nil "http://~A" (website-host)))
           (quickhoney-image-category image) (quickhoney-image-subcategory image) (store-image-name image)))
 
-(define-persistent-class quickhoney-animation-image (quickhoney-image)
-  ((animation :update)))
-
-(defmethod destroy-object :before ((image quickhoney-animation-image))
-  (delete-object (quickhoney-animation-image-animation image)))
-
 (defun convert-all-pixel-images (directory)
   (dolist (category (remove :pixel (quickhoney::all-categories) :test-not #'eql :key #'car))
     (dolist (image (quickhoney:images-in-category category))
