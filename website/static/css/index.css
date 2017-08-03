@@ -125,13 +125,14 @@ a.debugger {
 /* menu */
 
 #menu-backdrop {
-    width: 900px;
     height: 150px;
     z-index: 100;
     background-color: white;
+    width: 100%
     top: 0px;
     left: 0px;
 }
+
 #menu.home a img { background-color: #953cfd; }
 
 #menu.pixel a img { background-color: #ff00ff; }
@@ -421,30 +422,39 @@ div.news_sep { width: 486px; height: 17px; background-image: url(/image/news-sep
 /* cms styles */
 
 .cms {
+    width: auto !important;
     margin-top: 10px;
 }
 
-div#cms {
-    position: absolute;
+#cms {
+    position: fixed;
     visibility: hidden;
     top: 0px;
-    left: 0px;
-    width: 400px;
+    right: 0px;
+    width: 600px;
+    z-index: 1000;
 }
 
-div#cms div.cms_form {
-    position: absolute;
+#cms p {
+    width: auto;
+}
+
+#cms div.cms_form {
     visibility: hidden;
-    top: 0px;
+    position: absolute;
     left: 0px;
-    z-index: 3;
+    top: 70px;
     background-color: #bfbfbf;
     color: #000000;
     border: thin solid #000000;
     padding: 5px;
 }
 
-div#cms div.cms_title {
+#login_status {
+    top: 10px !important;
+}
+
+#cms div.cms_title {
     padding: 2px;
     font-size: 100%;
     text-align: center;
@@ -452,15 +462,6 @@ div#cms div.cms_title {
     margin-bottom: 5px;
     color: #ffffff;
     background-color: #000000;
-}
-
-div#login_status {
-    margin-top: -100px;
-}
-
-div#login_form {
-    margin-top: -100px;
-    width: 400px;
 }
 
 input.invisibleSubmit {

@@ -86,10 +86,6 @@ function login_status(json_result) {
 function show_cms_window(name) {
     log('show_cms_window ' + name);
     
-    $("cms").style.top = "106px";
-    $("cms").style.left = "730px";
-    $("cms").style.width = "400px";
-
     var elements = $("cms").childNodes;
 
     if (logged_in) {
@@ -1060,8 +1056,15 @@ function display_current_image() {
                         style: 'visibility: hidden',
                         src: '/image/' + encodeURI(current_image.name) + imageproc_ops });
 
+        if (logged_in) {
+            img.style.cursor = 'crosshair';
+            $(img)
+                .onclick = function (e) {
+                    console.log('set image center', current_image.name, e.offsetX, e.offsetY);
+                }
+        }
 	var divNode = DIV({ style: 'position: relative; margin-left: ' + left_padding + 'px' },
-                          may_enlarge ? A({ onclick: 'enlarge()', href: '#' }, img) : img);
+                          (may_enlarge && !logged_in) ? A({ onclick: 'enlarge()', href: '#' }, img) : img);
         replaceChildNodes('image_detail', divNode);
         wait_for_images(function () {
             hide_cue();
@@ -1319,7 +1322,6 @@ function make_overlay_content(overlay, options) {
                       DIV({ 'class': 'ydsf' },
                           inner));
     overlay.style.width = width + 'px';
-//    $(closeID).style.left = (width - 23) + 'px';
     $(closeID).style.right = '13px';
     $(closeID).onclick = function () {
 	overlay.style.visibility = 'hidden';

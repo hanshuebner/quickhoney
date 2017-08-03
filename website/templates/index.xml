@@ -169,9 +169,9 @@
               </span>
               <br />
               Dscription:<br />
-              <textarea id="upload_description" name="description" rows="5" cols="60"> </textarea><br />
+              <textarea id="upload_description" name="description" rows="5" cols="45"> </textarea><br />
               Keywords:<br />
-              <input type="text" id="upload_keywords" name="spider-keywords" value="" size="60" /><br />
+              <input type="text" id="upload_keywords" name="spider-keywords" value="" size="45" /><br />
               <input type="checkbox" id="explicit" name="explicit" value="1" /> Explicit<br/>
             </p>
             <p class="cms">
@@ -237,9 +237,9 @@
               </span>
               <br />
               Keywords:<br />
-              <input type="text" id="edit_keywords" name="spider-keywords" value="" size="60" /><br />
+              <input type="text" id="edit_keywords" name="spider-keywords" value="" size="45" /><br />
               Description:<br />
-              <textarea id="edit_description" name="description" rows="5" cols="60"> </textarea><br />
+              <textarea id="edit_description" name="description" rows="5" cols="45"> </textarea><br />
               <input type="checkbox" id="edit_explicit" name="explicit" value="1" /> Explicit<br/>
             </p>
             <p class="cms">
@@ -258,7 +258,7 @@
               <quickhoney:twitter-account-checkboxes/>
               <br/>
               Text:<br/>
-              <input name="tweet" size="80"/> <br/>
+              <input name="tweet" size="45"/> <br/>
               <input type="submit" name="tweet" value="tweet"/>
             </p>
           </form>
@@ -276,11 +276,11 @@
                 </tr>
                 <tr>
                   <td>Title:</td>
-                  <td><input id="news_title" name="title" size="60"/></td>
+                  <td><input id="news_title" name="title" size="45"/></td>
                 </tr>
                 <tr>
                   <td>Text:</td>
-                  <td><textarea id="news_editor" name="text" cols="80" rows="10"> </textarea></td>
+                  <td><textarea id="news_editor" name="text" cols="45" rows="10"> </textarea></td>
                 </tr>
               </tbody>
             </table>
@@ -297,7 +297,7 @@
               <quickhoney:twitter-account-checkboxes/>
               <br/>
               Text:<br/>
-              <input name="tweet" size="80"/> <br/>
+              <input name="tweet" size="45"/> <br/>
               <input type="submit" name="tweet" value="tweet"/>
             </p>
           </form>
