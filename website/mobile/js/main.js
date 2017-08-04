@@ -218,6 +218,12 @@ function main()
     Path.map('#contact').to(contact);
     Path.root("#home");
     Path.listen();
+
+    $.get('/json-clients',
+          function (data) {
+        $('#client_names').html(format_clients(data.clients));
+    });
+
     var currentWidth = screenWidth();
     $(window).resize(function () {
         if (currentWidth != screenWidth()) {

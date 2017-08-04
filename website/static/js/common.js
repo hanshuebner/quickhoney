@@ -81,3 +81,17 @@ function makeSocialIcons(image, mobile)
                      IMG({src: '/static/images/social/' + image.category + mobile + '-pinterest.png'})));
     }
 }
+
+function format_clients(client_names)
+{
+    var rendered_clients = [];
+    for (var i = 0; i < client_names.length; i++) {
+	var client_name = client_names[i];
+	if (client_name.search(/,/)) {
+	    rendered_clients[i] = client_name.replace(/^(.*)(\s\S+,\s*.*)$/, "<b>$1</b>$2");
+	} else {
+	    rendered_clients[i] = "<b>" + client_name + "</b>";
+	}
+    }
+    return rendered_clients.join("; ");
+}

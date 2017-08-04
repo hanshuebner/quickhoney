@@ -219,6 +219,17 @@ a:nth-child(odd) .button {
     margin-right: 20px;
 }
 
+#contact h1 {
+    font-size: 100%;
+    font-weight: normal;
+    margin: 0px;
+    color: #ffa200;
+}
+
+#contact a {
+    color: #ffa200;
+}
+
 /* ==========================================================================
    Helper classes
    ========================================================================== */

@@ -248,16 +248,7 @@ function make_clients_selector(textentry_field) {
 
 function set_clients(json_data) {
     client_names = json_data.clients;
-    var rendered_clients = [];
-    for (var i = 0; i < client_names.length; i++) {
-	      var client_name = client_names[i];
-	      if (client_name.search(/,/)) {
-	          rendered_clients[i] = client_name.replace(/^(.*)(\s\S+,\s*.*)$/, "<b>$1</b>$2");
-	      } else {
-	          rendered_clients[i] = "<b>" + client_name + "</b>";
-	      }
-    }
-    $("client_names").innerHTML = rendered_clients.join("; ");
+    $("client_names").innerHTML = format_clients(client_names);
     $("upload_client_select").innerHTML = make_clients_selector('upload_client');
     $("edit_client_select").innerHTML = make_clients_selector('edit_client');
 }
