@@ -73,13 +73,14 @@
                                     (/ button-width (image-width input-image)))))
          (cutout-width (floor (/ button-width scale-factor)))
          (cutout-height (floor (/ button-height scale-factor)))
+         (cutout-x (max 0 (min (- (quickhoney:quickhoney-image-center-x bknr.images:*current-image*) (floor cutout-width 2))
+                               (- (image-width input-image) cutout-width))))
+         (cutout-y (max 0 (min (- (quickhoney:quickhoney-image-center-y bknr.images:*current-image*) (floor cutout-height 2))
+                               (- (image-height input-image) cutout-height))))
          (radius (parse-integer radius)))
     (copy-image input-image button-image
-                (floor (- (image-width input-image) cutout-width) 2)
-                (if (or (eq :pixel category)
-                        (> button-width button-height))
-                    (floor (- (image-height input-image) cutout-height) 2)
-                    0)
+                cutout-x
+                cutout-y
                 0 0
                 cutout-width cutout-height
                 :resize t :resample t

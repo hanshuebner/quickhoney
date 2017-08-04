@@ -50,7 +50,9 @@
            #:quickhoney-image-subcategory
            #:all-categories
            #:subcategories-of
-           #:images-in-category))
+           #:images-in-category
+           #:quickhoney-image-center-x
+           #:quickhoney-image-center-y))
 
 (defpackage :quickhoney.tags
   (:use :cl

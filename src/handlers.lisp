@@ -175,10 +175,9 @@
   
 (defmethod handle-object-form ((handler json-edit-image-handler) (action (eql :set-center)) image)
   (with-query-params (center-x center-y)
-    (format t "set center-x ~A center-y ~A~%" center-x center-y)
     (with-transaction (:set-center)
-      (setf (quickhoney-image-center-x image) center-x
-            (quickhoney-image-center-y image) center-y)))
+      (setf (quickhoney-image-center-x image) (parse-integer center-x)
+            (quickhoney-image-center-y image) (parse-integer center-y))))
   (setf *last-image-upload-timestamp* (get-universal-time))
   (with-json-response ()
     (yason:encode-object-element "result" "edited")))
