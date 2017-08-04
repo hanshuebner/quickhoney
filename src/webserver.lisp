@@ -51,6 +51,9 @@
        ("/static" directory-handler
                   :destination ,(merge-pathnames #p"static/" *website-directory*)
                   :filename-separator #\,)
+       ("/m" directory-handler
+             :destination ,(merge-pathnames #p "mobile/" *website-directory*)
+             :filename-separator #\,)
        ("/favicon.ico" file-handler
                        :destination ,(merge-pathnames #p"static/favicon.ico" *website-directory*)
                        :content-type "application/x-icon")

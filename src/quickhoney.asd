@@ -37,7 +37,7 @@
 
                (:file "news" :depends-on ("image"))
                (:file "layout" :depends-on ("config"))
-               (:file "imageproc" :depends-on ("config"))
+               (:file "imageproc" :depends-on ("config" "image"))
                (:file "tweet")
                (:file "handlers" :depends-on ("layout" "config" "image" "news" "tweet"))
                (:file "tags" :depends-on ("image"))
