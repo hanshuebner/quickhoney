@@ -93,6 +93,7 @@ function toggleImageInfo(e)
     if (imageInfo.length) {
         imageInfo.remove();
     } else {
+        $('.image-info').remove(); /* remove other image infos */
         with (DOMBuilder.dom) {
             var info = [];
             if (image.description) {
