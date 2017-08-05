@@ -115,8 +115,10 @@
           <table border="0">
             <tbody>
               <tr>
+                <td><div></div></td>
                 <td valign="top" id="newsentries">
                 </td>
+                <td><div></div></td>
                 <td class="archive" id="archive-navigation" valign="top" align="right">
                 </td>
               </tr>

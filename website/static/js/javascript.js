@@ -298,8 +298,8 @@ function make_upload_item(item)
     var path = item.category + '/' + item.subcategory + '/' + encodeURI(item.name);
     return DIV({ 'class': 'newsentry autonews news_' + item.category },
                A({ href: '/#' + path, onclick: function () { jump_to(path); } },
-                 IMG({ src: "/image/" + encodeURI(item.name) + '/cutout-button,,' + color + ',98,98,0,' + item.category,
-                             width: 98, height: 98 })),
+                 IMG({ src: "/image/" + encodeURI(item.name) + '/cutout-button,,' + color + ',120,120,0,' + item.category,
+                             width: 120, height: 120 })),
                DIV(null,
                    H1(null,
                       A({ href: '/#' + path, onclick: function () { jump_to(path); } },
