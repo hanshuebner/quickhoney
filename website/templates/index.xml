@@ -318,6 +318,9 @@
     </script>
     <script language="javascript" type="text/javascript">
       if ('ontouchstart' in window || navigator.msMaxTouchPoints) {
+          if (location.pathname != '/') {
+              location.hash = '#' + location.pathname.substring(1);
+          }
           location.pathname = "/m/index.html";
       } else {
           init();
