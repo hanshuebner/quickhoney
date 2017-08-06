@@ -1,4 +1,5 @@
 
+/* Number of images to preload when displaying a category */
 var preloadCount = 5;
 
 function setPage(name, category)
@@ -86,12 +87,20 @@ function gotoCategory(category)
         }));
 }
 
+function setHash(hash) {
+    var oldHandler = window.onhashchange;
+    window.onhashchange = null;
+    location.hash = '#' + hash;
+    setTimeout(function () { window.onhashchange = oldHandler; }, 0);
+}
+
 function toggleImageInfo(e)
 {
     var image = e.data;
     var imageInfo = $(e.delegateTarget).find('.image-info');
     if (imageInfo.length) {
         imageInfo.remove();
+        setHash(image.category + '/' + image.subcategory);
     } else {
         $('.image-info').remove(); /* remove other image infos */
         with (DOMBuilder.dom) {
@@ -106,6 +115,7 @@ function toggleImageInfo(e)
             $(e.delegateTarget).append(DIV({ 'class': 'image-info' },
                                            info,
                                            makeSocialIcons(image, true)));
+            setHash(image.category + '/' + image.subcategory + '/' + image.name);
         }
         e.delegateTarget.scrollIntoViewIfNeeded();
     }
@@ -149,21 +159,33 @@ $.fn.reveal = function ()
     });
 }
 
-function gotoSubcategory(category, subcategory)
+function gotoSubcategory(category, subcategory, imageName)
 {
     setPage('images', category);
     console.log('images', subcategory);
     $('#images').empty();
-    $.get('/json-image-query/' + category + '/' + subcategory,
-          function (data) {
-              $('#images')
-                  .append(data.queryResult.map(makeImageDisplay));
-              $('#images div')
-                  .waypoint(function () {
-                      $(this.element).nextAll().slice(0, preloadCount + 1).reveal();
-                  });
-              $('#images div').slice(0, preloadCount + 1).reveal();
-          });
+    if (imageName) {
+        $.get('/json-image-info/' + imageName,
+              function (data) {
+                  var image = data.image;
+                  $('#images')
+                      .append(makeImageDisplay(image))
+                      .reveal();
+              });
+    } else {
+        $.get('/json-image-query/' + category + '/' + subcategory,
+              function (data) {
+                  var images = data.queryResult;
+
+                  $('#images')
+                      .append(images.map(makeImageDisplay));
+                  $('#images div')
+                      .waypoint(function () {
+                          $(this.element).nextAll().slice(0, preloadCount + 1).reveal();
+                      });
+                  $('#images div').slice(0, preloadCount + 1).reveal();
+              });
+    }
 }
 
 function news()
@@ -211,8 +233,8 @@ function main()
         Path.map('#' + category).to(function () {
             gotoCategory(category);
         });
-        Path.map('#' + category + '/:subcategory').to(function () {
-            gotoSubcategory(category, this.params['subcategory']);
+        Path.map('#' + category + '/:subcategory(/:image)').to(function () {
+            gotoSubcategory(category, this.params.subcategory, this.params.image);
         });
     });
     Path.map('#news').to(news);
