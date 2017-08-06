@@ -44,11 +44,8 @@ function buttonWidth()
 
 function buttonHeight(count)
 {
-    if (window.mode == 'wide') {
-        return Math.floor(($(window).height() - 170) / Math.ceil(count / 2));
-    } else {
-        return Math.floor(($(window).height() - 170) / count);
-    }
+    return Math.max(120,
+                    Math.floor(($(window).height() - 170) / ((window.mode == 'wide') ? Math.ceil(count / 2) : count)));
 }
 
 function home()
