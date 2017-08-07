@@ -482,9 +482,9 @@
 
 (defclass json-news-handler (object-handler)
   ()
-  (:default-initargs  :query-function (lambda (string) (or (find-rss-channel string)
-                                                           (store-image-with-name string)
-                                                           (find-store-object string)))))
+  (:default-initargs :query-function (lambda (string) (or (find-rss-channel string)
+                                                          (store-image-with-name string)
+                                                          (find-store-object string)))))
 
 (defgeneric json-encode-news-item (item)
   (:method ((item t))

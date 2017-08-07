@@ -112,7 +112,7 @@ function toggleImageInfo(e)
             $(e.delegateTarget).append(DIV({ 'class': 'image-info' },
                                            info,
                                            makeSocialIcons(image, true)));
-            setHash(image.category + '/' + image.subcategory + '/' + image.name);
+            setHash(image.category + '/' + image.subcategory + '/' + encodeURI(image.name));
         }
         e.delegateTarget.scrollIntoViewIfNeeded();
     }
@@ -185,9 +185,61 @@ function gotoSubcategory(category, subcategory, imageName)
     }
 }
 
+function saveScrollPosition()
+{
+    console.log('save scroll position', getScrollXY());
+    window.savedScrollPosition = getScrollXY().y;
+}
+
+function makeNewsItem(item) {
+    var categoryColors = { pixel: 'ff00ff',
+                           vector: '00ccff',
+                           pen: 'ff0000',
+                           news: '30be01' };
+    with (DOMBuilder.dom) {
+        switch (item.type) {
+        case 'upload':
+            var path = item.category + '/' + item.subcategory + '/' + encodeURI(item.name);
+            return DIV({ 'class': 'upload-item ' + item.category },
+                       A({ href: '#' + path },
+                         IMG({ src: '/image/' + encodeURI(item.name) + '/cutout-button,,' + categoryColors[item.category] + ',120,120,0,' + item.category,
+                               width: 120, height: 120 })),
+                       DIV(H1(A({ href: '#' + path },
+                                item.name)),
+                           P(item.date, ' by ', item.owner),
+                           item.description ? P(item.description) : ''));
+        case 'news':
+            var ratio = (item.width < screenWidth()) ? 1 : (item.width / screenWidth());
+            return DIV({ 'class': 'news-item' },
+                       DIV(IMG({ src: '/image/' + item.id,
+                                 width: item.width / ratio,
+                                 height: item.height / ratio
+                               })),
+                       DIV(H1(item.title),
+                           P(item.date, ' by ', item.owner)));
+        }
+    }
+}
+
 function news()
 {
     setPage('news');
+    $('#news')
+        .empty();
+    $.get('/json-news-items/quickhoney',
+          function (data) {
+              data.items.map(function (item) {
+                  with (DOMBuilder.dom) {
+                      $('#news').append([ makeNewsItem(item),
+                                          DIV({ 'class': 'sep' })]);
+                  }});
+              $('#news a').on('click', saveScrollPosition);
+              if (window.savedScrollPosition) {
+                  setTimeout(function () {
+                      window.scrollTo(0, window.savedScrollPosition)
+                  }, 300);
+              }
+          });
 }
 
 function contact()

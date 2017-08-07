@@ -270,21 +270,6 @@ function intersection(a, b)
     return result;
 }
 
-function getScrollXY() {
-  if (typeof (window.pageYOffset) == 'number') {
-      // Netscape compliant
-      return { x: window.pageXOffset, y: window.pageYOffset };
-  } else if (document.body && ( document.body.scrollLeft || document.body.scrollTop)) {
-      // DOM compliant
-      return { x: document.body.scrollLeft, y: document.body.scrollTop };
-  } else if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
-      // IE standards compliant mode
-      return { x: document.documentElement.scrollLeft, y: document.documentElement.scrollTop };
-  } else {
-      return { x: 0, y: 0 };
-  }
-}
-
 function permalink(path) {
     return A(
         { href: '/' + path,
