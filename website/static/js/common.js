@@ -60,7 +60,7 @@ function makeSocialIcons(image, mobile)
     var mobile = mobile ? '-mobile' : '';
     with (DOMBuilder.dom) {
         return DIV({ 'class': 'social-icons' },
-                   A({ href: '#',
+                   A({ href: 'mailto:?subject=QuickHoney%20Image%20' + encodeURI(image.name) + '&body=http://quickhoney.com/' + link,
                        title: 'Share by Email' },
                      IMG({src: '/static/images/social/' + image.category + mobile + '-mail.png'})),
                    A({ href: 'https://www.facebook.com/sharer/sharer.php?u=http://quickhoney.com/' + link,
