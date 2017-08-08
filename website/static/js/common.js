@@ -54,10 +54,20 @@ function random_button_image(category, subcategory, width, height, cut_category)
     }
 }
 
+function ownerTwitterHandle(image)
+{
+    switch (image.owner) {
+    case "nana": return "nanowska";
+    case "p": return "peekasso";
+    default: return "quickhoney";
+    }
+}
+
 function makeSocialIcons(image, mobile)
 {
     var link = image.category + '/' + image.subcategory + '/' + encodeURI(image.name);
     var mobile = mobile ? '-mobile' : '';
+    var twitterHandle = ownerTwitterHandle(image);
     with (DOMBuilder.dom) {
         return DIV({ 'class': 'social-icons' },
                    A({ href: 'mailto:?subject=QuickHoney%20Image%20' + encodeURI(image.name) + '&body=http://quickhoney.com/' + link,
@@ -67,7 +77,10 @@ function makeSocialIcons(image, mobile)
                        title: 'Share on Facebook',
                        target: '_new'},
                      IMG({src: '/static/images/social/' + image.category + mobile + '-facebook.png'})),
-                   A({ href: 'https://twitter.com/home?status=http%3A//quickhoney.com/' + link,
+                   A({ href: 'https://twitter.com/share?'
+                       + 'text=' + encodeURI(image.description || '')
+                       + '&url=http%3A//quickhoney.com/' + link
+                       + (ownerTwitterHandle ? ('&via=' + twitterHandle) : ''),
                        title: 'Tweet',
                        target: '_new'},
                      IMG({src: '/static/images/social/' + image.category + mobile + '-twitter.png'})),

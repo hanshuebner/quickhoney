@@ -47,6 +47,7 @@
                                                                           (symbol-name (class-name (class-of image)))
                                                                           "")))
     (yason:encode-object-element "name" (store-image-name image))
+    (yason:encode-object-element "owner" (user-login (owned-object-owner image)))
     (when (quickhoney-image-category image)
       (yason:encode-object-element "category" (quickhoney-image-category image))
       (when (quickhoney-image-subcategory image)
