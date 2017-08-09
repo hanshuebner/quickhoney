@@ -218,6 +218,7 @@ div#results {
     visibility: inherit;
     top: 0px;
     left: 0px;
+    overflow: hidden;
 }
 
 div#image_browser .subform { display: none }
