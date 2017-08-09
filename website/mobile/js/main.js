@@ -302,6 +302,11 @@ function main()
             location.reload();
         }
     });
+
+    /* scroll to top before leaving page so that the scroll position is not restored */
+    window.onbeforeunload = function () {
+        window.scrollTo(0, 0);
+    }
 }
 
 $(document).ready(main);
