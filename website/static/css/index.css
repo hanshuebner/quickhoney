@@ -399,7 +399,7 @@ div.footer {
 .news_vector { border-color: #00ccff }
 .news_pen { border-color: #ff0000 }
 div.news_sep { height: 17px; background-image: url(/image/news-sep); }
-.archive { width: 162px }
+.archive { width:75px }
 .archive a.year { font-size: 1.2em; margin: 2px 0px 2px 0px}
 .archive a.year.active { color: #000; }
 .archive a.month.active { display: block; }
