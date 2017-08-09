@@ -304,9 +304,10 @@ function main()
     });
 
     /* scroll to top before leaving page so that the scroll position is not restored */
-    window.onbeforeunload = function () {
+    $(window).on('beforeunload', function () {
+        $('body').empty();
         window.scrollTo(0, 0);
-    }
+    });
 }
 
 $(document).ready(main);
