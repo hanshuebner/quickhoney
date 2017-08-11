@@ -717,10 +717,19 @@ function show_directory_buttons(category) {
         }
         rows = Math.ceil(subs.length / 3);
     }
-    setStyle($('directory'), { height: (100 + rows * 279) + 'px' });
-    replaceChildNodes('directory', buttons);
+    var height = rows * (279 + 16);
+    setStyle($('directory'), { height: (100 + height) + 'px' });
+    replaceChildNodes('directory', DIV({ style: 'height: ' + height + 'px' }, buttons), copyright());
 
     wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'hidden-button'), seq(0, subs.length))); });
+}
+
+function copyright()
+{
+    return DIV({ class: 'footer' },
+               '©1998-2017 QuickHoney Nana Rausch & Peter Stemmler. No part of ',
+               'this website may be reproduced in any manner without permission.  ',
+               'Programming by Hübner/Odendahl');
 }
 
 function show_home_buttons() {
@@ -741,10 +750,7 @@ function show_home_buttons() {
 
     replaceChildNodes('home',
                       buttons,
-                      DIV({ class: 'footer' },
-                          '©1998-2017 QuickHoney Nana Rausch & Peter Stemmler. No part of ',
-                          'this website may be reproduced in any manner without permission.  ',
-                          'Programming by Hübner/Odendahl'));
+                      copyright());
 
     wait_for_images(function () { reveal_buttons_nicely(map(partial(operator['add'], 'home_'), home_buttons)); });
 }
