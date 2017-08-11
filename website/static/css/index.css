@@ -219,6 +219,7 @@ div#results {
     top: 0px;
     left: 0px;
     overflow: hidden;
+    margin-top: -32px;
 }
 
 div#image_browser .subform { display: none }
