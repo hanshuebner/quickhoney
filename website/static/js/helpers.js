@@ -26,10 +26,10 @@ function $(id) {
 function wait_for_images(callback) {
     var waiting = 0;
     map(function (image) {
-            if (!image.complete) {
-                waiting++;
-            }
-        }, getElementsByTagAndClassName('img', null));
+        if (!image.complete) {
+            waiting++;
+        }
+    }, getElementsByTagAndClassName('img', null));
 
     if (waiting == 0 || window.opera) {
         callback();
