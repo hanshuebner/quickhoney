@@ -238,7 +238,6 @@ div#thumbnails {
 }
 
 img.inherited_image {
-    visibility: hidden;
     border-width: 0px;
 }
 
