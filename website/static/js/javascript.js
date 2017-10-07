@@ -9,10 +9,6 @@
 // updated a few times over the years, which despite all the ugliness
 // worked well.
 
-/* safari global variable - used to trigger some compatibility hacks */
-
-var safari = false;
-
 /* configuration */
 
 var max_news_items = 50;        /* maximum number of news items to display */
@@ -854,7 +850,7 @@ function display_thumbnail_page() {
 	    var imageLink = A({ href: '#' + current_directory + '/' + current_subdirectory + '/' + encodeURI(image.name),
                                 onclick: function () { window.current_scroll_position = getScrollXY().y; } },
                               imageElement);
-	    var imageSpan = SPAN({'style': "position:relative"}, imageLink);
+	   var imageSpan = SPAN({'style': "position:relative"}, imageLink);
 	    row_nodes.push(imageSpan);
         }
         row_nodes.push(BR());
@@ -1128,27 +1124,8 @@ function do_quickhoney(target) {
 
 /* main initialization routine */
 
-function safari_compatibility_hack() {
-    // for safari, we change the style sheet so that images are not hidden during load
-    log('changing stylesheet for safari');
-    for (var i = 0; i < document.styleSheets.length; i++) {
-	var rules = document.styleSheets[i][document.all ? 'rules' : 'cssRules'];
-	for (var j = 0; j < rules.length; j++) {
-	    var rule = rules[j];
-	    var ruleText = rule.selectorText.toLowerCase();
-	    if (ruleText.indexOf('img.inherited_image') != -1) {
-		rule.style['visibility'] = 'visible';
-	    }
-	}
-    }
-}
-
 function init_application() {
     log('init_application');
-    if (navigator.userAgent.indexOf("Safari") != -1) {
-	safari = true;
-	safari_compatibility_hack();
-    }
 
     function log_error(url, error) {
         log('fetching ' + url + ' failed: ' + error);
