@@ -99,11 +99,11 @@ function show_cms_window(name) {
 	$("login_status").style.visibility = 'visible';
 	
     } else {
-	      for (var i = 0; i < elements.length; i++) {
-	          if (elements[i].id) {
-		            elements[i].style.visibility = "hidden";
-	          }
-	      }
+	for (var i = 0; i < elements.length; i++) {
+	    if (elements[i].id) {
+		elements[i].style.visibility = "hidden";
+	    }
+	}
     }
 
     log('show_cms_window ' + name + ' done');
@@ -128,8 +128,8 @@ function send_logout() {
 function all_inputs(parent) {
     var inputs = [];
     map(function (tag) {
-            inputs = inputs.concat(getElementsByTagAndClassName(tag, null, parent));
-        }, ['textarea', 'select', 'input']);
+        inputs = inputs.concat(getElementsByTagAndClassName(tag, null, parent));
+    }, ['textarea', 'select', 'input']);
     return inputs;
 }
 
@@ -139,11 +139,11 @@ function submit_json(url, form, handler) {
 
     if (form) {
         map(function (input) {
-                names.push(input.name);
-                if (input.type != 'checkbox' || input.checked) {
-                    values.push(input.value);
-                }
-            }, all_inputs(form));
+            names.push(input.name);
+            if (input.type != 'checkbox' || input.checked) {
+                values.push(input.value);
+            }
+        }, all_inputs(form));
     }
 
     log("values " + queryString(names, values));
@@ -263,10 +263,10 @@ function intersection(a, b)
 {
     var result = [];
     map(function (value) {
-            if (findValue(b, value) != -1) {
-                result.push(value);
-            }
-        }, a);
+        if (findValue(b, value) != -1) {
+            result.push(value);
+        }
+    }, a);
     return result;
 }
 
@@ -284,7 +284,7 @@ function make_upload_item(item)
     return DIV({ 'class': 'newsentry autonews news_' + item.category },
                A({ href: '/#' + path, onclick: function () { jump_to(path); } },
                  IMG({ src: "/image/" + encodeURI(item.name) + '/cutout-button,,' + color + ',120,120,0,' + item.category,
-                             width: 120, height: 120 })),
+                       width: 120, height: 120 })),
                DIV(null,
                    H1(null,
                       A({ href: '/#' + path, onclick: function () { jump_to(path); } },
@@ -333,9 +333,9 @@ function load_news(single_entry, data)
         }
         replaceChildNodes('newsentries',
                           map(function (item) {
-                                  return [ ((item.type == 'upload') ? make_upload_item : make_news_item)(item),
-                                           DIV({ 'class': 'news_sep' }) ];
-                              }, data.items));
+                              return [ ((item.type == 'upload') ? make_upload_item : make_news_item)(item),
+                                       DIV({ 'class': 'news_sep' }) ];
+                          }, data.items));
         $('archive-navigation').style.visibility = 'inherit';
 
         wait_for_images(function () { hide_cue(); $('newsentries').style.visibility = 'inherit'; });
@@ -373,9 +373,9 @@ function reload_news()
 function show_news_archive_navigation(year, month) {
 
     map(function (element) {
-            ((element.year == year && (month || element.month)) ? addElementClass : removeElementClass)
-                (element, 'active');
-        }, $('archive-navigation').childNodes);
+        ((element.year == year && (month || element.month)) ? addElementClass : removeElementClass)
+        (element, 'active');
+    }, $('archive-navigation').childNodes);
 
     for (i = 1; i <= 12; i++) {
         ((month == i) ? addElementClass : removeElementClass)('archive-navigation', 'm' + i);
@@ -428,25 +428,25 @@ function initialize_news_archive(data)
         var activeYear = document.location.href.replace(/.*news\/(\d+).*/, "$1");
         replaceChildNodes('archive-navigation',
                           map(function (entry) {
-                                  var year = entry[0];
-                                  var month = entry[1];
-                                  var result = [];
-                                  if (year != currentYear) {
-                                      currentYear = year;
-                                      var link = A({ href: '#news/' + year,
-                                                     'class': 'year' + (year == activeYear ? ' active' : '') },
-                                                   year, BR());
-                                      link.year = year;
-                                      result.push(link);
-                                  }
-                                  var link = A({ href: '#news/' + year + '/' + month,
-                                                 'class': 'month ' + 'm' + month + (year == activeYear ? ' active' : '')},
-                                               month_names[month - 1], BR());
-                                  link.month = month;
+                              var year = entry[0];
+                              var month = entry[1];
+                              var result = [];
+                              if (year != currentYear) {
+                                  currentYear = year;
+                                  var link = A({ href: '#news/' + year,
+                                                 'class': 'year' + (year == activeYear ? ' active' : '') },
+                                               year, BR());
                                   link.year = year;
                                   result.push(link);
-                                  return result;
-                              }, data.months));
+                              }
+                              var link = A({ href: '#news/' + year + '/' + month,
+                                             'class': 'month ' + 'm' + month + (year == activeYear ? ' active' : '')},
+                                           month_names[month - 1], BR());
+                              link.month = month;
+                              link.year = year;
+                              result.push(link);
+                              return result;
+                          }, data.months));
     }
     catch (e) {
         log('error while processing archive data: ' + e);
@@ -561,7 +561,7 @@ var pages = {
     vector: new Page('00ccff',
                      partial(directory, 'vector')),
     pen: new Page('ff0000',
-                     partial(directory, 'pen')),
+                  partial(directory, 'pen')),
     news: new Page('30be01',
                    news),
     contact: new Page('ffa200')
@@ -603,8 +603,8 @@ function show_page(pagename, subpath) {
 
     /* workaround for IE, which does not display the overlapping menu items expectedly */
     map(function (keyword) {
-            $('m_' + keyword).style.zIndex = (keyword == pagename) ? 101 : 100;
-        }, ['pixel', 'vector', 'pen', 'news', 'contact']);
+        $('m_' + keyword).style.zIndex = (keyword == pagename) ? 101 : 100;
+    }, ['pixel', 'vector', 'pen', 'news', 'contact']);
 
     // Activate the menu by coloring the menu choices correctly
     $('menu').className = pagename;
@@ -1049,8 +1049,8 @@ function display_current_image() {
         $("edit_center_y").value = current_image.center_y;
 
         map(function(keyword) {
-                $('edit_' + keyword).checked = current_image.keywords[keyword] ? true : false;
-            }, ['explicit']);
+            $('edit_' + keyword).checked = current_image.keywords[keyword] ? true : false;
+        }, ['explicit']);
 	show_cms_window("edit_form");
     }
 }
@@ -1132,22 +1132,22 @@ function safari_compatibility_hack() {
     // for safari, we change the style sheet so that images are not hidden during load
     log('changing stylesheet for safari');
     for (var i = 0; i < document.styleSheets.length; i++) {
-	      var rules = document.styleSheets[i][document.all ? 'rules' : 'cssRules'];
-	      for (var j = 0; j < rules.length; j++) {
-	          var rule = rules[j];
-	          var ruleText = rule.selectorText.toLowerCase();
-	          if (ruleText.indexOf('img.inherited_image') != -1) {
-		            rule.style['visibility'] = 'visible';
-	          }
-	      }
+	var rules = document.styleSheets[i][document.all ? 'rules' : 'cssRules'];
+	for (var j = 0; j < rules.length; j++) {
+	    var rule = rules[j];
+	    var ruleText = rule.selectorText.toLowerCase();
+	    if (ruleText.indexOf('img.inherited_image') != -1) {
+		rule.style['visibility'] = 'visible';
+	    }
+	}
     }
 }
 
 function init_application() {
     log('init_application');
     if (navigator.userAgent.indexOf("Safari") != -1) {
-	      safari = true;
-	      safari_compatibility_hack();
+	safari = true;
+	safari_compatibility_hack();
     }
 
     function log_error(url, error) {
@@ -1227,10 +1227,10 @@ function poll_path() {
 /* old cms support */
 
 function check(button, checkboxname, b) {
-  checkboxes = button.form[checkboxname];
-  for (i = 0; i < checkboxes.length; i++) {
-    checkboxes[i].checked = b;
-  }
+    checkboxes = button.form[checkboxname];
+    for (i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = b;
+    }
 }
 
 function overlay_remove()
@@ -1251,7 +1251,7 @@ function fade_out_page(to, callback) {
     fade('menu', {to: to,
 		  duration: duration});
     fade('image_browser', {to: to,
-			  duration: duration});
+			   duration: duration});
     setTimeout(callback, duration * 1000);
 }
 
@@ -1265,7 +1265,7 @@ function make_overlay_content(overlay, options) {
     var buttonColor = options.color || pages[current_directory].link_color;
     var invertColor = options.invertColor || false;
     var colorString = (!options.invertColor ? "000000," + buttonColor :
-		      "ffffff," + buttonColor + ",000000,ffffff");
+		       "ffffff," + buttonColor + ",000000,ffffff");
 
     overlay.style.visibility = 'hidden';
     overlay.style.top = options.top || '144px';
