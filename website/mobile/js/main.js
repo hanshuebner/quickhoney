@@ -50,6 +50,7 @@ function buttonHeight(count)
 
 function home()
 {
+    window.savedScrollPosition = 0;
     $('#home .button')
         .css('width', buttonWidth())
         .css('height', buttonHeight(4));
@@ -70,6 +71,7 @@ function home()
 
 function gotoCategory(category)
 {
+    window.savedScrollPosition = 0;
     setPage('category', category);
     $('#category')
         .empty()
@@ -158,6 +160,7 @@ $.fn.reveal = function ()
 
 function gotoSubcategory(category, subcategory, imageName)
 {
+    window.savedScrollPosition = 0;
     setPage('images', category);
     console.log('images', subcategory);
     $('#images').empty();
@@ -236,7 +239,7 @@ function news()
               $('#news a').on('click', saveScrollPosition);
               if (window.savedScrollPosition) {
                   setTimeout(function () {
-                      window.scrollTo(0, window.savedScrollPosition)
+                      window.scrollTo(0, window.savedScrollPosition);
                   }, 300);
               }
           });
