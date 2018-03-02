@@ -25,12 +25,31 @@
     (setf (quickhoney-image-center-x image) (floor (store-image-width image) 2)
           (quickhoney-image-center-y image) (floor (store-image-height image) 2))))
 
+#+(or)
+(with-transaction (:fix-center)
+  (dolist (image (class-instances 'quickhoney-image))
+    (with-slots (center-x center-y) image
+      (when (and (slot-boundp image 'center-x)
+                 (stringp center-x))
+        (setf center-x (parse-integer center-x)))
+      (when (and (slot-boundp image 'center-y)
+                 (stringp center-y))
+        (setf center-y (parse-integer center-y)))
+      (when (and (slot-boundp image 'center-x)
+                 (not center-x))
+        (setf center-x (floor (store-image-width image) 2)))
+      (when (and (slot-boundp image 'center-y)
+                 (not center-y))
+        (setf center-y (floor (store-image-height image) 2))))))
+
 (defmethod quickhoney-image-center-x :before ((image quickhoney-image))
-  (unless (slot-boundp image 'center-x)
+  (unless (and (slot-boundp image 'center-x)
+               (slot-value image 'center-x))
     (quickhoney-image-init-center image)))
 
 (defmethod quickhoney-image-center-y :before ((image quickhoney-image))
-  (unless (slot-boundp image 'center-y)
+  (unless (and (slot-boundp image 'center-y)
+               (slot-value image 'center-y))
     (quickhoney-image-init-center image)))
 
 (defvar *last-image-upload-timestamp* 0)

@@ -166,8 +166,8 @@
       (setf (quickhoney-image-client image) client
             (quickhoney-image-spider-keywords image) spider-keywords
             (quickhoney-image-description image) description
-            (quickhoney-image-center-x image) center-x
-            (quickhoney-image-center-y image) center-y
+            (quickhoney-image-center-x image) (parse-integer center-x)
+            (quickhoney-image-center-y image) (parse-integer center-y)
             (store-image-keywords image) (append (set-difference (store-image-keywords image) *editable-keywords*)
                                                  (image-keywords-from-request-parameters)))))
   (setf *last-image-upload-timestamp* (get-universal-time))
