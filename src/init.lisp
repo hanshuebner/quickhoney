@@ -7,6 +7,14 @@
   #+openmcl
   (ccl:save-application "quickhoney" :prepend-kernel t))
 
+(defun reopen-store ()
+  (close-store)
+  (make-instance 'store
+                 :directory *store-directory*
+                 :subsystems (list (make-instance 'store-object-subsystem)
+                                   (make-instance 'blob-subsystem
+                                                  :n-blobs-per-directory 1000))))
+
 (defun startup ()
   (cond
     (*dumped-image*
@@ -25,12 +33,7 @@ it if it is missing."
 
      (setf *hunchentoot-default-external-format* (flex:make-external-format :utf-8 :eol-style :lf))
 
-     (close-store)
-     (make-instance 'store
-                    :directory *store-directory*
-                    :subsystems (list (make-instance 'store-object-subsystem)
-                                      (make-instance 'blob-subsystem
-                                                     :n-blobs-per-directory 1000)))
+     (reopen-store)
 
      (unless (class-instances 'bknr.cron::cron-job)
        (bknr.cron:make-cron-job "daily statistics" 'make-yesterdays-statistics 1 0 :every :every)
@@ -39,11 +42,21 @@ it if it is missing."
        (make-rss-channel "quickhoney" "QuickHoney" "QuickHoney Illustrations" "rss/quickhoney"
                          :items (class-instances 'quickhoney-image)))
 
+     ;; Update spring 2018
      (unless (store-image-with-name "type-honey-draw")
        (dolist (name (directory #P "../update-2018/type*.png"))
          (when-let (old (store-image-with-name (pathname-name name)))
            (delete-object old))
          (import-image name)))
+
+     (unless (images-in-category '(:pen :quick-portraits))
+       (with-transaction (:update-spring-2018)
+         (dolist (image (images-in-category '(:pen :portraits)))
+           (setf (quickhoney-image-cat-sub image) '(:pen :quick-portraits)))
+         (dolist (image (images-in-category '(:pen :nudes)))
+           (setf (quickhoney-image-cat-sub image) '(:pen :quick-draw)))
+         (dolist (image (images-in-category '(:pen :stuff)))
+           (setf (quickhoney-image-cat-sub image) '(:pen :quick-draw)))))
      
      (cl-gd::load-gd-glue)))
 
