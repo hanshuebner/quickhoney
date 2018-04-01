@@ -305,8 +305,8 @@
 (defparameter *home-buttons* '("pixel" "vector" "news" "pen"))
 (defparameter *categories*
   '(("pixel" "birdview" "headon" "spot" "icons")
-    ("vector" "icons" "portraits" "celebrities" "blackwhite" "editorial" "microspots" "nudes")
-    ("pen" "honeypen" "portraits" "nudes" "stuff")))
+    ("vector" "icons" "portraits" "celebrities" "blackwhite" "editorial" "microspots" "crazy-shit")
+    ("pen" "honeypen" "quick-portraits" "quick-draw" "honey-draw")))
 
 (defun make-subcategories-json ()
   (yason:with-output-to-string* ()

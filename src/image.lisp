@@ -52,6 +52,12 @@
                (slot-value image 'center-y))
     (quickhoney-image-init-center image)))
 
+(defmethod quickhoney-image-center-x ((image store-image))
+  (floor (store-image-width image) 2))
+
+(defmethod quickhoney-image-center-y ((image store-image))
+  (floor (store-image-height image) 2))
+
 (defvar *last-image-upload-timestamp* 0)
 
 (defmethod initialize-transient-instance :after ((image quickhoney-image))

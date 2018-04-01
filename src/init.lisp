@@ -38,6 +38,12 @@ it if it is missing."
      (unless (class-instances 'rss-channel)
        (make-rss-channel "quickhoney" "QuickHoney" "QuickHoney Illustrations" "rss/quickhoney"
                          :items (class-instances 'quickhoney-image)))
+
+     (unless (store-image-with-name "type-honey-draw")
+       (dolist (name (directory #P "../update-2018/type*.png"))
+         (when-let (old (store-image-with-name (pathname-name name)))
+           (delete-object old))
+         (import-image name)))
      
      (cl-gd::load-gd-glue)))
 
