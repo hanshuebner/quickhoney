@@ -112,3 +112,14 @@
     (export-image img (merge-pathnames (make-pathname :name (store-image-name img)
 						      :type  (string-downcase (symbol-name (blob-type img))))
 				       dir))))
+
+(defun import-directory (directory user category subcategory)
+  (loop for file in (directory (merge-pathnames #P"*.*" directory))
+        when (pathname-name file)
+          collect (handler-case
+                      (import-image file
+                                    :class-name 'quickhoney-image
+                                    :user (bknr.user:find-user user)
+                                    :initargs `(:cat-sub (,category ,subcategory)))
+                    (error (e)
+                      (format t "Error importing ~A: ~A~%" file e)))))
