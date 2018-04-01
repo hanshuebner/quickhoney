@@ -698,13 +698,21 @@ function show_directory_buttons(category) {
                         make_subcategory_button(subs[5], 7),
                         make_subcategory_button(subs[6], 6)) ];
         rows = 3;
-    } else if (category == 'pen' || category == 'pixel') {
+    } else if (category == 'pixel') {
         buttons = [ DIV(null,
                         make_subcategory_button(subs[0], 0, 568),
                         make_subcategory_button(subs[1], 1, 568),
                         make_subcategory_button(subs[2], 2)),
                     DIV(null,
                         make_subcategory_button(subs[3], 5)) ];
+        rows = 2;
+    } else if (category == 'pen') {
+        buttons = [ DIV(null,
+                        make_subcategory_button(subs[0], 0, 568),
+                        make_subcategory_button(subs[1], 1),
+                        make_subcategory_button(subs[2], 2, 568)),
+                    DIV(null,
+                        make_subcategory_button(subs[3], 4)) ];
         rows = 2;
     } else {
         buttons = [ DIV(null, map(make_subcategory_button, subs.slice(0, 3))) ];
